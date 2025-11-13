@@ -39,3 +39,7 @@ coverage/
 
 # OS
 Thumbs.db
+
+
+*:Zone.Identifier
+*.Zone.Identifier
