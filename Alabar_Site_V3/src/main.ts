@@ -4,8 +4,8 @@
  */
 
 import '@styles/main.css';
-import { initPixiApp, getPixiAppState } from '@pixi/PixiInitializer';
-import { initRouter } from '@core/router/Router';
+import { initPixiApp, getPixiAppState } from '@';
+import { initRouter } from '@/router/Router';
 
 /**
  * Main application initialization

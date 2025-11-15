@@ -6,7 +6,7 @@ export default defineConfig({
     alias: {
       '@': resolve(__dirname, './src'),
       '@core': resolve(__dirname, './src/core'),
-      '@pixi': resolve(__dirname, './src/core/pixi'),
+      '@pixiCore': resolve(__dirname, './src/core/pixi'),
       '@pages': resolve(__dirname, './src/pages'),
       '@components': resolve(__dirname, './src/components'),
       '@styles': resolve(__dirname, './src/styles')

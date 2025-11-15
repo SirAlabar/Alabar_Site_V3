@@ -11,9 +11,9 @@ import {
   showLoading,
   hideLoading,
   show404
-} from './LayoutManager';
-import { mountHeader, setupGameHeaderEvents } from './HeaderManager';
-import type { RouteConfig, RouteConfigMap } from '@core/types';
+} from '../manager/LayoutManager';
+import { mountHeader, setupGameHeaderEvents } from '../manager/HeaderManager';
+import type { RouteConfig, RouteConfigMap } from '@/utils/types';
 
 /**
  * Singleton RouterState

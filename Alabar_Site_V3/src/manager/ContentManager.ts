@@ -4,7 +4,7 @@
  */
 
 import type { Application, Container } from 'pixi.js';
-import type { PageGroups } from '@core/types';
+import type { PageGroups } from '@/utils/types';
 import type { AssetManager } from './AssetManager';
 
 type ViewInitializer = (container: Container, app: Application, assetManager?: AssetManager) => void;
