@@ -1,14 +1,18 @@
 /**
  * Layout Component - Base layout structure
+ * Creates the skeleton: header mount + content mount
  */
 
-export class Layout {
+export class Layout
+{
   /**
    * Mount layout to selector
    */
-  mount(selector: string): void {
+  mount(selector: string): void
+  {
     const container = document.querySelector(selector);
-    if (!container) {
+    if (!container)
+    {
       console.error(`Layout container "${selector}" not found`);
       return;
     }
@@ -17,9 +21,10 @@ export class Layout {
   }
 
   /**
-   * Render layout HTML
+   * Render layout HTML structure
    */
-  render(): string {
+  render(): string
+  {
     return `
       <div class="flex flex-col min-h-screen">
         <!-- Header mount point -->
@@ -34,8 +39,10 @@ export class Layout {
   /**
    * Render page section wrapper
    */
-  renderPageSection(id: string, content: string, isHomePage: boolean = false): string {
-    if (isHomePage) {
+  renderPageSection(id: string, content: string, isHomePage: boolean = false): string
+  {
+    if (isHomePage)
+    {
       return `<div id="${id}" class="min-h-screen">${content}</div>`;
     }
     

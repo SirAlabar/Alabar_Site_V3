@@ -1,11 +1,11 @@
 /**
  * LayoutManager - Handles rendering different layout types
- * Includes special 'pixi' layout for canvas-based content
+ * MINIMAL VERSION - BaseComponent and PixiInitializer features commented until ready
  */
 
-import { BaseComponent } from '@components/BaseComponent';
-import { Layout } from '@components/common/Layout';
-import { getPixiAppState, navigatePixiContent } from '@pixi/PixiInitializer';
+// import { BaseComponent } from './components/BaseComponent';
+import { Layout } from '../components/common/Layout';
+// import { getPixiAppState, navigatePixiContent } from './pixi/PixiInitializer';
 
 // Module-level variables
 let layout: Layout;
@@ -13,30 +13,51 @@ let layout: Layout;
 /**
  * Initialize layout manager
  */
-export function initLayoutManager(): void {
+export function initLayoutManager(): void
+{
   layout = new Layout();
 }
 
 /**
- * Render default layout (with header)
+ * Mount the basic layout structure
+ * Creates #header-mount and #content-mount containers
  */
-export function renderDefault(component: BaseComponent): void {
+export function mountLayout(): void
+{
   const headerMount = document.querySelector('#header-mount');
   const contentMount = document.querySelector('#content-mount');
 
   // Only mount layout if structure doesn't exist
-  if (!headerMount || !contentMount) {
+  if (!headerMount || !contentMount)
+  {
+    layout.mount('#app');
+    console.log('✅ Layout structure created');
+  }
+}
+
+// TODO: Uncomment when BaseComponent is ready
+/*
+export function renderDefault(component: BaseComponent): void
+{
+  const headerMount = document.querySelector('#header-mount');
+  const contentMount = document.querySelector('#content-mount');
+
+  // Only mount layout if structure doesn't exist
+  if (!headerMount || !contentMount)
+  {
     layout.mount('#app');
   }
 
   // Mount content to existing #content-mount slot
   const contentMountAfter = document.querySelector('#content-mount');
-  if (contentMountAfter) {
+  if (contentMountAfter)
+  {
     contentMountAfter.setAttribute('data-route-content', 'true');
 
     const isHomePage = component.constructor.name === 'HomePage';
 
-    if (isHomePage) {
+    if (isHomePage)
+    {
       contentMountAfter.className = '';
       const pageContent = layout.renderPageSection(
         'page-content',
@@ -44,7 +65,9 @@ export function renderDefault(component: BaseComponent): void {
         true
       );
       contentMountAfter.innerHTML = pageContent;
-    } else {
+    }
+    else
+    {
       contentMountAfter.className = 'flex-1 flex flex-col pt-20';
       contentMountAfter.innerHTML = layout.renderPageSection(
         'page-content',
@@ -55,21 +78,23 @@ export function renderDefault(component: BaseComponent): void {
   }
 
   // Call component mount if it exists
-  if (typeof component.mount === 'function') {
+  if (typeof component.mount === 'function')
+  {
     component.mount('#content-mount');
   }
 }
+*/
 
-/**
- * Render PIXI layout (canvas-based content)
- * This is the special layout that works with PIXI containers
- */
-export function renderPixi(component: BaseComponent, page: string, subpage: string | null = null): void {
+// TODO: Uncomment when PIXI navigation is ready
+/*
+export function renderPixi(component: BaseComponent, page: string, subpage: string | null = null): void
+{
   const app = document.querySelector('#app')!;
 
   // Check if PIXI is initialized
   const pixiState = getPixiAppState();
-  if (!pixiState.isInitialized) {
+  if (!pixiState.isInitialized)
+  {
     console.error('PIXI not initialized yet');
     return;
   }
@@ -85,15 +110,17 @@ export function renderPixi(component: BaseComponent, page: string, subpage: stri
   navigatePixiContent(page, subpage);
 
   // Call component mount if needed (for DOM overlays)
-  if (typeof component.mount === 'function') {
+  if (typeof component.mount === 'function')
+  {
     component.mount('#app');
   }
 }
+*/
 
-/**
- * Render game layout (fullscreen, no header)
- */
-export function renderGame(component: BaseComponent): void {
+// TODO: Uncomment when game components are ready
+/*
+export function renderGame(component: BaseComponent): void
+{
   const app = document.querySelector('#app')!;
 
   app.innerHTML = `
@@ -106,11 +133,12 @@ export function renderGame(component: BaseComponent): void {
 
   mountComponent(component, '#game-content');
 }
+*/
 
-/**
- * Render minimal layout (no navigation, just content)
- */
-export function renderMinimal(component: BaseComponent): void {
+// TODO: Uncomment when needed
+/*
+export function renderMinimal(component: BaseComponent): void
+{
   const app = document.querySelector('#app')!;
 
   app.innerHTML = `
@@ -122,12 +150,11 @@ export function renderMinimal(component: BaseComponent): void {
   mountComponent(component, '#minimal-content');
 }
 
-/**
- * Mount component helper
- */
-function mountComponent(component: BaseComponent, selector: string): void {
+function mountComponent(component: BaseComponent, selector: string): void
+{
   const container = document.querySelector(selector);
-  if (!container) {
+  if (!container)
+  {
     console.error(`Container ${selector} not found`);
     return;
   }
@@ -136,15 +163,18 @@ function mountComponent(component: BaseComponent, selector: string): void {
   container.innerHTML = component.render();
 
   // Call mount if component has it
-  if (typeof component.mount === 'function') {
+  if (typeof component.mount === 'function')
+  {
     component.mount(selector);
   }
 }
+*/
 
 /**
  * Show loading screen
  */
-export function showLoading(): void {
+export function showLoading(): void
+{
   const loading = document.createElement('div');
   loading.id = 'layout-loading';
   loading.className = 'fixed inset-0 bg-rpg-darker/90 flex items-center justify-center z-50';
@@ -164,9 +194,11 @@ export function showLoading(): void {
 /**
  * Hide loading screen
  */
-export function hideLoading(): void {
+export function hideLoading(): void
+{
   const loading = document.querySelector('#layout-loading');
-  if (loading) {
+  if (loading)
+  {
     loading.remove();
   }
 }
@@ -174,7 +206,8 @@ export function hideLoading(): void {
 /**
  * Show 404 page
  */
-export function show404(): void {
+export function show404(): void
+{
   const app = document.querySelector('#app')!;
   app.innerHTML = `
     <div class="min-h-screen bg-rpg-darker flex items-center justify-center" data-route-content="true">

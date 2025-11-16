@@ -35,33 +35,57 @@ export class AssetManager
 		// Asset paths configuration
 		this.assetPaths = {
 			player: {
-				spritesheet: './assets/images/player/Little_Leo64px.webp',
-				data: './assets/images/player/Little_Leo64px.json'
+				spritesheet: './assets/images/player/Little_Leo_Hero.webp',
+				data: './assets/images/player/Little_Leo_Hero.json'
 			},
 			monsters: {
+				orc1: {
+					spritesheet: './assets/images/monsters/Orc1.webp',
+					data: './assets/images/monsters/Orc1.json'
+				},
+				orc2: {
+					spritesheet: './assets/images/monsters/Orc2.webp',
+					data: './assets/images/monsters/Orc2.json'
+				},
+				orc3: {
+					spritesheet: './assets/images/monsters/Orc3.webp',
+					data: './assets/images/monsters/Orc3.json'
+				},
+				plant1: {
+					spritesheet: './assets/images/monsters/Plant1.webp',
+					data: './assets/images/monsters/Plant1.json'
+				},
+				plant2: {
+					spritesheet: './assets/images/monsters/Plant2.webp',
+					data: './assets/images/monsters/Plant2.json'
+				},
+				plant3: {
+					spritesheet: './assets/images/monsters/Plant3.webp',
+					data: './assets/images/monsters/Plant3.json'
+				},
 				slime1: {
-					spritesheet: './assets/images/monsters/Slime2/Slime1.webp',
-					data: './assets/images/monsters/Slime2/Slime1.json'
+					spritesheet: './assets/images/monsters/Slime1.webp',
+					data: './assets/images/monsters/Slime1.json'
 				},
 				slime2: {
-					spritesheet: './assets/images/monsters/Slime2/Slime2.webp',
-					data: './assets/images/monsters/Slime2/Slime2.json'
+					spritesheet: './assets/images/monsters/Slime2.webp',
+					data: './assets/images/monsters/Slime2.json'
 				},
 				slime3: {
-					spritesheet: './assets/images/monsters/Slime3/Slime3.webp',
-					data: './assets/images/monsters/Slime3/Slime3.json'
+					spritesheet: './assets/images/monsters/Slime3.webp',
+					data: './assets/images/monsters/Slime3.json'
 				},
 				vampire1: {
-					spritesheet: './assets/images/monsters/Vampires1/Vampire1.webp',
-					data: './assets/images/monsters/Vampires1/Vampire1.json'
+					spritesheet: './assets/images/monsters/Vampire1.webp',
+					data: './assets/images/monsters/Vampire1.json'
 				},
 				vampire2: {
-					spritesheet: './assets/images/monsters/Vampires2/Vampire2.webp',
-					data: './assets/images/monsters/Vampires2/Vampire2.json'
+					spritesheet: './assets/images/monsters/Vampire2.webp',
+					data: './assets/images/monsters/Vampire2.json'
 				},
 				vampire3: {
-					spritesheet: './assets/images/monsters/Vampires3/Vampire3.webp',
-					data: './assets/images/monsters/Vampires3/Vampire3.json'
+					spritesheet: './assets/images/monsters/Vampire3.webp',
+					data: './assets/images/monsters/Vampire3.json'
 				}
 			},
 			clouds_spritesheet: {

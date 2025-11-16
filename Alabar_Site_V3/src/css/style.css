@@ -2,96 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Base Styles */
-@layer base 
+/* Custom component classes - MUST be inside @layer */
+@layer components
 {
-  body 
-  {
-    @apply bg-rpg-darker text-rpg-text overflow-x-hidden;
-  }
-  
-  * 
-  {
-    @apply box-border;
-  }
-}
-
-/* Custom Component Classes */
-@layer components 
-{
-  /* Buttons */
-  .btn-pixel 
+  .btn-pixel
   {
     @apply px-6 py-3 bg-rpg-accent text-rpg-darker font-pixel text-sm uppercase 
            hover:bg-rpg-accent-hover transition-all duration-200 
-           border-2 border-rpg-darker shadow-rpg hover:shadow-rpg-lg
-           active:translate-y-0.5;
+           border-2 border-rpg-darker shadow-lg hover:shadow-xl
+           active:translate-y-1;
   }
   
-  .btn-pixel-secondary 
+  .btn-pixel-secondary
   {
     @apply px-4 py-2 bg-rpg-dark text-rpg-accent font-pixel text-xs uppercase 
-           hover:bg-rpg-medium border-2 border-rpg-accent transition-all duration-200
-           active:translate-y-0.5;
+           hover:bg-rpg-darker border-2 border-rpg-accent transition-all duration-200
+           active:translate-y-1;
   }
   
-  /* Cards */
-  .card-rpg 
+  .card-rpg
   {
     @apply bg-rpg-dark border-2 border-rpg-accent/30 rounded-lg p-6 
-           shadow-rpg hover:border-rpg-accent transition-all duration-300;
-  }
-  
-  .card-3d 
-  {
-    @apply transform-gpu transition-all duration-300
-           hover:scale-105 hover:-translate-y-2 hover:rotate-y-3;
-    transform-style: preserve-3d;
-    perspective: 1000px;
-  }
-  
-  /* Navigation */
-  .nav-link 
-  {
-    @apply font-game text-rpg-text hover:text-rpg-accent 
-           transition-colors duration-200 relative;
-  }
-  
-  .nav-link::after 
-  {
-    content: '';
-    @apply absolute bottom-0 left-0 w-0 h-0.5 bg-rpg-accent
-           transition-all duration-300;
-  }
-  
-  .nav-link:hover::after 
-  {
-    @apply w-full;
-  }
-  
-  /* Containers */
-  .container-rpg 
-  {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
-  }
-  
-  /* Text Effects */
-  .text-glow 
-  {
-    text-shadow: 0 0 20px rgba(201, 169, 97, 0.5);
-  }
-  
-  .text-3d 
-  {
-    text-shadow: 
-      1px 1px 1px rgba(0,0,0,0.5),
-      2px 2px 2px rgba(0,0,0,0.3),
-      3px 3px 3px rgba(0,0,0,0.2);
+           shadow-lg hover:border-rpg-accent transition-all duration-300;
   }
 }
 
-/* Pixi Canvas Styles */
-#pixi-mount 
+/* Pixi canvas container styles */
+#pixi-mount
 {
   position: fixed;
   top: 0;
@@ -102,89 +39,20 @@
   pointer-events: none;
 }
 
-#pixi-mount canvas 
+#pixi-mount canvas
 {
   pointer-events: auto;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
 }
 
-/* Header Styles */
-#header-mount 
+/* Ensure content overlays work properly */
+#header-mount
 {
   position: relative;
   z-index: 50;
 }
 
-/* Main App Container */
-#app 
+#app
 {
   position: relative;
   z-index: 10;
-  min-height: 100vh;
-}
-
-/* Loading Styles */
-@keyframes loading-pulse 
-{
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-.loading-pulse 
-{
-  animation: loading-pulse 2s ease-in-out infinite;
-}
-
-/* Scrollbar Styles */
-::-webkit-scrollbar 
-{
-  width: 12px;
-}
-
-::-webkit-scrollbar-track 
-{
-  @apply bg-rpg-dark;
-}
-
-::-webkit-scrollbar-thumb 
-{
-  @apply bg-rpg-accent rounded;
-}
-
-::-webkit-scrollbar-thumb:hover 
-{
-  @apply bg-rpg-accent-hover;
-}
-
-/* Game-specific styles */
-.game-container 
-{
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: all;
-}
-
-/* Damage numbers */
-.damage-text 
-{
-  @apply font-pixel text-yellow-400 pointer-events-none;
-  animation: damage-float 1s ease-out forwards;
-}
-
-@keyframes damage-float 
-{
-  0% 
-  {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
-  100% 
-  {
-    transform: translateY(-50px) scale(0.8);
-    opacity: 0;
-  }
 }
