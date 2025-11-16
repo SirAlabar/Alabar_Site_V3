@@ -141,6 +141,12 @@ export class App
       }
     };
     
+    // Set completion callback
+    this.assetManager.onComplete = () =>
+    {
+      console.log('✅ All assets loaded');
+    };
+    
     // Load all assets
     await this.assetManager.loadAll();
   }
