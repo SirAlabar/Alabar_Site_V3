@@ -11,8 +11,8 @@ import {
   showLoading,
   hideLoading,
   show404
-} from '../manager/LayoutManager';
-import { mountHeader, setupGameHeaderEvents } from '../manager/HeaderManager';
+} from '../managers/LayoutManager';
+import { mountHeader, setupGameHeaderEvents } from '../managers/HeaderManager';
 import type { RouteConfig, RouteConfigMap } from '@/utils/types';
 
 /**

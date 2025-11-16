@@ -1,15 +1,14 @@
 /**
  * App.ts - Main application singleton
- * Manages Pixi application and overall app state
- * 
- * MINIMAL VERSION - Router, AssetManager, SceneManager commented until needed
+ * Manages Pixi, AssetManager, Layout, Header, and loading flow
  */
 
 import { Application } from 'pixi.js';
-import { initLayoutManager, mountLayout } from './manager/LayoutManager';
-import { initHeaderManager, mountHeader } from './manager/HeaderManager';
+import { initLayoutManager, mountLayout } from './managers/LayoutManager';
+import { initHeaderManager, mountHeader } from './managers/HeaderManager';
+import { AssetManager } from './managers/AssetManager';
+import { LoadingUI } from './components/LoadingUI';
 // import { Router } from './router/Router';
-// import { AssetManager } from './managers/AssetManager';
 // import { SceneManager } from './managers/SceneManager';
 
 export class App
@@ -17,8 +16,9 @@ export class App
   private static instance: App;
   
   private pixiApp: Application | null = null;
+  private assetManager: AssetManager | null = null;
+  private loadingUI: LoadingUI | null = null;
   // private router: Router | null = null;
-  // private assetManager: AssetManager | null = null;
   // private sceneManager: SceneManager | null = null;
   private isInitialized = false;
   
@@ -43,8 +43,17 @@ export class App
     
     try
     {
+      // Show loading screen FIRST
+      this.showLoading();
+      
       // Initialize Pixi Application
       await this.initPixi();
+      
+      // Load all assets with progress tracking
+      await this.initAssets();
+      
+      // Show completion animation
+      await this.loadingUI?.showComplete();
       
       // Initialize Layout Manager
       this.initLayout();
@@ -52,14 +61,14 @@ export class App
       // Initialize Header Manager
       this.initHeader();
       
-      // TODO: Uncomment when AssetManager is ready
-      // await this.initAssets();
-      
       // TODO: Uncomment when SceneManager is ready
       // this.initSceneManager();
       
       // TODO: Uncomment when Router is ready
       // this.initRouter();
+      
+      // Hide loading screen
+      this.hideLoading();
       
       this.isInitialized = true;
       console.log('✅ App initialized successfully');
@@ -67,7 +76,23 @@ export class App
     catch (error)
     {
       console.error('Failed to initialize App:', error);
+      this.hideLoading();
       throw error;
+    }
+  }
+  
+  private showLoading(): void
+  {
+    this.loadingUI = new LoadingUI();
+    console.log('✅ Loading UI shown');
+  }
+  
+  private hideLoading(): void
+  {
+    if (this.loadingUI)
+    {
+      this.loadingUI.hide();
+      this.loadingUI = null;
     }
   }
   
@@ -101,6 +126,29 @@ export class App
     window.addEventListener('resize', this.handleResize.bind(this));
     
     console.log('✅ Pixi initialized');
+  }
+  
+  private async initAssets(): Promise<void>
+  {
+    this.assetManager = AssetManager.getInstance();
+    
+    // Set loading progress callback (expects 0-1 range)
+    this.assetManager.onProgress = (progress: number) =>
+    {
+      if (this.loadingUI)
+      {
+        this.loadingUI.updateProgress(progress);
+      }
+    };
+    
+    // Set completion callback
+    this.assetManager.onComplete = () =>
+    {
+      console.log('✅ All assets loaded');
+    };
+    
+    // Load all assets
+    await this.assetManager.loadAll();
   }
   
   private initLayout(): void
@@ -140,34 +188,6 @@ export class App
     */
   }
   
-  // TODO: Uncomment when AssetManager is ready
-  /*
-  private async initAssets(): Promise<void>
-  {
-    this.assetManager = AssetManager.getInstance();
-    
-    // Set loading progress callback
-    this.assetManager.onProgress = (progress: number) =>
-    {
-      this.updateLoadingProgress(progress);
-    };
-    
-    // Load all assets
-    await this.assetManager.loadAll();
-    
-    console.log('✅ Assets loaded');
-  }
-  
-  private updateLoadingProgress(progress: number): void
-  {
-    const loadingBar = document.getElementById('loading-bar');
-    if (loadingBar)
-    {
-      loadingBar.style.width = `${progress * 100}%`;
-    }
-  }
-  */
-  
   // TODO: Uncomment when SceneManager is ready
   /*
   private initSceneManager(): void
@@ -201,16 +221,16 @@ export class App
     return this.pixiApp;
   }
   
+  getAssetManager(): AssetManager | null
+  {
+    return this.assetManager;
+  }
+  
   // TODO: Uncomment when needed
   /*
   getRouter(): Router | null
   {
     return this.router;
-  }
-  
-  getAssetManager(): AssetManager | null
-  {
-    return this.assetManager;
   }
   
   getSceneManager(): SceneManager | null
