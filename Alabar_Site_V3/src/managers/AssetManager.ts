@@ -92,28 +92,22 @@ export class AssetManager
    */
   private async loadAssetBundles(): Promise<void>
   {
-    const bundles = ['player', 'monsters', 'backgrounds', 'ui', 'spritesheets'];
-    const totalBundles = bundles.length;
-    let loadedBundles = 0;
+    // Use single bundle to avoid duplicate registrations
+    const bundleName = 'game-assets';
     
-    for (const bundleName of bundles)
+    try
     {
-      try
+      const assets = await Assets.loadBundle(bundleName, (progress) =>
       {
-        const assets = await Assets.loadBundle(bundleName, (progress) =>
-        {
-          const baseProgress = 5 + (loadedBundles / totalBundles) * 70;
-          const bundleProgress = (progress / totalBundles) * 70;
-          this.updateProgress(baseProgress + bundleProgress);
-        });
-        
-        this.processLoadedAssets(bundleName, assets);
-        loadedBundles++;
-      }
-      catch (error)
-      {
-        console.error(`Failed to load bundle: ${bundleName}`, error);
-      }
+        const totalProgress = 5 + (progress * 70);
+        this.updateProgress(totalProgress);
+      });
+      
+      this.processLoadedAssets(bundleName, assets);
+    }
+    catch (error)
+    {
+      console.error(`Failed to load bundle: ${bundleName}`, error);
     }
     
     this.updateProgress(75);
@@ -126,22 +120,15 @@ export class AssetManager
   {
     return {
       bundles: [
-        // Player bundle
         {
-          name: 'player',
+          name: 'game-assets',
           assets: [
+            // Player
             {
               alias: 'player_spritesheet',
               src: '/assets/images/player/Leo_Hero.json'
-            }
-          ]
-        },
-        
-        // Monsters bundle
-        {
-          name: 'monsters',
-          assets: [
-            // Orcs
+            },
+            // Monsters - Orcs
             {
               alias: 'orc1_spritesheet',
               src: '/assets/images/monsters/Orc1.json'
@@ -154,7 +141,7 @@ export class AssetManager
               alias: 'orc3_spritesheet',
               src: '/assets/images/monsters/Orc3.json'
             },
-            // Plants
+            // Monsters - Plants
             {
               alias: 'plant1_spritesheet',
               src: '/assets/images/monsters/Plant1.json'
@@ -167,7 +154,7 @@ export class AssetManager
               alias: 'plant3_spritesheet',
               src: '/assets/images/monsters/Plant3.json'
             },
-            // Slimes
+            // Monsters - Slimes
             {
               alias: 'slime1_spritesheet',
               src: '/assets/images/monsters/Slime1.json'
@@ -180,7 +167,7 @@ export class AssetManager
               alias: 'slime3_spritesheet',
               src: '/assets/images/monsters/Slime3.json'
             },
-            // Vampires
+            // Monsters - Vampires
             {
               alias: 'vampire1_spritesheet',
               src: '/assets/images/monsters/Vampire1.json'
@@ -192,15 +179,13 @@ export class AssetManager
             {
               alias: 'vampire3_spritesheet',
               src: '/assets/images/monsters/Vampire3.json'
-            }
-          ]
-        },
-        
-        // Background assets bundle
-        {
-          name: 'backgrounds',
-          assets: [
-            // Light theme backgrounds
+            },
+            // Clouds
+            {
+              alias: 'clouds_spritesheet',
+              src: '/assets/images/background/light/clouds.json'
+            },
+            // Background assets - Light theme
             {
               alias: 'bg_light_mountain',
               src: '/assets/images/background/light/mountain.webp'
@@ -237,7 +222,7 @@ export class AssetManager
               alias: 'bg_light_field7',
               src: '/assets/images/background/light/field7.webp'
             },
-            // Dark theme backgrounds
+            // Background assets - Dark theme
             {
               alias: 'bg_dark_background',
               src: '/assets/images/background/dark/background_night.webp'
@@ -281,14 +266,8 @@ export class AssetManager
             {
               alias: 'bg_dark_field7',
               src: '/assets/images/background/dark/field7_night.webp'
-            }
-          ]
-        },
-        
-        // UI assets bundle
-        {
-          name: 'ui',
-          assets: [
+            },
+            // UI assets
             {
               alias: 'avatar',
               src: '/assets/images/Avatar_Profile_64px.gif'
@@ -310,17 +289,6 @@ export class AssetManager
               src: '/assets/images/cursor_night.png'
             }
           ]
-        },
-        
-        // Spritesheets bundle (clouds)
-        {
-          name: 'spritesheets',
-          assets: [
-            {
-              alias: 'clouds_spritesheet',
-              src: '/assets/images/background/light/clouds.json'
-            }
-          ]
         }
       ]
     };
@@ -333,6 +301,18 @@ export class AssetManager
   {
     for (const [alias, asset] of Object.entries(assets))
     {
+      // Skip file paths (contain '/')
+      if (alias.includes('/'))
+      {
+        continue;
+      }
+      
+      // Skip bundle-prefixed aliases (e.g., 'game-assets-player_spritesheet')
+      if (alias.includes('-'))
+      {
+        continue;
+      }
+      
       if (asset instanceof Texture)
       {
         this.textures.set(alias, asset);
@@ -343,7 +323,7 @@ export class AssetManager
       }
     }
     
-    console.log(`✅ Loaded bundle: ${bundleName} (${Object.keys(assets).length} assets)`);
+    console.log(`✅ Loaded bundle: ${bundleName} (${this.textures.size} textures, ${this.spritesheets.size} spritesheets)`);
   }
   
   /**
@@ -362,17 +342,10 @@ export class AssetManager
     
     for (const alias of spritesheetAliases)
     {
-      try
+      // Check if already in our map 
+      if (!this.spritesheets.has(alias))
       {
-        const spritesheet = await Assets.get(alias);
-        if (spritesheet && spritesheet instanceof Spritesheet)
-        {
-          this.spritesheets.set(alias, spritesheet);
-        }
-      }
-      catch (error)
-      {
-        console.warn(`Could not load spritesheet: ${alias}`, error);
+        console.warn(`Spritesheet ${alias} not found in loaded assets`);
       }
     }
     
@@ -426,6 +399,22 @@ export class AssetManager
   
   /**
    * Get sprite frames from a spritesheet
+   * 
+   * IMPORTANT: Always use this method to get frames!
+   * Don't use Assets.cache.get() directly for individual frames
+   * because multiple spritesheets have frames with the same names
+   * (e.g., all monsters have "atk_down_0", "death_down_0", etc.)
+   * 
+   * HOWEVER: After running fix-spritesheet-names.js, frames have unique names
+   * and can be accessed directly via Assets.cache for better performance!
+   * 
+   * Example (after fix):
+   *   const frame = Assets.cache.get('Orc1_atk_down_0');
+   *   const frame2 = Assets.cache.get('Orc2_atk_down_0');
+   * 
+   * Example (using this method):
+   *   const orc1Frames = assetManager.getSpriteFrames('orc1_spritesheet');
+   *   const orc2Frames = assetManager.getSpriteFrames('orc2_spritesheet');
    */
   getSpriteFrames(spritesheetAlias: string): Texture[]
   {
@@ -437,6 +426,27 @@ export class AssetManager
     
     console.warn(`No frames found for spritesheet: ${spritesheetAlias}`);
     return [];
+  }
+  
+  /**
+   * Get a specific frame from a spritesheet by frame name
+   * 
+   * Example (before fix-spritesheet-names.js):
+   *   const frame = assetManager.getSpriteFrame('orc1_spritesheet', 'atk_down_0');
+   * 
+   * Example (after fix-spritesheet-names.js - use cache directly instead):
+   *   const frame = Assets.cache.get('Orc1_atk_down_0'); // Better performance!
+   */
+  getSpriteFrame(spritesheetAlias: string, frameName: string): Texture | null
+  {
+    const spritesheet = this.getSpritesheet(spritesheetAlias);
+    if (spritesheet && spritesheet.textures && spritesheet.textures[frameName])
+    {
+      return spritesheet.textures[frameName];
+    }
+    
+    console.warn(`Frame "${frameName}" not found in spritesheet: ${spritesheetAlias}`);
+    return null;
   }
   
   /**
@@ -488,4 +498,5 @@ export class AssetManager
   {
     return this.isLoaded;
   }
+  
 }
