@@ -46,7 +46,10 @@ export class App
     {
       // Show loading screen FIRST
       this.showLoading();
-      
+
+      // Initialize Layout Manager
+      this.initLayout();
+
       // Initialize Pixi Application
       await this.initPixi();
       
@@ -55,9 +58,6 @@ export class App
       
       // Show completion animation
       await this.loadingUI?.showComplete();
-      
-      // Initialize Layout Manager
-      this.initLayout();
       
       // Initialize Header Manager
       this.initHeader();

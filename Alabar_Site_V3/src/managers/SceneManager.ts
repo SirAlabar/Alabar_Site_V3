@@ -31,6 +31,9 @@ export class SceneManager
   // Layer configuration
   private layerConfig: LayerConfig[];
   
+  // Store bound listener for cleanup
+  private boundThemeToggleListener: (() => void) | null = null;
+  
   constructor(assetManager: AssetManager, cloudsManager?: CloudsManager)
   {
     // PIXI references - will be set by setBackgroundGroup
@@ -61,8 +64,8 @@ export class SceneManager
       { id: 'field1', zIndex: -2 }
     ];
     
-    // Set up theme toggle button listeners
-    this.setupThemeToggle();
+    // Listen for theme toggle events from Header
+    this.setupThemeToggleListener();
     
     // Resize listener to update scaling when window size changes
     window.addEventListener('resize', this.handleResize.bind(this));
@@ -207,18 +210,11 @@ export class SceneManager
     this.currentTheme = theme;
     localStorage.setItem('theme', theme);
     
-    // Update the toggle button
-    const themeToggle = document.getElementById('theme-toggle');
-    if (themeToggle)
-    {
-      themeToggle.textContent = theme === 'light' ? '🌚' : '🌞';
-    }
+    // Update the toggle button emoji
+    this.updateThemeButton(theme);
     
-    const themeToggleMobile = document.getElementById('theme-toggle-mobile');
-    if (themeToggleMobile)
-    {
-      themeToggleMobile.textContent = theme === 'light' ? '🌚' : '🌞';
-    }
+    // Update body attribute for CSS
+    document.body.setAttribute('data-theme', theme);
   }
   
   // Set up the background layer (color or image)
@@ -339,36 +335,35 @@ export class SceneManager
   {
     const newTheme: Theme = this.currentTheme === 'light' ? 'dark' : 'light';
     this.applyTheme(newTheme);
-    
-    // Update body attribute for CSS
-    document.body.setAttribute('data-theme', newTheme);
   }
   
-  // Set up the theme toggle button listeners
-  setupThemeToggle(): void
+  // Update theme toggle button emoji
+  updateThemeButton(theme: Theme): void
   {
-    // Desktop toggle
+    const emoji = theme === 'light' ? '🌚' : '🌞';
+    
     const themeToggle = document.getElementById('theme-toggle');
     if (themeToggle)
     {
-      themeToggle.addEventListener('click', () =>
-      {
-        this.toggleTheme();
-      });
+      themeToggle.textContent = emoji;
     }
     
-    // Mobile toggle
     const themeToggleMobile = document.getElementById('theme-toggle-mobile');
     if (themeToggleMobile)
     {
-      themeToggleMobile.addEventListener('click', () =>
-      {
-        this.toggleTheme();
-      });
+      themeToggleMobile.textContent = emoji;
     }
+  }
+  
+  // Set up listener for theme toggle events from Header
+  setupThemeToggleListener(): void
+  {
+    this.boundThemeToggleListener = () =>
+    {
+      this.toggleTheme();
+    };
     
-    // Apply initial theme to body
-    document.body.setAttribute('data-theme', this.currentTheme);
+    window.addEventListener('theme:toggle', this.boundThemeToggleListener);
   }
   
   // Apply scaling to maintain 2:1 ratio for all devices
@@ -422,7 +417,7 @@ export class SceneManager
     if (maxLayerHeight > 0)
     {
       // Adjust scene height to contain image
-      const sceneElement = document.getElementById('main-scene');
+      const sceneElement = document.getElementById('pixi-mount');
       if (sceneElement)
       {
         sceneElement.style.height = maxLayerHeight + 'px';
@@ -517,6 +512,12 @@ export class SceneManager
   {
     // Remove event listeners
     window.removeEventListener('resize', this.handleResize.bind(this));
+    
+    if (this.boundThemeToggleListener)
+    {
+      window.removeEventListener('theme:toggle', this.boundThemeToggleListener);
+      this.boundThemeToggleListener = null;
+    }
     
     // Destroy CloudsManager
     if (this.cloudsManager)

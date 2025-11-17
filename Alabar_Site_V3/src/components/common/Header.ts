@@ -169,6 +169,34 @@ export class Header
       mobileMenuBtn.addEventListener('click', toggleMenu);
       this.listeners.set('mobile-menu-toggle', toggleMenu);
     }
+
+    // Theme toggle - Desktop
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle)
+    {
+      const handleThemeToggle = () =>
+      {
+        // Dispatch custom event for SceneManager to handle
+        window.dispatchEvent(new CustomEvent('theme:toggle'));
+      };
+
+      themeToggle.addEventListener('click', handleThemeToggle);
+      this.listeners.set('theme-toggle', handleThemeToggle);
+    }
+
+    // Theme toggle - Mobile
+    const themeToggleMobile = document.getElementById('theme-toggle-mobile');
+    if (themeToggleMobile)
+    {
+      const handleThemeToggleMobile = () =>
+      {
+        // Dispatch custom event for SceneManager to handle
+        window.dispatchEvent(new CustomEvent('theme:toggle'));
+      };
+
+      themeToggleMobile.addEventListener('click', handleThemeToggleMobile);
+      this.listeners.set('theme-toggle-mobile', handleThemeToggleMobile);
+    }
   }
 
   /**
@@ -181,6 +209,22 @@ export class Header
       if (key === 'mobile-menu-toggle')
       {
         const btn = document.getElementById('mobile-menu-btn');
+        if (btn)
+        {
+          btn.removeEventListener('click', listener);
+        }
+      }
+      else if (key === 'theme-toggle')
+      {
+        const btn = document.getElementById('theme-toggle');
+        if (btn)
+        {
+          btn.removeEventListener('click', listener);
+        }
+      }
+      else if (key === 'theme-toggle-mobile')
+      {
+        const btn = document.getElementById('theme-toggle-mobile');
         if (btn)
         {
           btn.removeEventListener('click', listener);

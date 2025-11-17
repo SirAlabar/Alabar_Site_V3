@@ -580,7 +580,7 @@ export class CloudsManager
    */
   private getSceneHeight(): number
   {
-    const sceneElement = document.getElementById('main-scene');
+    const sceneElement = document.getElementById('pixi-mount');
     if (sceneElement)
     {
       return sceneElement.clientHeight;
@@ -626,7 +626,7 @@ export class CloudsManager
       // Fallback to element size comparison
       if (scaleFactor === 1.0)
       {
-        const sceneElement = document.getElementById('main-scene');
+        const sceneElement = document.getElementById('pixi-mount');
         if (sceneElement)
         {
           // Get height ratio compared to window

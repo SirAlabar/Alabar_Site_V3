@@ -7,7 +7,7 @@ export class ContactPage
   render(): string 
   {
     return `
-      <div class="container-rpg py-20">
+      <div class="container-rpg py-2">
         <header class="text-center mb-12">
           <h1 class="font-pixel text-4xl text-rpg-accent mb-4">CONTACT</h1>
           <p class="font-game text-xl text-rpg-text">Let's connect and create something amazing</p>
@@ -48,40 +48,6 @@ export class ContactPage
               <button class="btn-pixel w-full" id="send-message">
                 SEND MESSAGE
               </button>
-            </div>
-          </div>
-          
-          <!-- Social Links -->
-          <div class="card-rpg">
-            <h2 class="font-pixel text-2xl text-rpg-accent mb-6">Connect</h2>
-            <div class="grid grid-cols-2 gap-4">
-              <a href="https://github.com" target="_blank" class="social-link">
-                <div class="bg-rpg-darker p-4 rounded text-center hover:bg-rpg-medium transition-colors">
-                  <div class="text-3xl mb-2">⚔️</div>
-                  <span class="font-pixel text-xs text-rpg-accent">GITHUB</span>
-                </div>
-              </a>
-              
-              <a href="https://linkedin.com" target="_blank" class="social-link">
-                <div class="bg-rpg-darker p-4 rounded text-center hover:bg-rpg-medium transition-colors">
-                  <div class="text-3xl mb-2">🛡️</div>
-                  <span class="font-pixel text-xs text-rpg-accent">LINKEDIN</span>
-                </div>
-              </a>
-              
-              <a href="mailto:contact@alabar.dev" class="social-link">
-                <div class="bg-rpg-darker p-4 rounded text-center hover:bg-rpg-medium transition-colors">
-                  <div class="text-3xl mb-2">📜</div>
-                  <span class="font-pixel text-xs text-rpg-accent">EMAIL</span>
-                </div>
-              </a>
-              
-              <a href="https://discord.com" target="_blank" class="social-link">
-                <div class="bg-rpg-darker p-4 rounded text-center hover:bg-rpg-medium transition-colors">
-                  <div class="text-3xl mb-2">🏰</div>
-                  <span class="font-pixel text-xs text-rpg-accent">DISCORD</span>
-                </div>
-              </a>
             </div>
           </div>
         </div>

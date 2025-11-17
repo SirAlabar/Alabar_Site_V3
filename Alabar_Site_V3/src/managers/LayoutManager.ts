@@ -3,7 +3,7 @@
  * MINIMAL VERSION - BaseComponent and PixiInitializer features commented until ready
  */
 
-// import { BaseComponent } from './components/BaseComponent';
+import { BaseComponent } from '../components/BaseComponent';
 import { Layout } from '../components/common/Layout';
 // import { getPixiAppState, navigatePixiContent } from './pixi/PixiInitializer';
 
@@ -35,8 +35,7 @@ export function mountLayout(): void
   }
 }
 
-// TODO: Uncomment when BaseComponent is ready
-/*
+
 export function renderDefault(component: BaseComponent): void
 {
   const headerMount = document.querySelector('#header-mount');
@@ -68,7 +67,7 @@ export function renderDefault(component: BaseComponent): void
     }
     else
     {
-      contentMountAfter.className = 'flex-1 flex flex-col pt-20';
+      contentMountAfter.className = 'flex-1 flex flex-col';
       contentMountAfter.innerHTML = layout.renderPageSection(
         'page-content',
         component.render(),
@@ -83,7 +82,7 @@ export function renderDefault(component: BaseComponent): void
     component.mount('#content-mount');
   }
 }
-*/
+
 
 // TODO: Uncomment when PIXI navigation is ready
 /*

@@ -7,7 +7,7 @@ export class AboutPage
   render(): string 
   {
     return `
-      <div class="container-rpg py-20">
+      <div class="container-rpg py-2">
         <header class="text-center mb-12">
           <h1 class="font-pixel text-4xl text-rpg-accent mb-4">ABOUT ME</h1>
           <p class="font-game text-xl text-rpg-text">Software Developer & Game Enthusiast</p>

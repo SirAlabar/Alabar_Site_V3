@@ -1,6 +1,6 @@
 /**
  * Layout Component - Base layout structure
- * Creates the skeleton: header mount + content mount
+ * Creates the skeleton: Pixi scene + header mount + content mount
  */
 
 export class Layout
@@ -22,15 +22,20 @@ export class Layout
 
   /**
    * Render layout HTML structure
+   * SPA structure: Pixi background persists, only content changes
    */
   render(): string
   {
     return `
-      <div class="flex flex-col min-h-screen">
-        <!-- Header mount point -->
+      <!-- Pixi.js Background Scene (NEVER CHANGES) -->
+      <div id="pixi-mount" class="fixed inset-0 z-0"></div>
+      
+      <!-- DOM Content Layer (sits above Pixi) -->
+      <div class="relative z-10 flex flex-col min-h-screen">
+        <!-- Header mount point (NEVER CHANGES) -->
         <div id="header-mount"></div>
         
-        <!-- Content mount point -->
+        <!-- Content mount point (CHANGES ON ROUTE) -->
         <div id="content-mount" class="flex-1"></div>
       </div>
     `;
