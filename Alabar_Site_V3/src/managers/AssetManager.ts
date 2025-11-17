@@ -5,6 +5,25 @@
 
 import { Assets, Texture, Spritesheet } from 'pixi.js';
 
+type MonsterInfo = { spritesheet: string; data: string };
+
+interface AssetPaths
+{
+  player: { spritesheet: string; data: string };
+  monsters: Record<string, MonsterInfo>;
+  clouds: { spritesheet: string; data: string };
+  backgrounds: {
+    light: { backgroundColor: string; [key: string]: string };
+    dark: { backgroundColor: string; [key: string]: string };
+  };
+  ui: {
+    avatar: string;
+    github: string;
+    linkedin: string;
+    cursors: { light: string; dark: string };
+  };
+}
+
 export class AssetManager
 {
   private static instance: AssetManager;
@@ -18,6 +37,105 @@ export class AssetManager
   private spritesheets: Map<string, Spritesheet> = new Map();
   private isLoading: boolean = false;
   private isLoaded: boolean = false;
+  
+  // Asset paths configuration
+  private assetPaths: AssetPaths = {
+    player: {
+      spritesheet: '/assets/images/player/Leo_Hero.webp',
+      data: '/assets/images/player/Leo_Hero.json'
+    },
+    monsters: {
+      orc1: {
+        spritesheet: '/assets/images/monsters/Orc1.webp',
+        data: '/assets/images/monsters/Orc1.json'
+      },
+      orc2: {
+        spritesheet: '/assets/images/monsters/Orc2.webp',
+        data: '/assets/images/monsters/Orc2.json'
+      },
+      orc3: {
+        spritesheet: '/assets/images/monsters/Orc3.webp',
+        data: '/assets/images/monsters/Orc3.json'
+      },
+      plant1: {
+        spritesheet: '/assets/images/monsters/Plant1.webp',
+        data: '/assets/images/monsters/Plant1.json'
+      },
+      plant2: {
+        spritesheet: '/assets/images/monsters/Plant2.webp',
+        data: '/assets/images/monsters/Plant2.json'
+      },
+      plant3: {
+        spritesheet: '/assets/images/monsters/Plant3.webp',
+        data: '/assets/images/monsters/Plant3.json'
+      },
+      slime1: {
+        spritesheet: '/assets/images/monsters/Slime1.webp',
+        data: '/assets/images/monsters/Slime1.json'
+      },
+      slime2: {
+        spritesheet: '/assets/images/monsters/Slime2.webp',
+        data: '/assets/images/monsters/Slime2.json'
+      },
+      slime3: {
+        spritesheet: '/assets/images/monsters/Slime3.webp',
+        data: '/assets/images/monsters/Slime3.json'
+      },
+      vampire1: {
+        spritesheet: '/assets/images/monsters/Vampire1.webp',
+        data: '/assets/images/monsters/Vampire1.json'
+      },
+      vampire2: {
+        spritesheet: '/assets/images/monsters/Vampire2.webp',
+        data: '/assets/images/monsters/Vampire2.json'
+      },
+      vampire3: {
+        spritesheet: '/assets/images/monsters/Vampire3.webp',
+        data: '/assets/images/monsters/Vampire3.json'
+      }
+    },
+    clouds: {
+      spritesheet: '/assets/images/background/light/clouds.webp',
+      data: '/assets/images/background/light/clouds.json'
+    },
+    backgrounds: {
+      light: {
+        backgroundColor: '#87CEEB',
+        mountain: '/assets/images/background/light/mountain.webp',
+        castle: '/assets/images/background/light/castle.webp',
+        field1: '/assets/images/background/light/field1.webp',
+        field2: '/assets/images/background/light/field2.webp',
+        field3: '/assets/images/background/light/field3.webp',
+        field4: '/assets/images/background/light/field4.webp',
+        field5: '/assets/images/background/light/field5.webp',
+        field6: '/assets/images/background/light/field6.webp',
+        field7: '/assets/images/background/light/field7.webp'
+      },
+      dark: {
+        backgroundColor: '#191970',
+        background: '/assets/images/background/dark/background_night.webp',
+        mountain: '/assets/images/background/dark/mountain_night.webp',
+        moon: '/assets/images/background/dark/moon_night.webp',
+        castle: '/assets/images/background/dark/castle_night.webp',
+        field1: '/assets/images/background/dark/field1_night.webp',
+        field2: '/assets/images/background/dark/field2_night.webp',
+        field3: '/assets/images/background/dark/field3_night.webp',
+        field4: '/assets/images/background/dark/field4_night.webp',
+        field5: '/assets/images/background/dark/field5_night.webp',
+        field6: '/assets/images/background/dark/field6_night.webp',
+        field7: '/assets/images/background/dark/field7_night.webp'
+      }
+    },
+    ui: {
+      avatar: '/assets/images/Avatar_Profile_64px.gif',
+      github: '/assets/images/github_logo.png',
+      linkedin: '/assets/images/linkedin_logo.png',
+      cursors: {
+        light: '/assets/images/cursor_light.png',
+        dark: '/assets/images/cursor_night.png'
+      }
+    }
+  };
   
   private constructor() {}
   
@@ -92,7 +210,6 @@ export class AssetManager
    */
   private async loadAssetBundles(): Promise<void>
   {
-    // Use single bundle to avoid duplicate registrations
     const bundleName = 'game-assets';
     
     try
@@ -118,177 +235,67 @@ export class AssetManager
    */
   private createManifest(): any
   {
+    const assets: any[] = [];
+    
+    // Player spritesheet
+    assets.push({
+      alias: 'player_spritesheet',
+      src: this.assetPaths.player.data
+    });
+    
+    // Monster spritesheets
+    for (const [key, monster] of Object.entries(this.assetPaths.monsters))
+    {
+      assets.push({
+        alias: `${key}_spritesheet`,
+        src: monster.data
+      });
+    }
+    
+    // Clouds spritesheet
+    assets.push({
+      alias: 'clouds_spritesheet',
+      src: this.assetPaths.clouds.data
+    });
+    
+    // Light background textures (plain images, no JSON)
+    for (const [key, path] of Object.entries(this.assetPaths.backgrounds.light))
+    {
+      if (key !== 'backgroundColor')
+      {
+        assets.push({
+          alias: `bg_light_${key}`,
+          src: path
+        });
+      }
+    }
+    
+    // Dark background textures (plain images, no JSON)
+    for (const [key, path] of Object.entries(this.assetPaths.backgrounds.dark))
+    {
+      if (key !== 'backgroundColor')
+      {
+        assets.push({
+          alias: `bg_dark_${key}`,
+          src: path
+        });
+      }
+    }
+    
+    // UI assets (plain images)
+    assets.push(
+      { alias: 'avatar', src: this.assetPaths.ui.avatar },
+      { alias: 'github_logo', src: this.assetPaths.ui.github },
+      { alias: 'linkedin_logo', src: this.assetPaths.ui.linkedin },
+      { alias: 'cursor_light', src: this.assetPaths.ui.cursors.light },
+      { alias: 'cursor_night', src: this.assetPaths.ui.cursors.dark }
+    );
+    
     return {
       bundles: [
         {
           name: 'game-assets',
-          assets: [
-            // Player
-            {
-              alias: 'player_spritesheet',
-              src: '/assets/images/player/Leo_Hero.json'
-            },
-            // Monsters - Orcs
-            {
-              alias: 'orc1_spritesheet',
-              src: '/assets/images/monsters/Orc1.json'
-            },
-            {
-              alias: 'orc2_spritesheet',
-              src: '/assets/images/monsters/Orc2.json'
-            },
-            {
-              alias: 'orc3_spritesheet',
-              src: '/assets/images/monsters/Orc3.json'
-            },
-            // Monsters - Plants
-            {
-              alias: 'plant1_spritesheet',
-              src: '/assets/images/monsters/Plant1.json'
-            },
-            {
-              alias: 'plant2_spritesheet',
-              src: '/assets/images/monsters/Plant2.json'
-            },
-            {
-              alias: 'plant3_spritesheet',
-              src: '/assets/images/monsters/Plant3.json'
-            },
-            // Monsters - Slimes
-            {
-              alias: 'slime1_spritesheet',
-              src: '/assets/images/monsters/Slime1.json'
-            },
-            {
-              alias: 'slime2_spritesheet',
-              src: '/assets/images/monsters/Slime2.json'
-            },
-            {
-              alias: 'slime3_spritesheet',
-              src: '/assets/images/monsters/Slime3.json'
-            },
-            // Monsters - Vampires
-            {
-              alias: 'vampire1_spritesheet',
-              src: '/assets/images/monsters/Vampire1.json'
-            },
-            {
-              alias: 'vampire2_spritesheet',
-              src: '/assets/images/monsters/Vampire2.json'
-            },
-            {
-              alias: 'vampire3_spritesheet',
-              src: '/assets/images/monsters/Vampire3.json'
-            },
-            // Clouds
-            {
-              alias: 'clouds_spritesheet',
-              src: '/assets/images/background/light/clouds.json'
-            },
-            // Background assets - Light theme
-            {
-              alias: 'bg_light_mountain',
-              src: '/assets/images/background/light/mountain.webp'
-            },
-            {
-              alias: 'bg_light_castle',
-              src: '/assets/images/background/light/castle.webp'
-            },
-            {
-              alias: 'bg_light_field1',
-              src: '/assets/images/background/light/field1.webp'
-            },
-            {
-              alias: 'bg_light_field2',
-              src: '/assets/images/background/light/field2.webp'
-            },
-            {
-              alias: 'bg_light_field3',
-              src: '/assets/images/background/light/field3.webp'
-            },
-            {
-              alias: 'bg_light_field4',
-              src: '/assets/images/background/light/field4.webp'
-            },
-            {
-              alias: 'bg_light_field5',
-              src: '/assets/images/background/light/field5.webp'
-            },
-            {
-              alias: 'bg_light_field6',
-              src: '/assets/images/background/light/field6.webp'
-            },
-            {
-              alias: 'bg_light_field7',
-              src: '/assets/images/background/light/field7.webp'
-            },
-            // Background assets - Dark theme
-            {
-              alias: 'bg_dark_background',
-              src: '/assets/images/background/dark/background_night.webp'
-            },
-            {
-              alias: 'bg_dark_mountain',
-              src: '/assets/images/background/dark/mountain_night.webp'
-            },
-            {
-              alias: 'bg_dark_moon',
-              src: '/assets/images/background/dark/moon_night.webp'
-            },
-            {
-              alias: 'bg_dark_castle',
-              src: '/assets/images/background/dark/castle_night.webp'
-            },
-            {
-              alias: 'bg_dark_field1',
-              src: '/assets/images/background/dark/field1_night.webp'
-            },
-            {
-              alias: 'bg_dark_field2',
-              src: '/assets/images/background/dark/field2_night.webp'
-            },
-            {
-              alias: 'bg_dark_field3',
-              src: '/assets/images/background/dark/field3_night.webp'
-            },
-            {
-              alias: 'bg_dark_field4',
-              src: '/assets/images/background/dark/field4_night.webp'
-            },
-            {
-              alias: 'bg_dark_field5',
-              src: '/assets/images/background/dark/field5_night.webp'
-            },
-            {
-              alias: 'bg_dark_field6',
-              src: '/assets/images/background/dark/field6_night.webp'
-            },
-            {
-              alias: 'bg_dark_field7',
-              src: '/assets/images/background/dark/field7_night.webp'
-            },
-            // UI assets
-            {
-              alias: 'avatar',
-              src: '/assets/images/Avatar_Profile_64px.gif'
-            },
-            {
-              alias: 'github_logo',
-              src: '/assets/images/github_logo.png'
-            },
-            {
-              alias: 'linkedin_logo',
-              src: '/assets/images/linkedin_logo.png'
-            },
-            {
-              alias: 'cursor_light',
-              src: '/assets/images/cursor_light.png'
-            },
-            {
-              alias: 'cursor_night',
-              src: '/assets/images/cursor_night.png'
-            }
-          ]
+          assets: assets
         }
       ]
     };
@@ -307,7 +314,7 @@ export class AssetManager
         continue;
       }
       
-      // Skip bundle-prefixed aliases (e.g., 'game-assets-player_spritesheet')
+      // Skip bundle-prefixed aliases
       if (alias.includes('-'))
       {
         continue;
@@ -333,16 +340,12 @@ export class AssetManager
   {
     const spritesheetAliases = [
       'player_spritesheet',
-      'orc1_spritesheet', 'orc2_spritesheet', 'orc3_spritesheet',
-      'plant1_spritesheet', 'plant2_spritesheet', 'plant3_spritesheet',
-      'slime1_spritesheet', 'slime2_spritesheet', 'slime3_spritesheet',
-      'vampire1_spritesheet', 'vampire2_spritesheet', 'vampire3_spritesheet',
-      'clouds_spritesheet'
+      'clouds_spritesheet',
+      ...Object.keys(this.assetPaths.monsters).map(key => `${key}_spritesheet`)
     ];
     
     for (const alias of spritesheetAliases)
     {
-      // Check if already in our map 
       if (!this.spritesheets.has(alias))
       {
         console.warn(`Spritesheet ${alias} not found in loaded assets`);
@@ -361,7 +364,7 @@ export class AssetManager
     
     if (this.onProgress)
     {
-      this.onProgress(clampedProgress / 100); // Convert to 0-1 for LoadingUI
+      this.onProgress(clampedProgress / 100);
     }
   }
   
@@ -399,22 +402,6 @@ export class AssetManager
   
   /**
    * Get sprite frames from a spritesheet
-   * 
-   * IMPORTANT: Always use this method to get frames!
-   * Don't use Assets.cache.get() directly for individual frames
-   * because multiple spritesheets have frames with the same names
-   * (e.g., all monsters have "atk_down_0", "death_down_0", etc.)
-   * 
-   * HOWEVER: After running fix-spritesheet-names.js, frames have unique names
-   * and can be accessed directly via Assets.cache for better performance!
-   * 
-   * Example (after fix):
-   *   const frame = Assets.cache.get('Orc1_atk_down_0');
-   *   const frame2 = Assets.cache.get('Orc2_atk_down_0');
-   * 
-   * Example (using this method):
-   *   const orc1Frames = assetManager.getSpriteFrames('orc1_spritesheet');
-   *   const orc2Frames = assetManager.getSpriteFrames('orc2_spritesheet');
    */
   getSpriteFrames(spritesheetAlias: string): Texture[]
   {
@@ -430,12 +417,6 @@ export class AssetManager
   
   /**
    * Get a specific frame from a spritesheet by frame name
-   * 
-   * Example (before fix-spritesheet-names.js):
-   *   const frame = assetManager.getSpriteFrame('orc1_spritesheet', 'atk_down_0');
-   * 
-   * Example (after fix-spritesheet-names.js - use cache directly instead):
-   *   const frame = Assets.cache.get('Orc1_atk_down_0'); // Better performance!
    */
   getSpriteFrame(spritesheetAlias: string, frameName: string): Texture | null
   {
@@ -488,7 +469,11 @@ export class AssetManager
    */
   getBackgroundColor(theme: 'light' | 'dark'): number
   {
-    return theme === 'light' ? 0x87CEEB : 0x191970;
+    const colorHex = theme === 'light' 
+      ? this.assetPaths.backgrounds.light.backgroundColor 
+      : this.assetPaths.backgrounds.dark.backgroundColor;
+    
+    return parseInt(colorHex.replace('#', ''), 16);
   }
   
   /**
@@ -499,4 +484,11 @@ export class AssetManager
     return this.isLoaded;
   }
   
+  /**
+   * Get asset paths configuration
+   */
+  getAssetPaths(): AssetPaths
+  {
+    return this.assetPaths;
+  }
 }

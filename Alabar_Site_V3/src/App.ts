@@ -3,13 +3,14 @@
  * Manages Pixi, AssetManager, Layout, Header, and loading flow
  */
 
-import { Application } from 'pixi.js';
+import { Application, Container } from 'pixi.js';
 import { initLayoutManager, mountLayout } from './managers/LayoutManager';
 import { initHeaderManager, mountHeader } from './managers/HeaderManager';
 import { AssetManager } from './managers/AssetManager';
 import { LoadingUI } from './components/LoadingUI';
-// import { Router } from './router/Router';
-// import { SceneManager } from './managers/SceneManager';
+import { Router } from './router/Router';
+import { SceneManager } from './managers/SceneManager';
+import { CloudsManager } from './managers/CloudsManager';
 
 export class App
 {
@@ -18,8 +19,8 @@ export class App
   private pixiApp: Application | null = null;
   private assetManager: AssetManager | null = null;
   private loadingUI: LoadingUI | null = null;
-  // private router: Router | null = null;
-  // private sceneManager: SceneManager | null = null;
+  private router: Router | null = null;
+  private sceneManager: SceneManager | null = null;
   private isInitialized = false;
   
   private constructor() {}
@@ -61,17 +62,17 @@ export class App
       // Initialize Header Manager
       this.initHeader();
       
-      // TODO: Uncomment when SceneManager is ready
-      // this.initSceneManager();
+      // Initialize Scene Manager (Pixi backgrounds)
+      this.initSceneManager();
       
-      // TODO: Uncomment when Router is ready
-      // this.initRouter();
+      // Initialize Router
+      this.initRouter();
       
       // Hide loading screen
       this.hideLoading();
       
       this.isInitialized = true;
-      console.log('✅ App initialized successfully');
+      console.log('[OK] App initialized successfully');
     }
     catch (error)
     {
@@ -84,7 +85,7 @@ export class App
   private showLoading(): void
   {
     this.loadingUI = new LoadingUI();
-    console.log('✅ Loading UI shown');
+    console.log('[OK] Loading UI shown');
   }
   
   private hideLoading(): void
@@ -125,7 +126,7 @@ export class App
     // Handle window resize
     window.addEventListener('resize', this.handleResize.bind(this));
     
-    console.log('✅ Pixi initialized');
+    console.log('[OK] Pixi initialized');
   }
   
   private async initAssets(): Promise<void>
@@ -144,7 +145,7 @@ export class App
     // Set completion callback
     this.assetManager.onComplete = () =>
     {
-      console.log('✅ All assets loaded');
+      console.log('[OK] All assets loaded');
     };
     
     // Load all assets
@@ -159,7 +160,7 @@ export class App
     // Mount the layout structure (#header-mount, #content-mount)
     mountLayout();
     
-    console.log('✅ Layout Manager initialized');
+    console.log('[OK] Layout Manager initialized');
   }
   
   private initHeader(): void
@@ -170,7 +171,7 @@ export class App
     // Mount default header
     mountHeader('default');
     
-    console.log('✅ Header Manager initialized');
+    console.log('[OK] Header Manager initialized');
   }
   
   private handleResize(): void
@@ -179,17 +180,12 @@ export class App
     
     this.pixiApp.renderer.resize(window.innerWidth, window.innerHeight);
     
-    // TODO: Uncomment when SceneManager is ready
-    /*
     if (this.sceneManager)
     {
-      this.sceneManager.handleResize(window.innerWidth, window.innerHeight);
+      this.sceneManager.handleResize();
     }
-    */
   }
   
-  // TODO: Uncomment when SceneManager is ready
-  /*
   private initSceneManager(): void
   {
     if (!this.pixiApp)
@@ -197,23 +193,39 @@ export class App
       throw new Error('Pixi app not initialized');
     }
     
-    this.sceneManager = SceneManager.getInstance();
-    this.sceneManager.initialize(this.pixiApp);
+    // Create background group container
+    const backgroundGroup = new Container();
+    backgroundGroup.zIndex = -10;
+    backgroundGroup.sortableChildren = true;
+    this.pixiApp.stage.addChild(backgroundGroup);
     
-    console.log('✅ Scene Manager initialized');
+    // Create SceneManager first
+    this.sceneManager = new SceneManager(this.assetManager!);
+    
+    // Create CloudsManager with SceneManager reference
+    const cloudsManager = new CloudsManager(
+      this.pixiApp,
+      backgroundGroup,
+      this.assetManager!,
+      this.sceneManager
+    );
+    
+    // Link CloudsManager to SceneManager
+    this.sceneManager.setCloudsManager(cloudsManager);
+    
+    // Set background group and initialize
+    this.sceneManager.setBackgroundGroup(backgroundGroup, this.pixiApp);
+    
+    console.log('[OK] Scene Manager initialized');
   }
-  */
   
-  // TODO: Uncomment when Router is ready
-  /*
   private initRouter(): void
   {
     this.router = Router.getInstance();
     this.router.initialize();
     
-    console.log('✅ Router initialized');
+    console.log('[OK] Router initialized');
   }
-  */
   
   // Public getters
   getPixiApp(): Application | null
@@ -226,8 +238,6 @@ export class App
     return this.assetManager;
   }
   
-  // TODO: Uncomment when needed
-  /*
   getRouter(): Router | null
   {
     return this.router;
@@ -237,15 +247,12 @@ export class App
   {
     return this.sceneManager;
   }
-  */
   
   // Cleanup
   destroy(): void
   {
     window.removeEventListener('resize', this.handleResize.bind(this));
     
-    // TODO: Uncomment when needed
-    /*
     if (this.router)
     {
       this.router.destroy();
@@ -255,7 +262,6 @@ export class App
     {
       this.sceneManager.destroy();
     }
-    */
     
     if (this.pixiApp)
     {

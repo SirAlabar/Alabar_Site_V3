@@ -1,383 +1,307 @@
 /**
- * Router - Main routing system with PIXI content support
- * Adapted from Transcendence router with hybrid DOM + PIXI capabilities
+ * Router - History API based routing (no hash)
+ * Handles clean URLs: /, /about, /projects/42, etc.
  */
 
-import {
-  renderDefault,
-  renderPixi,
-  renderGame,
-  renderMinimal,
-  showLoading,
-  hideLoading,
-  show404
-} from '../managers/LayoutManager';
-import { mountHeader, setupGameHeaderEvents } from '../managers/HeaderManager';
-import type { RouteConfig, RouteConfigMap } from '@/utils/types';
+import { BaseComponent } from '../components/BaseComponent';
 
-/**
- * Singleton RouterState
- */
-class RouterState {
-  private static instance: RouterState;
+interface Route
+{
+  path: string;
+  component: () => BaseComponent;
+  exact?: boolean;
+}
 
-  public currentRoute: any = null;
-  public isInitialized = false;
-  public isNavigating = false;
-
-  private currentPageInstance: any = null;
-  private clickListener: ((e: Event) => void) | null = null;
-  private hashChangeListener: ((e: HashChangeEvent) => void) | null = null;
-
+export class Router
+{
+  private static instance: Router;
+  private routes: Route[] = [];
+  private currentPath: string = '';
+  private currentComponent: BaseComponent | null = null;
+  
   private constructor() {}
-
-  static getInstance(): RouterState {
-    if (!RouterState.instance) {
-      RouterState.instance = new RouterState();
+  
+  static getInstance(): Router
+  {
+    if (!Router.instance)
+    {
+      Router.instance = new Router();
     }
-    return RouterState.instance;
+    return Router.instance;
   }
-
-  setCurrentPageInstance(instance: any): void {
-    this.currentPageInstance = instance;
-  }
-
-  cleanupCurrentPage(): void {
-    if (this.currentPageInstance) {
-      if (typeof this.currentPageInstance.dispose === 'function') {
-        this.currentPageInstance.dispose();
-      } else if (typeof this.currentPageInstance.cleanup === 'function') {
-        this.currentPageInstance.cleanup();
-      }
-      this.currentPageInstance = null;
-    }
-  }
-
-  cleanup(): void {
-    this.cleanupCurrentPage();
-
-    if (this.clickListener) {
-      document.removeEventListener('click', this.clickListener);
-      this.clickListener = null;
-    }
-
-    if (this.hashChangeListener) {
-      window.removeEventListener('hashchange', this.hashChangeListener);
-      this.hashChangeListener = null;
-    }
-  }
-
-  setEventListeners(
-    clickListener: (e: Event) => void,
-    hashChangeListener: (e: HashChangeEvent) => void
-  ): void {
-    this.cleanup();
-    this.clickListener = clickListener;
-    this.hashChangeListener = hashChangeListener;
-    document.addEventListener('click', clickListener);
-    window.addEventListener('hashchange', hashChangeListener);
-  }
-}
-
-/**
- * Route configuration
- */
-const routeConfig: RouteConfigMap = {
-  '/': {
-    component: () => import('@pages/HomePage'),
-    title: 'Home - Alabar',
-    layout: 'pixi',
-    headerType: 'default'
-  },
-  '/about': {
-    component: () => import('@pages/AboutPage'),
-    title: 'About - Alabar',
-    layout: 'pixi',
-    headerType: 'default'
-  },
-  '/contact': {
-    component: () => import('@pages/ContactPage'),
-    title: 'Contact - Alabar',
-    layout: 'pixi',
-    headerType: 'default'
-  },
-  '/projects/42': {
-    component: () => import('@pages/Projects42Page'),
-    title: '42 Projects - Alabar',
-    layout: 'pixi',
-    headerType: 'default'
-  },
-  '/projects/web': {
-    component: () => import('@pages/ProjectsWebPage'),
-    title: 'Web Projects - Alabar',
-    layout: 'pixi',
-    headerType: 'default'
-  },
-  '/projects/mobile': {
-    component: () => import('@pages/ProjectsMobilePage'),
-    title: 'Mobile Projects - Alabar',
-    layout: 'pixi',
-    headerType: 'default'
-  },
-  '/projects/games': {
-    component: () => import('@pages/ProjectsGamesPage'),
-    title: 'Game Projects - Alabar',
-    layout: 'pixi',
-    headerType: 'default'
-  },
-  '/404': {
-    component: () => import('@pages/NotFoundPage'),
-    title: '404 - Alabar',
-    layout: 'pixi',
-    headerType: 'none'
-  }
-};
-
-// Get singleton instance
-const routerState = RouterState.getInstance();
-
-/**
- * Get current path from hash
- */
-function getCurrentPath(): string {
-  const hash = window.location.hash.slice(1); // Remove '#'
-  return hash || '/';
-}
-
-/**
- * Parse route and extract page/subpage for PIXI
- */
-function parseRoutePath(path: string): { page: string; subpage: string | null } {
-  const cleanPath = path.replace(/^\//, '');
-  const segments = cleanPath.split('/');
-
-  if (segments.length === 0 || segments[0] === '') {
-    return { page: 'home', subpage: null };
-  }
-
-  if (segments[0] === 'projects' && segments[1]) {
-    return { page: 'projects', subpage: segments[1] };
-  }
-
-  if (segments[0] === '404') {
-    return { page: '404', subpage: null };
-  }
-
-  return { page: segments[0], subpage: null };
-}
-
-/**
- * Parse route config
- */
-function parseRoute(path: string): RouteConfig {
-  // Try exact match
-  if (routeConfig[path]) {
-    return routeConfig[path];
-  }
-
-  // Return 404
-  return routeConfig['/404'];
-}
-
-/**
- * Main navigation function
- */
-export async function navigateTo(path: string): Promise<void> {
-  if (routerState.isNavigating) {
-    return;
-  }
-
-  const cleanPath = path.startsWith('/') ? path : `/${path}`;
-
-  if (routerState.currentRoute && routerState.currentRoute.path === cleanPath) {
-    return;
-  }
-
-  routerState.isNavigating = true;
-  routerState.cleanupCurrentPage();
-
-  const route = parseRoute(cleanPath);
-  const { page, subpage } = parseRoutePath(cleanPath);
-
-  document.title = route.title;
-
-  // Update hash
-  if (window.location.hash !== `#${cleanPath}`) {
-    window.location.hash = cleanPath;
-  }
-
-  window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-
-  try {
-    showLoading();
-
-    const moduleImport = await route.component();
-    const ComponentClass = moduleImport.default || moduleImport;
-    const component = new ComponentClass();
-
-    routerState.setCurrentPageInstance(component);
-
-    // Render with appropriate layout
-    renderWithLayout(component, route.layout, page, subpage);
-
-    // Mount header
-    mountHeader(route.headerType, '#header-mount');
-
-    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-
-    requestAnimationFrame(() => {
-      setupGameHeaderEvents();
-      updateActiveNavLinks();
+  
+  /**
+   * Initialize router and set up listeners
+   */
+  initialize(): void
+  {
+    // Register routes
+    this.registerRoutes();
+    
+    // Listen for browser back/forward
+    window.addEventListener('popstate', () =>
+    {
+      this.handleRoute();
     });
-
-    routerState.currentRoute = { ...route, path: cleanPath };
-  } catch (error) {
-    console.error('Error during navigation:', error);
-    show404();
-  } finally {
-    hideLoading();
-    routerState.isNavigating = false;
+    
+    // Listen for internal navigation clicks
+    this.attachLinkListeners();
+    
+    // Handle initial route
+    this.handleRoute();
+    
+    console.log('Router initialized');
   }
-}
-
-/**
- * Render with layout - handles both DOM and PIXI layouts
- */
-function renderWithLayout(
-  component: any,
-  layoutType: string,
-  page: string,
-  subpage: string | null
-): void {
-  switch (layoutType) {
-    case 'pixi':
-      renderPixi(component, page, subpage);
-      break;
-    case 'game':
-      renderGame(component);
-      break;
-    case 'minimal':
-      renderMinimal(component);
-      break;
-    default:
-      renderDefault(component);
+  
+  /**
+   * Register all application routes
+   */
+  private registerRoutes(): void
+  {
+    this.routes = [
+      // Home
+      {
+        path: '/',
+        component: () => this.loadPage('HomePage'),
+        exact: true
+      },
+      // About
+      {
+        path: '/about',
+        component: () => this.loadPage('AboutPage'),
+        exact: true
+      },
+      // Contact
+      {
+        path: '/contact',
+        component: () => this.loadPage('ContactPage'),
+        exact: true
+      },
+      // Projects - Main
+      {
+        path: '/projects',
+        component: () => this.loadPage('ProjectsPage'),
+        exact: true
+      },
+      // Projects - 42 School
+      {
+        path: '/projects/42',
+        component: () => this.loadPage('Projects42Page'),
+        exact: true
+      },
+      // Projects - Web
+      {
+        path: '/projects/web',
+        component: () => this.loadPage('ProjectsWebPage'),
+        exact: true
+      },
+      // Projects - Mobile
+      {
+        path: '/projects/mobile',
+        component: () => this.loadPage('ProjectsMobilePage'),
+        exact: true
+      },
+      // Projects - Games
+      {
+        path: '/projects/games',
+        component: () => this.loadPage('ProjectsGamesPage'),
+        exact: true
+      }
+    ];
   }
-}
-
-/**
- * Update active nav links
- */
-function updateActiveNavLinks(): void {
-  const currentPath = getCurrentPath();
-
-  document.querySelectorAll('[data-link]').forEach(link => {
-    const href = link.getAttribute('href');
-
-    if (!href) {
+  
+  /**
+   * Navigate to a new route
+   */
+  navigateTo(path: string): void
+  {
+    // Update browser history
+    window.history.pushState({}, '', path);
+    
+    // Handle the route
+    this.handleRoute();
+  }
+  
+  /**
+   * Handle current route
+   */
+  private handleRoute(): void
+  {
+    const path = window.location.pathname;
+    this.currentPath = path;
+    
+    // Find matching route
+    const route = this.findRoute(path);
+    
+    if (route)
+    {
+      this.loadRoute(route);
+    }
+    else
+    {
+      // 404 - Not Found
+      this.load404();
+    }
+  }
+  
+  /**
+   * Find route that matches path
+   */
+  private findRoute(path: string): Route | null
+  {
+    for (const route of this.routes)
+    {
+      if (route.exact)
+      {
+        // Exact match
+        if (route.path === path)
+        {
+          return route;
+        }
+      }
+      else
+      {
+        // Prefix match
+        if (path.startsWith(route.path))
+        {
+          return route;
+        }
+      }
+    }
+    
+    return null;
+  }
+  
+  /**
+   * Load a route's component
+   */
+  private loadRoute(route: Route): void
+  {
+    // Cleanup previous component
+    if (this.currentComponent && this.currentComponent.cleanup)
+    {
+      this.currentComponent.cleanup();
+    }
+    else if (this.currentComponent && this.currentComponent.dispose)
+    {
+      this.currentComponent.dispose();
+    }
+    
+    // Load new component
+    this.currentComponent = route.component();
+    
+    // Mount to content area
+    this.mountComponent(this.currentComponent);
+    
+    console.log(`Route: ${route.path}`);
+  }
+  
+  /**
+   * Load 404 page
+   */
+  private load404(): void
+  {
+    console.warn(`Route not found: ${this.currentPath}`);
+    
+    // Cleanup previous component
+    if (this.currentComponent && this.currentComponent.cleanup)
+    {
+      this.currentComponent.cleanup();
+    }
+    
+    // Load 404 component
+    this.currentComponent = this.loadPage('NotFoundPage');
+    this.mountComponent(this.currentComponent);
+  }
+  
+  /**
+   * Mount component to DOM
+   */
+  private mountComponent(component: BaseComponent): void
+  {
+    const contentMount = document.getElementById('content-mount');
+    
+    if (!contentMount)
+    {
+      console.error('Content mount element not found');
       return;
     }
-
-    const linkPath = href.replace('#', '');
-
-    if (linkPath === currentPath) {
-      link.classList.add('active');
-    } else {
-      link.classList.remove('active');
-    }
-  });
-}
-
-/**
- * Handle link clicks
- */
-function handleLinkClick(e: Event): void {
-  const target = e.target as HTMLElement;
-
-  if (!target) {
-    return;
-  }
-
-  const link = target.closest('a') as HTMLAnchorElement;
-
-  if (!link) {
-    return;
-  }
-
-  const href = link.getAttribute('href');
-
-  if (!href) {
-    return;
-  }
-
-  if (link.hasAttribute('data-link')) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (href && !routerState.isNavigating) {
-      const path = href.replace('#', '');
-      navigateTo(path);
+    
+    // Render component HTML
+    contentMount.innerHTML = component.render();
+    
+    // Call mount lifecycle if exists
+    if (component.mount)
+    {
+      component.mount('#content-mount');
     }
   }
-}
-
-/**
- * Handle hash change
- */
-function handleHashChange(_e: HashChangeEvent): void {
-  if (!routerState.isNavigating) {
-    const path = getCurrentPath();
-    navigateTo(path);
+  
+  /**
+   * Lazy load page component (placeholder for now)
+   */
+  private loadPage(pageName: string): BaseComponent
+  {
+    // TODO: Import actual page components when they exist
+    // For now, return a simple placeholder component
+    
+    return {
+      render: () => `
+        <div class="min-h-screen flex items-center justify-center bg-rpg-darker text-rpg-text">
+          <div class="text-center">
+            <h1 class="font-pixel text-4xl text-rpg-accent mb-4">${pageName}</h1>
+            <p class="font-game text-lg">This page is under construction.</p>
+            <a href="/" data-link class="inline-block mt-6 px-6 py-3 bg-rpg-accent text-rpg-darker font-pixel rounded hover:bg-rpg-accent-hover transition-colors">
+              â† Back to Home
+            </a>
+          </div>
+        </div>
+      `
+    };
   }
-}
-
-/**
- * Initialize router
- */
-export function initRouter(): void {
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => initRouter());
-    return;
-  }
-
-  // Prevent double initialization
-  if (routerState.isInitialized) {
-    return;
-  }
-
-  routerState.isInitialized = true;
-
-  // Make router globally available
-  (window as any).navigateTo = navigateTo;
-
-  // Setup event listeners
-  routerState.setEventListeners(handleLinkClick, handleHashChange);
-
-  // Load initial page (don't navigate yet, PIXI needs to initialize first)
-  const currentPath = getCurrentPath();
-  const existingContent = document.querySelector('[data-route-content]');
-
-  if (!existingContent) {
-    setTimeout(() => {
-      if (!routerState.currentRoute) {
-        navigateTo(currentPath);
+  
+  /**
+   * Attach listeners to all navigation links
+   */
+  private attachLinkListeners(): void
+  {
+    document.addEventListener('click', (e: MouseEvent) =>
+    {
+      const target = e.target as HTMLElement;
+      const link = target.closest('a[data-link]') as HTMLAnchorElement;
+      
+      if (link)
+      {
+        e.preventDefault();
+        const href = link.getAttribute('href');
+        
+        if (href)
+        {
+          this.navigateTo(href);
+        }
       }
-    }, 100);
+    });
   }
-}
-
-/**
- * Get current route
- */
-export function getCurrentRoute(): any {
-  return routerState.currentRoute;
-}
-
-/**
- * Cleanup router (for testing/hot reload)
- */
-export function destroyRouter(): void {
-  routerState.cleanup();
-  routerState.isInitialized = false;
-  routerState.currentRoute = null;
-  routerState.isNavigating = false;
+  
+  /**
+   * Get current path
+   */
+  getCurrentPath(): string
+  {
+    return this.currentPath;
+  }
+  
+  /**
+   * Cleanup
+   */
+  destroy(): void
+  {
+    if (this.currentComponent && this.currentComponent.cleanup)
+    {
+      this.currentComponent.cleanup();
+    }
+    
+    // Remove event listeners would go here
+    window.removeEventListener('popstate', () => this.handleRoute());
+  }
 }

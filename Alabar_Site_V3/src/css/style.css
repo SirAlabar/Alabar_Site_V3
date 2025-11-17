@@ -30,7 +30,7 @@
 /* Pixi canvas container styles */
 #pixi-mount
 {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
