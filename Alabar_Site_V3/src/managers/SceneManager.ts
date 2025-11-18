@@ -120,6 +120,11 @@ export class SceneManager
     });
     
     this.backgroundGroup.position.set(0, 0);
+
+    if (this.cloudsManager && this.layers["clouds"]) 
+    {
+        this.layers["clouds"].addChild(this.cloudsManager.cloudsContainer);
+    }
   }
   
   // Apply a theme to the scene
@@ -340,7 +345,7 @@ export class SceneManager
   // Update theme toggle button emoji
   updateThemeButton(theme: Theme): void
   {
-    const emoji = theme === 'light' ? '🌚' : '🌞';
+    const emoji = theme === 'light' ? '🌙' : '☀️';
     
     const themeToggle = document.getElementById('theme-toggle');
     if (themeToggle)

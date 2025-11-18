@@ -57,7 +57,7 @@ export class CloudsManager
   private sceneManager: any; // Will be typed as SceneManager once converted
   
   // Cloud container
-  private cloudsContainer: Container;
+  public cloudsContainer: Container;
   
   // Cloud settings
   private config: CloudConfig;
