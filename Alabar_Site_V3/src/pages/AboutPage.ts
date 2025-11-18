@@ -9,14 +9,14 @@ export class AboutPage
     return `
       <div class="container-rpg py-2">
         <header class="text-center mb-12">
-          <h1 class="font-pixel text-4xl text-rpg-accent mb-4">ABOUT ME</h1>
+          <h1 class="font-pixel pixel-font pixel-shadow text-4xl text-rpg-accent mb-4">ABOUT ME</h1>
           <p class="font-game text-xl text-rpg-text">Software Developer & Game Enthusiast</p>
         </header>
         
         <div class="max-w-4xl mx-auto">
           <!-- Character Stats Card -->
           <div class="card-rpg mb-8">
-            <h2 class="font-pixel text-2xl text-rpg-accent mb-6">Character Stats</h2>
+            <h2 class="font-pixel pixel-font pixel-shadow text-2xl text-rpg-accent mb-6">Character Stats</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <p class="font-game text-rpg-text mb-2">Class: <span class="text-rpg-accent">Software Developer</span></p>

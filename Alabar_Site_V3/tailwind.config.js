@@ -37,8 +37,46 @@ export default {
           '0%': { transform: 'translateY(-20px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' }
         }
+      },
+      boxShadow: {
+        pixel: `
+          6px 6px 0 #00000099,
+          7px 7px 0 #00000088,
+          8px 8px 0 #00000055
+        `,
+        avatar: `6px 6px 10px rgba(0,0,0,0.6)`,
       }
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      const newUtils = {
+        ".pixel-font": {
+          "image-rendering": "pixelated",
+          "-webkit-font-smoothing": "none",
+          "-moz-osx-font-smoothing": "unset",
+          "font-smooth": "never",
+        },
+
+        ".pixel-shadow": {
+          "text-shadow": `
+            -2px 0 0 #000,
+            2px 0 0 #000,
+            0 -2px 0 #000,
+            0 2px 0 #000;
+          `,
+        },
+
+        ".pixel-shadow-strong": {
+          "text-shadow": `
+            3px 3px 0 #000,
+            2px 3px 0 #000,
+            3px 2px 0 #000
+          `,
+        },
+      };
+
+      addUtilities(newUtils);
+    }
+  ]
 }
