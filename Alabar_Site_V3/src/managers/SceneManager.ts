@@ -345,7 +345,7 @@ export class SceneManager
   // Update theme toggle button emoji
   updateThemeButton(theme: Theme): void
   {
-    const emoji = theme === 'light' ? '🌙' : '☀️';
+    const emoji = theme === 'light' ? '🌚' : '🌞';
     
     const themeToggle = document.getElementById('theme-toggle');
     if (themeToggle)
