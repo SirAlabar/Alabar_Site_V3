@@ -56,3 +56,25 @@
   position: relative;
   z-index: 10;
 }
+
+.wand-anim {
+  width: 32px;
+  height: 32px;
+  background-image: url('/assets/images/hamburger.webp');
+  background-repeat: no-repeat;
+  background-size: 160px 32px;
+  image-rendering: pixelated;
+  display: inline-block;
+  transform: rotate(-45deg);
+  animation: wand 0.6s steps(5) infinite;
+}
+
+@keyframes wand {
+  0% { background-position: 0 0; }
+  100% { background-position: -160px 0; }
+}
+
+.menu-open #menu-wand {
+  transform: rotate(135deg);
+}
+

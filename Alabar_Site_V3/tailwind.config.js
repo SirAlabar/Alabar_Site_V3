@@ -36,6 +36,10 @@ export default {
         slideIn: {
           '0%': { transform: 'translateY(-20px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' }
+        },
+        wand: {
+          '0%':   { backgroundPosition: '0 0' },
+          '100%': { backgroundPosition: '-160px 0' },
         }
       },
       boxShadow: {

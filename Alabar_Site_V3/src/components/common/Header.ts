@@ -58,17 +58,45 @@ export class Header
                   <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                 </svg>
               </button>
-              <div class="absolute top-full left-0 mt-2 w-48 bg-rpg-dark/30 backdrop-blur-2xl border border-rpg-accent/30 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 -translate-y-2">
-                <a href="/projects/42" data-link class="block px-4 py-3 font-pixel pixel-font pixel-shadow text-xs text-rpg-text hover:bg-rpg-accent hover:text-rpg-darker transition-all duration-200 rounded-t-lg">
-                  42 School
+              <div class="absolute top-full left-1/2 -translate-x-1/2 mt-3 
+                          w-64 p-4 rounded-xl
+
+                          bg-rpg-dark/40 
+                          backdrop-blur-3xl 
+                          border border-white/20
+
+                          shadow-[0_10px_30px_rgba(0,0,0,0.35)]
+                          opacity-0 invisible 
+                          group-hover:opacity-100 group-hover:visible 
+                          transition-all duration-300 
+                          transform scale-95 group-hover:scale-100">
+                <a href="/projects/42" data-link
+                  class="block w-full px-4 py-3 mb-2 rounded-lg 
+                          bg-white/10 
+                          hover:bg-white/20 
+                          text-rpg-text hover:text-rpg-accent
+                          font-pixel pixel-shadow text-sm transition-all">
+                  42 Projects
                 </a>
-                <a href="/projects/web" data-link class="block px-4 py-3 font-pixel pixel-font pixel-shadow text-xs text-rpg-text hover:bg-rpg-accent hover:text-rpg-darker transition-all duration-200">
+                <a href="/projects/web" data-link
+                  class="block w-full px-4 py-3 mb-2 rounded-lg 
+                          bg-white/10 hover:bg-white/20 
+                          text-rpg-text hover:text-rpg-accent
+                          font-pixel pixel-shadow text-sm transition-all">
                   Web
                 </a>
-                <a href="/projects/mobile" data-link class="block px-4 py-3 font-pixel pixel-font pixel-shadow text-xs text-rpg-text hover:bg-rpg-accent hover:text-rpg-darker transition-all duration-200">
+                <a href="/projects/mobile" data-link
+                  class="block w-full px-4 py-3 mb-2 rounded-lg 
+                          bg-white/10 hover:bg-white/20 
+                          text-rpg-text hover:text-rpg-accent
+                          font-pixel pixel-shadow text-sm transition-all">
                   Mobile
                 </a>
-                <a href="/projects/games" data-link class="block px-4 py-3 font-pixel pixel-font pixel-shadow text-xs text-rpg-text hover:text-rpg-accent hover:text-rpg-darker transition-all duration-200 rounded-b-lg">
+                <a href="/projects/games" data-link
+                  class="block w-full px-4 py-3 rounded-lg 
+                          bg-white/10 hover:bg-white/20 
+                          text-rpg-text hover:text-rpg-accent
+                          font-pixel pixel-shadow text-sm transition-all">
                   Games
                 </a>
               </div>
@@ -98,53 +126,108 @@ export class Header
 
           <!-- Mobile Menu Button -->
           <button id="mobile-menu-btn" class="md:hidden text-rpg-accent hover:text-rpg-accent-hover transition-colors">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-            </svg>
+              <div id="menu-wand" class="wand-anim"></div>
           </button>
         </nav>
 
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-rpg-dark/90 backdrop-blur-xl border-t border-rpg-accent/30">
-          <div class="px-6 py-4 space-y-4">
-            <a href="/" data-link class="block font-pixel text-sm text-rpg-text hover:text-rpg-accent transition-colors">
+        <div id="mobile-menu" 
+            class="hidden md:hidden 
+                    bg-rpg-dark/20 
+                    backdrop-blur-3xl 
+                    border-t border-white/10 
+                    py-6 px-4 space-y-4
+                    shadow-[0_10px_30px_rgba(0,0,0,0.35)]
+                    rounded-b-2xl">
+
+          <!-- Mobile nav wrapper (centralizado) -->
+          <div class="flex flex-col items-center space-y-4">
+
+            <!-- Each item as a compact card -->
+            <a href="/" data-link
+              class="w-full max-w-[320px] px-4 py-3 rounded-lg
+                      bg-white/10 hover:bg-white/20
+                      text-rpg-text hover:text-rpg-accent
+                      font-pixel pixel-shadow text-base transition-all text-center">
               Home
             </a>
-            <a href="/about" data-link class="block font-pixel text-sm text-rpg-text hover:text-rpg-accent transition-colors">
+
+            <a href="/about" data-link
+              class="w-full max-w-[320px] px-4 py-3 rounded-lg
+                      bg-white/10 hover:bg-white/20
+                      text-rpg-text hover:text-rpg-accent
+                      font-pixel pixel-shadow text-base transition-all text-center">
               About
             </a>
-            <a href="/contact" data-link class="block font-pixel text-sm text-rpg-text hover:text-rpg-accent transition-colors">
+
+            <a href="/contact" data-link
+              class="w-full max-w-[320px] px-4 py-3 rounded-lg
+                      bg-white/10 hover:bg-white/20
+                      text-rpg-text hover:text-rpg-accent
+                      font-pixel pixel-shadow text-base transition-all text-center">
               Contact
             </a>
-            <div class="pl-4 space-y-3 border-l-2 border-rpg-accent/30">
-              <p class="font-pixel text-xs text-rpg-accent">Projects:</p>
-              <a href="/projects/42" data-link class="block font-pixel text-xs text-rpg-text hover:text-rpg-accent transition-colors">
-                42 School
+
+            <!-- Projects -->
+            <p class="font-pixel pixel-shadow text-rpg-accent text-sm pt-2">
+              Projects:
+            </p>
+
+            <a href="/projects/42" data-link
+              class="w-full max-w-[320px] px-4 py-3 rounded-lg
+                      bg-white/10 hover:bg-white/20
+                      text-rpg-text hover:text-rpg-accent
+                      font-pixel pixel-shadow text-base transition-all text-center">
+              42 Projects
+            </a>
+
+            <a href="/projects/web" data-link
+              class="w-full max-w-[320px] px-4 py-3 rounded-lg
+                      bg-white/10 hover:bg-white/20
+                      text-rpg-text hover:text-rpg-accent
+                      font-pixel pixel-shadow text-base transition-all text-center">
+              Web
+            </a>
+
+            <a href="/projects/mobile" data-link
+              class="w-full max-w-[320px] px-4 py-3 rounded-lg
+                      bg-white/10 hover:bg-white/20
+                      text-rpg-text hover:text-rpg-accent
+                      font-pixel pixel-shadow text-base transition-all text-center">
+              Mobile
+            </a>
+
+            <a href="/projects/games" data-link
+              class="w-full max-w-[320px] px-4 py-3 rounded-lg
+                      bg-white/10 hover:bg-white/20
+                      text-rpg-text hover:text-rpg-accent
+                      font-pixel pixel-shadow text-base transition-all text-center">
+              Games
+            </a>
+
+            <!-- Social icons row -->
+            <div class="flex items-center justify-center space-x-6 pt-4">
+              <a href="https://github.com/SirAlabar" target="_blank"
+                class="hover:scale-110 transition-transform">
+                <img src="/assets/images/github_logo.png" class="w-10 h-10">
               </a>
-              <a href="/projects/web" data-link class="block font-pixel text-xs text-rpg-text hover:text-rpg-accent transition-colors">
-                Web
+
+              <a href="https://linkedin.com/in/hugollmarta" target="_blank"
+                class="hover:scale-110 transition-transform">
+                <img src="/assets/images/linkedin_logo.png" class="w-10 h-10">
               </a>
-              <a href="/projects/mobile" data-link class="block font-pixel text-xs text-rpg-text hover:text-rpg-accent transition-colors">
-                Mobile
-              </a>
-              <a href="/projects/games" data-link class="block font-pixel text-xs text-rpg-text hover:text-rpg-accent transition-colors">
-                Games
-              </a>
-            </div>
-            
-            <!-- Mobile Social Links + Theme Toggle -->
-            <div class="flex items-center justify-center space-x-4 pt-4 border-t border-rpg-accent/30">
-              <a href="https://github.com/SirAlabar" target="_blank" rel="noopener noreferrer" class="hover:scale-110 transition-transform">
-                <img src="/assets/images/github_logo.png" alt="GitHub" class="w-8 h-8">
-              </a>
-              <a href="https://linkedin.com/in/hugollmarta" target="_blank" rel="noopener noreferrer" class="hover:scale-110 transition-transform">
-                <img src="/assets/images/linkedin_logo.png" alt="LinkedIn" class="w-8 h-8">
-              </a>
-              <button id="theme-toggle-mobile" class="text-2xl hover:scale-110 transition-transform">
+
+              <button id="theme-toggle-mobile" 
+                      class="text-4xl hover:scale-110 transition-transform">
                 🌚
               </button>
             </div>
+
           </div>
+        </div>
+
+
+
         </div>
       </header>
     `;
@@ -164,6 +247,7 @@ export class Header
       const toggleMenu = () =>
       {
         mobileMenu.classList.toggle('hidden');
+        mobileMenuBtn.classList.toggle('menu-open');
       };
 
       mobileMenuBtn.addEventListener('click', toggleMenu);
