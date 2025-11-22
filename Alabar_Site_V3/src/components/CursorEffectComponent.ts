@@ -62,7 +62,6 @@ export class CursorEffectComponent
   
   // Mouse state
   private cursorPos = { x: 0, y: 0 };
-  private lastPos = { x: 0, y: 0 };
   private isMouseInside = false;
   
   // Theme
@@ -235,7 +234,7 @@ export class CursorEffectComponent
     this.cursorApp.ticker.add(this.boundTicker);
   }
   
-  private update(delta: number): void
+  private update(_delta: number): void
   {
     // Update cursor position
     this.updateCursorPosition();
