@@ -1,6 +1,6 @@
 /**
  * CursorEffectComponent.ts - Custom cursor with particle effects
- * Refactored for dedicated cursorApp (Layer 3 - Top overlay)
+ * Using original geometric/blood particle system
  */
 
 import { Application, Container, Sprite, Graphics, Ticker } from 'pixi.js';
@@ -8,11 +8,33 @@ import { AssetManager } from '../managers/AssetManager';
 
 interface Particle
 {
-  sprite: Graphics;
+  graphics: Graphics;
+  shape: string;
+  color: number;
+  x: number;
+  y: number;
+  size: number;
+  velocity: { x: number; y: number };
+  rotation: number;
+  rotationSpeed: number;
   life: number;
-  maxLife: number;
-  vx: number;
-  vy: number;
+  initialLife: number;
+}
+
+interface BloodDrop
+{
+  graphics: Graphics;
+  x: number;
+  y: number;
+  color: number;
+  size: number;
+  velocity: { x: number; y: number };
+  elongation: number;
+  life: number;
+  initialLife: number;
+  trail: boolean;
+  trailDrops: any[];
+  splatter: boolean;
 }
 
 interface CursorConfig
@@ -35,26 +57,37 @@ export class CursorEffectComponent
   
   // Particle system
   private particles: Particle[] = [];
+  private bloodDrops: BloodDrop[] = [];
   private particleContainer: Container;
   
   // Mouse state
-  private mouseX = 0;
-  private mouseY = 0;
+  private cursorPos = { x: 0, y: 0 };
+  private lastPos = { x: 0, y: 0 };
   private isMouseInside = false;
   
   // Theme
   private currentTheme: 'light' | 'dark' = 'light';
   
+  // Blood drop timing
+  private lastBloodTime = 0;
+  private bloodDropRate = 100;
+  
+  // Particle configuration
+  private particleShapes = ['circle', 'square', 'triangle', 'diamond', 'star'];
+  private particleColors = {
+    light: [0xFF5252, 0xFF7B25, 0xFFC107, 0x4CAF50, 0x2196F3, 0x9C27B0, 0xE91E63],
+    dark: [0xFF0000, 0xCC0000, 0xAA0000, 0x880000, 0x990000, 0xBB0000]
+  };
+  
   // Bound handlers
   private boundMouseMove: ((e: MouseEvent) => void) | null = null;
-  private boundMouseEnter: (() => void) | null = null;
   private boundMouseLeave: (() => void) | null = null;
   private boundThemeToggle: (() => void) | null = null;
   private boundTicker: ((ticker: Ticker) => void) | null = null;
   
   constructor(
     cursorApp: Application,
-    _stage: Container, // Not needed, using cursorApp.stage directly
+    _stage: Container,
     assetManager: AssetManager,
     config: CursorConfig
   )
@@ -70,6 +103,7 @@ export class CursorEffectComponent
     this.particleContainer = new Container();
     this.particleContainer.label = 'particles';
     this.particleContainer.zIndex = 1;
+    this.particleContainer.sortableChildren = true;
     
     this.cursorContainer = new Container();
     this.cursorContainer.label = 'cursor';
@@ -88,15 +122,9 @@ export class CursorEffectComponent
     // Start update loop
     this.startUpdateLoop();
     
-    // Hide default cursor
-    document.body.style.cursor = 'none';
-    
     console.log('[CursorEffect] Initialized on cursorApp');
   }
   
-  /**
-   * Initialize cursor sprite based on current theme
-   */
   private initCursorSprite(): void
   {
     const cursorAlias = this.currentTheme === 'light' ? 'cursor_light' : 'cursor_night';
@@ -108,49 +136,72 @@ export class CursorEffectComponent
       return;
     }
     
-    // Remove old sprite if exists
     if (this.cursorSprite)
     {
       this.cursorContainer.removeChild(this.cursorSprite);
       this.cursorSprite.destroy();
     }
     
-    // Create new cursor sprite
     this.cursorSprite = new Sprite(texture);
-    this.cursorSprite.anchor.set(0.5, 0.5);
+    this.cursorSprite.anchor.set(0.1, 0.1);
     this.cursorSprite.width = this.config.cursorSize;
     this.cursorSprite.height = this.config.cursorSize;
     
     this.cursorContainer.addChild(this.cursorSprite);
-    
-    // Position at current mouse
     this.updateCursorPosition();
   }
   
-  /**
-   * Setup event listeners
-   */
   private setupEventListeners(): void
   {
-    // Mouse move - track across entire window
+    // Mouse move - track and spawn particles
     this.boundMouseMove = (e: MouseEvent) =>
     {
-      this.mouseX = e.clientX;
-      this.mouseY = e.clientY;
+      const prevX = this.cursorPos.x;
+      const prevY = this.cursorPos.y;
+      
+      this.cursorPos.x = e.clientX;
+      this.cursorPos.y = e.clientY;
+      this.isMouseInside = true;
+      
+      // Calculate distance moved
+      const dx = this.cursorPos.x - prevX;
+      const dy = this.cursorPos.y - prevY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      
+      // Spawn particles if significant movement
+      if (distance > 1.5 && this.config.particlesEnabled)
+      {
+        const particleCount = Math.min(
+          this.config.particlesCount,
+          Math.floor(distance / 5) + 1
+        );
+        
+        if (this.currentTheme === 'dark')
+        {
+          // Blood drops - spawn sparingly
+          const now = Date.now();
+          if (now - this.lastBloodTime >= this.bloodDropRate)
+          {
+            this.addParticle(this.cursorPos.x, this.cursorPos.y);
+            this.lastBloodTime = now;
+          }
+        }
+        else
+        {
+          // Geometric particles - spawn along path
+          for (let i = 0; i < particleCount; i++)
+          {
+            this.addParticle(
+              this.cursorPos.x - dx * (i / particleCount),
+              this.cursorPos.y - dy * (i / particleCount)
+            );
+          }
+        }
+      }
     };
     window.addEventListener('mousemove', this.boundMouseMove);
     
-    // Mouse enter/leave window
-    this.boundMouseEnter = () =>
-    {
-      this.isMouseInside = true;
-      if (this.cursorContainer)
-      {
-        this.cursorContainer.visible = true;
-      }
-    };
-    window.addEventListener('mouseenter', this.boundMouseEnter);
-    
+    // Mouse leave window
     this.boundMouseLeave = () =>
     {
       this.isMouseInside = false;
@@ -174,9 +225,6 @@ export class CursorEffectComponent
     window.addEventListener('theme:toggle', this.boundThemeToggle);
   }
   
-  /**
-   * Start update loop
-   */
   private startUpdateLoop(): void
   {
     this.boundTicker = (ticker: Ticker) =>
@@ -187,27 +235,93 @@ export class CursorEffectComponent
     this.cursorApp.ticker.add(this.boundTicker);
   }
   
-  /**
-   * Main update loop
-   */
   private update(delta: number): void
   {
     // Update cursor position
     this.updateCursorPosition();
     
-    // Spawn particles if enabled and mouse is inside
-    if (this.config.particlesEnabled && this.isMouseInside)
+    // Update geometric particles (light theme)
+    for (let i = this.particles.length - 1; i >= 0; i--)
     {
-      this.spawnParticles();
+      const p = this.particles[i];
+      
+      // Update position
+      p.x += p.velocity.x;
+      p.y += p.velocity.y;
+      
+      // Add randomness to movement
+      p.velocity.x += ((Math.random() < 0.5 ? -1 : 1) * 2) / 75;
+      p.velocity.y -= Math.random() / 600;
+      
+      // Update rotation
+      p.rotation += p.rotationSpeed;
+      
+      // Reduce life
+      p.life--;
+      
+      // Calculate scale and opacity
+      const lifeProgress = 1 - (p.life / p.initialLife);
+      const scale = 0.2 + lifeProgress * 0.8;
+      const size = p.size * scale;
+      const opacity = p.life <= 0 ? 0 : Math.min(0.8, 
+        lifeProgress < 0.2 
+          ? lifeProgress * 4 
+          : p.life < p.initialLife * 0.3 
+            ? p.life / (p.initialLife * 0.3)
+            : 0.8
+      );
+      
+      // Redraw particle
+      this.drawParticleShape(p, size, opacity);
+      
+      // Remove dead particles
+      if (p.life <= 0)
+      {
+        this.particleContainer.removeChild(p.graphics);
+        this.particles.splice(i, 1);
+      }
     }
     
-    // Update particles
-    this.updateParticles(delta);
+    // Update blood drops (dark theme)
+    for (let i = this.bloodDrops.length - 1; i >= 0; i--)
+    {
+      const drop = this.bloodDrops[i];
+      
+      // Update position
+      drop.x += drop.velocity.x;
+      drop.y += drop.velocity.y;
+      
+      // Elongate as it falls
+      drop.elongation = 1 + drop.velocity.y * 0.3;
+      
+      // Gravity
+      drop.velocity.y += 0.05;
+      drop.velocity.x += (Math.random() - 0.5) * 0.02;
+      
+      // Check splatter
+      if (!drop.splatter && drop.y > this.cursorApp.screen.height - Math.random() * 100)
+      {
+        drop.splatter = true;
+        drop.velocity.x = 0;
+        drop.velocity.y = 0;
+        drop.life = Math.min(drop.life, 30);
+      }
+      
+      // Reduce life
+      drop.life--;
+      
+      // Redraw
+      this.drawBloodDrop(drop);
+      
+      // Remove dead drops
+      if (drop.life <= 0)
+      {
+        this.particleContainer.removeChild(drop.graphics);
+        this.bloodDrops.splice(i, 1);
+      }
+    }
   }
   
-  /**
-   * Update cursor sprite position
-   */
   private updateCursorPosition(): void
   {
     if (!this.cursorSprite)
@@ -215,107 +329,173 @@ export class CursorEffectComponent
       return;
     }
     
-    this.cursorContainer.position.set(this.mouseX, this.mouseY);
+    this.cursorContainer.position.set(this.cursorPos.x, this.cursorPos.y);
+    this.cursorContainer.visible = this.isMouseInside;
   }
   
-  /**
-   * Spawn particle trail
-   */
-  private spawnParticles(): void
+  private addParticle(x: number, y: number): void
   {
-    // Spawn based on config
-    for (let i = 0; i < this.config.particlesCount; i++)
+    const graphics = new Graphics();
+    
+    if (this.currentTheme === 'dark')
     {
-      this.createParticle(this.mouseX, this.mouseY);
+      // Blood drop
+      const colors = this.particleColors.dark;
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const size = 2 + Math.random() * 3;
+      
+      const bloodDrop: BloodDrop = {
+        graphics,
+        x,
+        y,
+        color,
+        size,
+        velocity: {
+          x: (Math.random() - 0.5) * 0.5,
+          y: 0.5 + Math.random() * 1.5
+        },
+        elongation: 1 + Math.random() * 2,
+        life: this.config.particlesLifespan * 1.5,
+        initialLife: this.config.particlesLifespan * 1.5,
+        trail: Math.random() > 0.7,
+        trailDrops: [],
+        splatter: false
+      };
+      
+      this.drawBloodDrop(bloodDrop);
+      this.particleContainer.addChild(graphics);
+      this.bloodDrops.push(bloodDrop);
+    }
+    else
+    {
+      // Geometric particle
+      const shape = this.particleShapes[Math.floor(Math.random() * this.particleShapes.length)];
+      const colors = this.particleColors.light;
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      
+      const particle: Particle = {
+        graphics,
+        shape,
+        color,
+        x,
+        y,
+        size: 2 + Math.random() * 2,
+        velocity: {
+          x: (Math.random() < 0.5 ? -1 : 1) * (Math.random() / 10),
+          y: -0.4 + Math.random() * -1
+        },
+        rotation: Math.random() * Math.PI * 2,
+        rotationSpeed: (Math.random() - 0.5) * 0.1,
+        life: this.config.particlesLifespan,
+        initialLife: this.config.particlesLifespan
+      };
+      
+      this.drawParticleShape(particle, particle.size, 0.8);
+      this.particleContainer.addChild(graphics);
+      this.particles.push(particle);
     }
   }
   
-  /**
-   * Create a single particle
-   */
-  private createParticle(x: number, y: number): void
+  private drawParticleShape(particle: Particle, size: number, alpha: number): void
   {
-    const particle = new Graphics();
+    const g = particle.graphics;
+    g.clear();
+    g.alpha = alpha;
     
-    // Random size
-    const size = 2 + Math.random() * 3;
-    
-    // Theme-based color
-    const color = this.currentTheme === 'light' ? 0xFFCC33 : 0x87CEEB;
-    
-    // Draw circle
-    particle.circle(0, 0, size);
-    particle.fill(color);
-    
-    particle.position.set(x, y);
-    
-    // Random velocity
-    const angle = Math.random() * Math.PI * 2;
-    const speed = 0.5 + Math.random() * 1.5;
-    const vx = Math.cos(angle) * speed;
-    const vy = Math.sin(angle) * speed;
-    
-    this.particleContainer.addChild(particle);
-    
-    this.particles.push(
+    switch (particle.shape)
     {
-      sprite: particle,
-      life: this.config.particlesLifespan,
-      maxLife: this.config.particlesLifespan,
-      vx: vx,
-      vy: vy
-    });
+      case 'circle':
+        g.circle(0, 0, size);
+        g.fill(particle.color);
+        g.stroke({ width: 1, color: 0xFFFFFF, alpha: alpha * 0.3 });
+        break;
+      case 'square':
+        g.rect(-size, -size, size * 2, size * 2);
+        g.fill(particle.color);
+        break;
+      case 'triangle':
+        g.moveTo(0, -size);
+        g.lineTo(-size, size);
+        g.lineTo(size, size);
+        g.closePath();
+        g.fill(particle.color);
+        break;
+      case 'diamond':
+        g.moveTo(0, -size);
+        g.lineTo(size, 0);
+        g.lineTo(0, size);
+        g.lineTo(-size, 0);
+        g.closePath();
+        g.fill(particle.color);
+        break;
+      case 'star':
+        const outerRadius = size;
+        const innerRadius = size / 2;
+        const spikes = 5;
+        for (let i = 0; i < spikes * 2; i++)
+        {
+          const radius = i % 2 === 0 ? outerRadius : innerRadius;
+          const angle = (Math.PI / spikes) * i;
+          if (i === 0)
+          {
+            g.moveTo(Math.cos(angle) * radius, Math.sin(angle) * radius);
+          }
+          else
+          {
+            g.lineTo(Math.cos(angle) * radius, Math.sin(angle) * radius);
+          }
+        }
+        g.closePath();
+        g.fill(particle.color);
+        break;
+    }
+    
+    g.x = particle.x;
+    g.y = particle.y;
+    g.rotation = particle.rotation;
   }
   
-  /**
-   * Update all particles
-   */
-  private updateParticles(delta: number): void
+  private drawBloodDrop(drop: BloodDrop): void
   {
-    for (let i = this.particles.length - 1; i >= 0; i--)
+    const g = drop.graphics;
+    g.clear();
+    
+    const lifeRatio = drop.life / drop.initialLife;
+    const alpha = Math.min(1, lifeRatio * 1.5);
+    
+    if (!drop.splatter)
     {
-      const particle = this.particles[i];
+      const elongation = drop.velocity.y * 0.5;
+      g.ellipse(0, 0, drop.size, drop.size * (1 + elongation));
+      g.fill({ color: drop.color, alpha });
       
-      // Decrease life
-      particle.life -= delta;
-      
-      // Remove dead particles
-      if (particle.life <= 0)
+      g.ellipse(-drop.size * 0.3, -drop.size * 0.3, drop.size * 0.4, drop.size * 0.4);
+      g.fill({ color: 0xFF5555, alpha: alpha * 0.3 });
+    }
+    else
+    {
+      const splatterSize = drop.size * (1.5 + Math.random());
+      g.moveTo(0, 0);
+      const points = 5 + Math.floor(Math.random() * 4);
+      for (let i = 0; i < points; i++)
       {
-        this.particleContainer.removeChild(particle.sprite);
-        particle.sprite.destroy();
-        this.particles.splice(i, 1);
-        continue;
+        const angle = (Math.PI * 2 / points) * i;
+        const radius = splatterSize * (0.5 + Math.random() * 0.8);
+        g.lineTo(Math.cos(angle) * radius, Math.sin(angle) * radius);
       }
-      
-      // Update position
-      particle.sprite.x += particle.vx * delta;
-      particle.sprite.y += particle.vy * delta;
-      
-      // Update alpha based on life remaining
-      const lifePercent = particle.life / particle.maxLife;
-      particle.sprite.alpha = lifePercent;
-      
-      // Scale down over time
-      const scale = 0.5 + (lifePercent * 0.5);
-      particle.sprite.scale.set(scale);
+      g.closePath();
+      g.fill({ color: drop.color, alpha: alpha * 0.8 });
     }
+    
+    g.x = drop.x;
+    g.y = drop.y;
   }
   
-  /**
-   * Cleanup and destroy
-   */
   destroy(): void
   {
-    // Remove event listeners
     if (this.boundMouseMove)
     {
       window.removeEventListener('mousemove', this.boundMouseMove);
-    }
-    
-    if (this.boundMouseEnter)
-    {
-      window.removeEventListener('mouseenter', this.boundMouseEnter);
     }
     
     if (this.boundMouseLeave)
@@ -328,20 +508,17 @@ export class CursorEffectComponent
       window.removeEventListener('theme:toggle', this.boundThemeToggle);
     }
     
-    // Remove ticker
     if (this.boundTicker)
     {
       this.cursorApp.ticker.remove(this.boundTicker);
     }
     
-    // Clean up particles
-    this.particles.forEach(particle =>
-    {
-      particle.sprite.destroy();
-    });
+    this.particles.forEach(p => p.graphics.destroy());
     this.particles = [];
     
-    // Clean up containers
+    this.bloodDrops.forEach(d => d.graphics.destroy());
+    this.bloodDrops = [];
+    
     if (this.particleContainer)
     {
       this.particleContainer.destroy({ children: true });
@@ -351,9 +528,6 @@ export class CursorEffectComponent
     {
       this.cursorContainer.destroy({ children: true });
     }
-    
-    // Restore default cursor
-    document.body.style.cursor = 'auto';
     
     console.log('[CursorEffect] Destroyed');
   }

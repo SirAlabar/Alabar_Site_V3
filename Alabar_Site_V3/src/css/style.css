@@ -118,3 +118,11 @@
 {
   transform: rotate(135deg);
 }
+
+/* Hide default browser cursor everywhere */
+*,
+*::before,
+*::after
+{
+  cursor: none !important;
+}
