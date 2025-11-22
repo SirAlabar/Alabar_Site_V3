@@ -17,14 +17,20 @@
     <!-- Loading Screen Container -->
     <div id="loading-container"></div>
     
-    <!-- Header Container -->
+    <!-- PIXI Layer 1: Background (parallax, clouds, environment) -->
+    <div id="pixi-bg"></div>
+    
+    <!-- DOM Layer: Header -->
     <div id="header-mount"></div>
     
-    <!-- Main App Container -->
+    <!-- DOM Layer: Main Content -->
     <div id="app"></div>
     
-    <!-- Pixi Canvas will be mounted here -->
-    <div id="pixi-mount"></div>
+    <!-- PIXI Layer 2: Game (gameplay, entities, combat) -->
+    <div id="pixi-game"></div>
+    
+    <!-- PIXI Layer 3: Cursor & Particle Effects (always on top) -->
+    <div id="pixi-cursor"></div>
     
     <script type="module" src="/src/main.ts"></script>
 </body>

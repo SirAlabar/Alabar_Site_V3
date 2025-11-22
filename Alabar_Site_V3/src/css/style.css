@@ -27,8 +27,12 @@
   }
 }
 
-/* Pixi canvas container styles */
-#pixi-mount
+/* ========================================
+   PIXI LAYER SYSTEM - Multi-App Architecture
+   ======================================== */
+
+/* PIXI Layer 1: Background (bottom layer) */
+#pixi-bg
 {
   position: absolute;
   top: 0;
@@ -39,12 +43,12 @@
   pointer-events: none;
 }
 
-#pixi-mount canvas
+#pixi-bg canvas
 {
-  pointer-events: auto;
+  pointer-events: none;
 }
 
-/* Ensure content overlays work properly */
+/* DOM Layers: Header and Content */
 #header-mount
 {
   position: relative;
@@ -57,7 +61,42 @@
   z-index: 10;
 }
 
-.wand-anim {
+/* PIXI Layer 2: Game (middle layer) */
+#pixi-game
+{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  pointer-events: none;
+}
+
+#pixi-game canvas
+{
+  pointer-events: auto;
+}
+
+/* PIXI Layer 3: Cursor & FX (top layer - always visible) */
+#pixi-cursor
+{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+#pixi-cursor canvas
+{
+  pointer-events: none;
+}
+
+.wand-anim
+{
   width: 32px;
   height: 32px;
   background-image: url('/assets/images/hamburger.webp');
@@ -69,12 +108,13 @@
   animation: wand 0.6s steps(5) infinite;
 }
 
-@keyframes wand {
+@keyframes wand
+{
   0% { background-position: 0 0; }
   100% { background-position: -160px 0; }
 }
 
-.menu-open #menu-wand {
+.menu-open #menu-wand
+{
   transform: rotate(135deg);
 }
-
