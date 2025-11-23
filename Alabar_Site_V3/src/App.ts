@@ -12,6 +12,7 @@ import { Router } from './router/Router';
 import { SceneManager } from './managers/SceneManager';
 import { CloudsManager } from './managers/CloudsManager';
 import { CursorEffectComponent } from './components/CursorEffectComponent';
+import { SiteGame } from '../src/game/core/SiteGame';
 
 export class App
 {
@@ -22,6 +23,7 @@ export class App
   private gameApp: Application | null = null;    // Layer 2: Game
   private cursorApp: Application | null = null;  // Layer 3: Cursor FX
   
+  private siteGame: SiteGame | null = null;  
   private assetManager: AssetManager | null = null;
   private loadingUI: LoadingUI | null = null;
   private router: Router | null = null;
@@ -73,6 +75,8 @@ export class App
 
       // Initialize Cursor Manager
       this.initCursorManager();
+
+      this.initSiteGame();
       
       // Initialize Router
       this.initRouter();
@@ -218,6 +222,19 @@ export class App
     
     console.log('[OK] Header Manager initialized');
   }
+
+    private initSiteGame(): void
+    {
+      if (!this.gameApp || !this.assetManager)
+      {
+        throw new Error('Cannot init SiteGame - dependencies missing');
+      }
+
+      this.siteGame = new SiteGame(this.gameApp, this.assetManager);
+      this.siteGame.initialize();
+
+      console.log('[OK] SiteGame initialized');
+    }
   
   private handleResize(): void
   {
@@ -384,6 +401,12 @@ export class App
     if (this.cursorApp)
     {
       this.cursorApp.destroy(true, { children: true });
+    }
+
+    if (this.siteGame)
+    {
+      this.siteGame.destroy();
+      this.siteGame = null;
     }
     
     this.isInitialized = false;
