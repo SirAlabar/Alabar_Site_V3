@@ -49,8 +49,6 @@ export class SiteGame
     
     // Listen for resize
     window.addEventListener('resize', this.handleResize.bind(this));
-    
-    console.log('[SiteGame] Initialized - canvas positioned at green fields');
   }
   
   /**
@@ -97,16 +95,12 @@ export class SiteGame
             canvasParent.style.left = `0px`;
             canvasParent.style.width = `100%`;
             canvasParent.style.height = `${gameHeight}px`;
-
-            console.log(`[SiteGame] Canvas parent set to top=${canvasY}px height=${gameHeight}px`);
         }
 
         this.gameApp.renderer.resize(
             this.gameApp.screen.width,
             gameHeight
         );
-
-        console.log(`[SiteGame] gameApp resized to height=${gameHeight}px`);
     }
 
   
@@ -132,9 +126,6 @@ export class SiteGame
     {
       this.player.updateBounds(this.gameBounds);
     }
-    
-    console.log('[SiteGame] Bounds updated (green fields area):', this.gameBounds);
-    console.log(`[SiteGame] Green fields height: ${greenFieldsHeight}px`);
   }
   
   /**
@@ -153,8 +144,6 @@ export class SiteGame
     
     // Start game loop
     this.start();
-    
-    console.log('[SiteGame] Started');
   }
   
   /**
@@ -180,8 +169,6 @@ export class SiteGame
     
     this.player.zIndex = 1000;
     this.gameContainer.addChild(this.player);
-    
-    console.log(`[SiteGame] Player spawned at (${startX}, ${startY}) in green fields`);
   }
   
   /**
@@ -196,8 +183,6 @@ export class SiteGame
     
     this.isRunning = true;
     this.gameApp.ticker.add(this.update, this);
-    
-    console.log('[SiteGame] Game loop started');
   }
   
   /**
@@ -212,8 +197,6 @@ export class SiteGame
     
     this.isRunning = false;
     this.gameApp.ticker.remove(this.update, this);
-    
-    console.log('[SiteGame] Game loop stopped');
   }
   
   /**
@@ -222,7 +205,6 @@ export class SiteGame
   pause(): void
   {
     this.isPaused = true;
-    console.log('[SiteGame] Paused');
   }
   
   /**
@@ -231,7 +213,6 @@ export class SiteGame
   resume(): void
   {
     this.isPaused = false;
-    console.log('[SiteGame] Resumed');
   }
   
   /**
@@ -282,9 +263,6 @@ export class SiteGame
         this.player.setPosition(clampedX, clampedY);
       }
     }
-    
-    const bgHeight = this.getBackgroundHeight();
-    console.log(`[SiteGame] Resize - Canvas positioned at ${bgHeight * 0.60}px`);
   }
   
   /**
@@ -338,7 +316,5 @@ export class SiteGame
     {
       this.gameContainer.destroy({ children: true });
     }
-    
-    console.log('[SiteGame] Destroyed');
   }
 }
