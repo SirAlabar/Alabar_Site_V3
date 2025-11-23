@@ -27,10 +27,6 @@
   }
 }
 
-/* ========================================
-   PIXI LAYER SYSTEM - Multi-App Architecture
-   ======================================== */
-
 /* PIXI Layer 1: Background (bottom layer) */
 #pixi-bg
 {
@@ -65,12 +61,11 @@
 #pixi-game
 {
   position: absolute;
-  top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
   z-index: 20;
   pointer-events: none;
+  border: 3px solid red;
 }
 
 #pixi-game canvas

@@ -1,11 +1,10 @@
 /**
  * LayoutManager - Handles rendering different layout types
- * MINIMAL VERSION - BaseComponent and PixiInitializer features commented until ready
  */
 
 import { BaseComponent } from '../components/BaseComponent';
 import { Layout } from '../components/common/Layout';
-// import { getPixiAppState, navigatePixiContent } from './pixi/PixiInitializer';
+
 
 // Module-level variables
 let layout: Layout;
@@ -83,91 +82,6 @@ export function renderDefault(component: BaseComponent): void
   }
 }
 
-
-// TODO: Uncomment when PIXI navigation is ready
-/*
-export function renderPixi(component: BaseComponent, page: string, subpage: string | null = null): void
-{
-  const app = document.querySelector('#app')!;
-
-  // Check if PIXI is initialized
-  const pixiState = getPixiAppState();
-  if (!pixiState.isInitialized)
-  {
-    console.error('PIXI not initialized yet');
-    return;
-  }
-
-  // Clear app container (keep pixi-mount separate)
-  app.innerHTML = `
-    <div class="h-screen w-screen" data-route-content="true">
-      <!-- PIXI canvas is in #pixi-mount -->
-    </div>
-  `;
-
-  // Navigate PIXI content
-  navigatePixiContent(page, subpage);
-
-  // Call component mount if needed (for DOM overlays)
-  if (typeof component.mount === 'function')
-  {
-    component.mount('#app');
-  }
-}
-*/
-
-// TODO: Uncomment when game components are ready
-/*
-export function renderGame(component: BaseComponent): void
-{
-  const app = document.querySelector('#app')!;
-
-  app.innerHTML = `
-    <div class="h-screen overflow-hidden" data-route-content="true">
-      <main class="h-full">
-        <div id="game-content" class="h-full"></div>
-      </main>
-    </div>
-  `;
-
-  mountComponent(component, '#game-content');
-}
-*/
-
-// TODO: Uncomment when needed
-/*
-export function renderMinimal(component: BaseComponent): void
-{
-  const app = document.querySelector('#app')!;
-
-  app.innerHTML = `
-    <div class="min-h-screen bg-rpg-darker" data-route-content="true">
-      <div id="minimal-content" class="min-h-screen flex items-center justify-center"></div>
-    </div>
-  `;
-
-  mountComponent(component, '#minimal-content');
-}
-
-function mountComponent(component: BaseComponent, selector: string): void
-{
-  const container = document.querySelector(selector);
-  if (!container)
-  {
-    console.error(`Container ${selector} not found`);
-    return;
-  }
-
-  // Render component HTML
-  container.innerHTML = component.render();
-
-  // Call mount if component has it
-  if (typeof component.mount === 'function')
-  {
-    component.mount(selector);
-  }
-}
-*/
 
 /**
  * Show loading screen

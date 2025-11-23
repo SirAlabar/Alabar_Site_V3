@@ -262,8 +262,6 @@ export class App
     {
       this.sceneManager.handleResize();
     }
-    
-    // Note: Cursor effect doesn't need resize handling (follows mouse)
   }
   
   /**

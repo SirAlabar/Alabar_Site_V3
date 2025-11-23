@@ -1,7 +1,5 @@
 /**
  * SiteGame.ts - Interactive website game layer
- * Simple gameplay on the site: walk around, kill enemies, find chest
- * Separate from the full Vampire Survivors game window
  */
 
 import { Application, Container } from 'pixi.js';
@@ -23,7 +21,7 @@ export class SiteGame
   private isRunning: boolean = false;
   private isPaused: boolean = false;
   
-  // Boundaries (the green gameplay area)
+  // Boundaries
   private gameBounds = {
     minX: 100,
     maxX: 0, // Will be set based on screen width
@@ -40,17 +38,11 @@ export class SiteGame
     this.gameContainer = new Container();
     this.gameContainer.label = 'SiteGameContainer';
     this.gameContainer.sortableChildren = true;
-    
-    // Position container at the start of green fields
-    // SceneManager sets body.style.minHeight to the background height
-    const bgHeight = this.getBackgroundHeight();
-    
-    this.gameContainer.position.set(
-      0,                        // No horizontal offset
-      bgHeight * 0.60          // Start at 60% (where green fields begin)
-    );
+    this.gameContainer.position.set(0, 0);
     
     this.gameApp.stage.addChild(this.gameContainer);
+    
+    this.positionCanvas();
     
     // Calculate initial bounds
     this.updateGameBounds();
@@ -58,8 +50,7 @@ export class SiteGame
     // Listen for resize
     window.addEventListener('resize', this.handleResize.bind(this));
     
-    console.log('[SiteGame] Initialized - container at green fields');
-    console.log(`[SiteGame] Background height: ${bgHeight}px, Container Y: ${bgHeight * 0.60}px`);
+    console.log('[SiteGame] Initialized - canvas positioned at green fields');
   }
   
   /**
@@ -85,24 +76,55 @@ export class SiteGame
   }
   
   /**
-   * Calculate game boundaries (the green playable area)
-   * Bounds are RELATIVE to the gameContainer position
+   * Position the canvas element in DOM at 60% of background height
+   */
+    private positionCanvas(): void
+    {
+        const bgHeight = this.getBackgroundHeight();
+
+        const gameHeight = bgHeight * 0.50;     
+
+        const canvasY = bgHeight * 0.50;
+
+        const canvasElement = this.gameApp.canvas;
+        const canvasParent = canvasElement.parentElement;
+
+        if (canvasParent)
+        {
+            // container DOM (#pixi-game)
+            canvasParent.style.position = "absolute";
+            canvasParent.style.top = `${canvasY}px`;
+            canvasParent.style.left = `0px`;
+            canvasParent.style.width = `100%`;
+            canvasParent.style.height = `${gameHeight}px`;
+
+            console.log(`[SiteGame] Canvas parent set to top=${canvasY}px height=${gameHeight}px`);
+        }
+
+        this.gameApp.renderer.resize(
+            this.gameApp.screen.width,
+            gameHeight
+        );
+
+        console.log(`[SiteGame] gameApp resized to height=${gameHeight}px`);
+    }
+
+  
+  /**
+   * Calculate game boundaries
    */
   private updateGameBounds(): void
   {
     const screenWidth = this.gameApp.screen.width;
     const bgHeight = this.getBackgroundHeight();
-    
-    // Container is positioned at 60% of background height
-    // Green fields cover the bottom 40% of background
-    const greenFieldsHeight = bgHeight * 0.40;
-    
-    // Playable area: Full width with margins, full green fields height
+
+    const greenFieldsHeight = bgHeight * 0.50;
+
     this.gameBounds = {
-      minX: 50,                       // Small left margin
-      maxX: screenWidth - 50,         // Small right margin
-      minY: 10,                       // Small top margin
-      maxY: greenFieldsHeight - 10    // Small bottom margin (relative to container)
+      minX: 25,                       // Small left margin
+      maxX: screenWidth -25,         // Small right margin
+      minY: 25,                       // Small top margin
+      maxY: greenFieldsHeight -25   // Small bottom margin
     };
     
     // Update player bounds if player exists
@@ -142,11 +164,10 @@ export class SiteGame
   {
     const screenWidth = this.gameApp.screen.width;
     const bgHeight = this.getBackgroundHeight();
-    const greenFieldsHeight = bgHeight * 0.40;
+    const greenFieldsHeight = bgHeight * 0.50;
     
-    // Position: Left-center of the playable area (inside green fields)
-    const startX = screenWidth * 0.20;           // 20% from left
-    const startY = greenFieldsHeight * 0.50;     // Middle of green fields height
+    const startX = screenWidth * 0.20;
+    const startY = greenFieldsHeight * 0.50;
     
     this.player = new Player(this.assetManager, {
       startX: startX,
@@ -155,7 +176,6 @@ export class SiteGame
       bounds: this.gameBounds
     });
     
-    // Scale up the player (64px sprite to 128px)
     this.player.scale.set(2.0, 2.0);
     
     this.player.zIndex = 1000;
@@ -242,13 +262,8 @@ export class SiteGame
    */
   private handleResize(): void
   {
-    const bgHeight = this.getBackgroundHeight();
-    
-    // Reposition container at green fields start (60% of background height)
-    this.gameContainer.position.set(
-      0,                        // No horizontal offset
-      bgHeight * 0.60          // Start at 60%
-    );
+    // Reposition canvas at green fields start
+    this.positionCanvas();
     
     // Update bounds
     this.updateGameBounds();
@@ -268,7 +283,8 @@ export class SiteGame
       }
     }
     
-    console.log(`[SiteGame] Resize - Container Y: ${bgHeight * 0.60}px`);
+    const bgHeight = this.getBackgroundHeight();
+    console.log(`[SiteGame] Resize - Canvas positioned at ${bgHeight * 0.60}px`);
   }
   
   /**
