@@ -4610,7 +4610,7 @@
     }
   },
   "animations": {
-    "atk_down": [
+    "Slime2_atk_down": [
       "Slime2_atk_down_0",
       "Slime2_atk_down_1",
       "Slime2_atk_down_2",
@@ -4623,7 +4623,7 @@
       "Slime2_atk_down_9",
       "Slime2_atk_down_10"
     ],
-    "atk_up": [
+    "Slime2_atk_up": [
       "Slime2_atk_up_0",
       "Slime2_atk_up_1",
       "Slime2_atk_up_2",
@@ -4636,7 +4636,7 @@
       "Slime2_atk_up_9",
       "Slime2_atk_up_10"
     ],
-    "atk_left": [
+    "Slime2_atk_left": [
       "Slime2_atk_left_0",
       "Slime2_atk_left_1",
       "Slime2_atk_left_2",
@@ -4649,7 +4649,7 @@
       "Slime2_atk_left_9",
       "Slime2_atk_left_10"
     ],
-    "atk_right": [
+    "Slime2_atk_right": [
       "Slime2_atk_right_0",
       "Slime2_atk_right_1",
       "Slime2_atk_right_2",
@@ -4662,7 +4662,7 @@
       "Slime2_atk_right_9",
       "Slime2_atk_right_10"
     ],
-    "death_down": [
+    "Slime2_death_down": [
       "Slime2_death_down_0",
       "Slime2_death_down_1",
       "Slime2_death_down_2",
@@ -4674,7 +4674,7 @@
       "Slime2_death_down_8",
       "Slime2_death_down_9"
     ],
-    "death_up": [
+    "Slime2_death_up": [
       "Slime2_death_up_0",
       "Slime2_death_up_1",
       "Slime2_death_up_2",
@@ -4686,7 +4686,7 @@
       "Slime2_death_up_8",
       "Slime2_death_up_9"
     ],
-    "death_left": [
+    "Slime2_death_left": [
       "Slime2_death_left_0",
       "Slime2_death_left_1",
       "Slime2_death_left_2",
@@ -4698,7 +4698,7 @@
       "Slime2_death_left_8",
       "Slime2_death_left_9"
     ],
-    "death_right": [
+    "Slime2_death_right": [
       "Slime2_death_right_0",
       "Slime2_death_right_1",
       "Slime2_death_right_2",
@@ -4710,35 +4710,35 @@
       "Slime2_death_right_8",
       "Slime2_death_right_9"
     ],
-    "hurt_down": [
+    "Slime2_hurt_down": [
       "Slime2_hurt_down_0",
       "Slime2_hurt_down_1",
       "Slime2_hurt_down_2",
       "Slime2_hurt_down_3",
       "Slime2_hurt_down_4"
     ],
-    "hurt_up": [
+    "Slime2_hurt_up": [
       "Slime2_hurt_up_0",
       "Slime2_hurt_up_1",
       "Slime2_hurt_up_2",
       "Slime2_hurt_up_3",
       "Slime2_hurt_up_4"
     ],
-    "hurt_left": [
+    "Slime2_hurt_left": [
       "Slime2_hurt_left_0",
       "Slime2_hurt_left_1",
       "Slime2_hurt_left_2",
       "Slime2_hurt_left_3",
       "Slime2_hurt_left_4"
     ],
-    "hurt_right": [
+    "Slime2_hurt_right": [
       "Slime2_hurt_right_0",
       "Slime2_hurt_right_1",
       "Slime2_hurt_right_2",
       "Slime2_hurt_right_3",
       "Slime2_hurt_right_4"
     ],
-    "idle_down": [
+    "Slime2_idle_down": [
       "Slime2_idle_down_0",
       "Slime2_idle_down_1",
       "Slime2_idle_down_2",
@@ -4746,7 +4746,7 @@
       "Slime2_idle_down_4",
       "Slime2_idle_down_5"
     ],
-    "idle_up": [
+    "Slime2_idle_up": [
       "Slime2_idle_up_0",
       "Slime2_idle_up_1",
       "Slime2_idle_up_2",
@@ -4754,7 +4754,7 @@
       "Slime2_idle_up_4",
       "Slime2_idle_up_5"
     ],
-    "idle_left": [
+    "Slime2_idle_left": [
       "Slime2_idle_left_0",
       "Slime2_idle_left_1",
       "Slime2_idle_left_2",
@@ -4762,7 +4762,7 @@
       "Slime2_idle_left_4",
       "Slime2_idle_left_5"
     ],
-    "idle_right": [
+    "Slime2_idle_right": [
       "Slime2_idle_right_0",
       "Slime2_idle_right_1",
       "Slime2_idle_right_2",
@@ -4770,7 +4770,7 @@
       "Slime2_idle_right_4",
       "Slime2_idle_right_5"
     ],
-    "run_down": [
+    "Slime2_run_down": [
       "Slime2_run_down_0",
       "Slime2_run_down_1",
       "Slime2_run_down_2",
@@ -4780,7 +4780,7 @@
       "Slime2_run_down_6",
       "Slime2_run_down_7"
     ],
-    "run_up": [
+    "Slime2_run_up": [
       "Slime2_run_up_0",
       "Slime2_run_up_1",
       "Slime2_run_up_2",
@@ -4790,7 +4790,7 @@
       "Slime2_run_up_6",
       "Slime2_run_up_7"
     ],
-    "run_left": [
+    "Slime2_run_left": [
       "Slime2_run_left_0",
       "Slime2_run_left_1",
       "Slime2_run_left_2",
@@ -4800,7 +4800,7 @@
       "Slime2_run_left_6",
       "Slime2_run_left_7"
     ],
-    "run_right": [
+    "Slime2_run_right": [
       "Slime2_run_right_0",
       "Slime2_run_right_1",
       "Slime2_run_right_2",
@@ -4810,7 +4810,7 @@
       "Slime2_run_right_6",
       "Slime2_run_right_7"
     ],
-    "walk_down": [
+    "Slime2_walk_down": [
       "Slime2_walk_down_0",
       "Slime2_walk_down_1",
       "Slime2_walk_down_2",
@@ -4820,7 +4820,7 @@
       "Slime2_walk_down_6",
       "Slime2_walk_down_7"
     ],
-    "walk_up": [
+    "Slime2_walk_up": [
       "Slime2_walk_up_0",
       "Slime2_walk_up_1",
       "Slime2_walk_up_2",
@@ -4830,7 +4830,7 @@
       "Slime2_walk_up_6",
       "Slime2_walk_up_7"
     ],
-    "walk_left": [
+    "Slime2_walk_left": [
       "Slime2_walk_left_0",
       "Slime2_walk_left_1",
       "Slime2_walk_left_2",
@@ -4840,7 +4840,7 @@
       "Slime2_walk_left_6",
       "Slime2_walk_left_7"
     ],
-    "walk_right": [
+    "Slime2_walk_right": [
       "Slime2_walk_right_0",
       "Slime2_walk_right_1",
       "Slime2_walk_right_2",
