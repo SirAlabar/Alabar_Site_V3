@@ -4032,7 +4032,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_walk_up_0": {
+    "Leo_Hero_walk_down_0": {
       "frame": {
         "x": 0,
         "y": 1536,
@@ -4056,7 +4056,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_walk_up_1": {
+    "Leo_Hero_walk_down_1": {
       "frame": {
         "x": 64,
         "y": 1536,
@@ -4080,7 +4080,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_walk_up_2": {
+    "Leo_Hero_walk_down_2": {
       "frame": {
         "x": 128,
         "y": 1536,
@@ -4104,7 +4104,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_walk_up_3": {
+    "Leo_Hero_walk_down_3": {
       "frame": {
         "x": 192,
         "y": 1536,
@@ -4128,7 +4128,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_walk_up_4": {
+    "Leo_Hero_walk_down_4": {
       "frame": {
         "x": 256,
         "y": 1536,
@@ -4152,7 +4152,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_walk_up_5": {
+    "Leo_Hero_walk_down_5": {
       "frame": {
         "x": 320,
         "y": 1536,
@@ -4464,7 +4464,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_walk_down_0": {
+    "Leo_Hero_walk_up_0": {
       "frame": {
         "x": 0,
         "y": 1728,
@@ -4488,7 +4488,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_walk_down_1": {
+    "Leo_Hero_walk_up_1": {
       "frame": {
         "x": 64,
         "y": 1728,
@@ -4512,7 +4512,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_walk_down_2": {
+    "Leo_Hero_walk_up_2": {
       "frame": {
         "x": 128,
         "y": 1728,
@@ -4536,7 +4536,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_walk_down_3": {
+    "Leo_Hero_walk_up_3": {
       "frame": {
         "x": 192,
         "y": 1728,
@@ -4560,7 +4560,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_walk_down_4": {
+    "Leo_Hero_walk_up_4": {
       "frame": {
         "x": 256,
         "y": 1728,
@@ -4584,7 +4584,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_walk_down_5": {
+    "Leo_Hero_walk_up_5": {
       "frame": {
         "x": 320,
         "y": 1728,

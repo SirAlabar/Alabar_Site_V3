@@ -26,7 +26,7 @@ export class Slime1 extends MonsterBase
     const monsterConfig: MonsterConfig = {
       startX: config.startX,
       startY: config.startY,
-      speed: 1.0,
+      speed: 0.75,
       spritesheetKey: 'slime1_spritesheet',
       animationPrefix: 'Slime1',
       health: 50,
