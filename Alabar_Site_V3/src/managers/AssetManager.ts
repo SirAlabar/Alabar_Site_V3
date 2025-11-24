@@ -22,6 +22,7 @@ interface AssetPaths
     linkedin: string;
     cursors: { light: string; dark: string };
   };
+  powers: { spritesheet: string; data: string };
 }
 
 export class AssetManager
@@ -134,6 +135,10 @@ export class AssetManager
         light: '/assets/images/cursor_light.png',
         dark: '/assets/images/cursor_night.png'
       }
+    },
+    powers: {
+      spritesheet: '/assets/images/powers/powers.png',
+      data: '/assets/images/powers/powers.json'
     }
   };
   
@@ -257,6 +262,12 @@ export class AssetManager
       alias: 'clouds_spritesheet',
       src: this.assetPaths.clouds.data
     });
+
+    // Powers spritesheet
+    assets.push({
+      alias: 'powers_spritesheet',
+      src: this.assetPaths.powers.data
+    });
     
     // Light background textures (plain images, no JSON)
     for (const [key, path] of Object.entries(this.assetPaths.backgrounds.light))
@@ -341,7 +352,8 @@ export class AssetManager
     const spritesheetAliases = [
       'player_spritesheet',
       'clouds_spritesheet',
-      ...Object.keys(this.assetPaths.monsters).map(key => `${key}_spritesheet`)
+      ...Object.keys(this.assetPaths.monsters).map(key => `${key}_spritesheet`),
+      'powers_spritesheet'
     ];
     
     for (const alias of spritesheetAliases)
