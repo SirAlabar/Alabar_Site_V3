@@ -3842,8 +3842,7 @@
     }
   },
   "animations": {
-    "atk": [],
-    "atk_down": [
+    "Orc1_atk_down": [
       "Orc1_atk_down_0",
       "Orc1_atk_down_1",
       "Orc1_atk_down_2",
@@ -3853,7 +3852,7 @@
       "Orc1_atk_down_6",
       "Orc1_atk_down_7"
     ],
-    "atk_up": [
+    "Orc1_atk_up": [
       "Orc1_atk_up_0",
       "Orc1_atk_up_1",
       "Orc1_atk_up_2",
@@ -3863,7 +3862,7 @@
       "Orc1_atk_up_6",
       "Orc1_atk_up_7"
     ],
-    "atk_left": [
+    "Orc1_atk_left": [
       "Orc1_atk_left_0",
       "Orc1_atk_left_1",
       "Orc1_atk_left_2",
@@ -3873,7 +3872,7 @@
       "Orc1_atk_left_6",
       "Orc1_atk_left_7"
     ],
-    "atk_right": [
+    "Orc1_atk_right": [
       "Orc1_atk_right_0",
       "Orc1_atk_right_1",
       "Orc1_atk_right_2",
@@ -3883,8 +3882,7 @@
       "Orc1_atk_right_6",
       "Orc1_atk_right_7"
     ],
-    "death": [],
-    "death_down": [
+    "Orc1_death_down": [
       "Orc1_death_down_0",
       "Orc1_death_down_1",
       "Orc1_death_down_2",
@@ -3894,7 +3892,7 @@
       "Orc1_death_down_6",
       "Orc1_death_down_7"
     ],
-    "death_up": [
+    "Orc1_death_up": [
       "Orc1_death_up_0",
       "Orc1_death_up_1",
       "Orc1_death_up_2",
@@ -3904,7 +3902,7 @@
       "Orc1_death_up_6",
       "Orc1_death_up_7"
     ],
-    "death_left": [
+    "Orc1_death_left": [
       "Orc1_death_left_0",
       "Orc1_death_left_1",
       "Orc1_death_left_2",
@@ -3914,7 +3912,7 @@
       "Orc1_death_left_6",
       "Orc1_death_left_7"
     ],
-    "death_right": [
+    "Orc1_death_right": [
       "Orc1_death_right_0",
       "Orc1_death_right_1",
       "Orc1_death_right_2",
@@ -3924,8 +3922,7 @@
       "Orc1_death_right_6",
       "Orc1_death_right_7"
     ],
-    "hurt": [],
-    "hurt_down": [
+    "Orc1_hurt_down": [
       "Orc1_hurt_down_0",
       "Orc1_hurt_down_1",
       "Orc1_hurt_down_2",
@@ -3933,7 +3930,7 @@
       "Orc1_hurt_down_4",
       "Orc1_hurt_down_5"
     ],
-    "hurt_up": [
+    "Orc1_hurt_up": [
       "Orc1_hurt_up_0",
       "Orc1_hurt_up_1",
       "Orc1_hurt_up_2",
@@ -3941,7 +3938,7 @@
       "Orc1_hurt_up_4",
       "Orc1_hurt_up_5"
     ],
-    "hurt_left": [
+    "Orc1_hurt_left": [
       "Orc1_hurt_left_0",
       "Orc1_hurt_left_1",
       "Orc1_hurt_left_2",
@@ -3949,7 +3946,7 @@
       "Orc1_hurt_left_4",
       "Orc1_hurt_left_5"
     ],
-    "hurt_right": [
+    "Orc1_hurt_right": [
       "Orc1_hurt_right_0",
       "Orc1_hurt_right_1",
       "Orc1_hurt_right_2",
@@ -3957,33 +3954,31 @@
       "Orc1_hurt_right_4",
       "Orc1_hurt_right_5"
     ],
-    "idle": [],
-    "idle_down": [
+    "Orc1_idle_down": [
       "Orc1_idle_down_0",
       "Orc1_idle_down_1",
       "Orc1_idle_down_2",
       "Orc1_idle_down_3"
     ],
-    "idle_up": [
+    "Orc1_idle_up": [
       "Orc1_idle_up_0",
       "Orc1_idle_up_1",
       "Orc1_idle_up_2",
       "Orc1_idle_up_3"
     ],
-    "idle_left": [
+    "Orc1_idle_left": [
       "Orc1_idle_left_0",
       "Orc1_idle_left_1",
       "Orc1_idle_left_2",
       "Orc1_idle_left_3"
     ],
-    "idle_right": [
+    "Orc1_idle_right": [
       "Orc1_idle_right_0",
       "Orc1_idle_right_1",
       "Orc1_idle_right_2",
       "Orc1_idle_right_3"
     ],
-    "run": [],
-    "run_down": [
+    "Orc1_run_down": [
       "Orc1_run_down_0",
       "Orc1_run_down_1",
       "Orc1_run_down_2",
@@ -3993,7 +3988,7 @@
       "Orc1_run_down_6",
       "Orc1_run_down_7"
     ],
-    "run_up": [
+    "Orc1_run_up": [
       "Orc1_run_up_0",
       "Orc1_run_up_1",
       "Orc1_run_up_2",
@@ -4003,7 +3998,7 @@
       "Orc1_run_up_6",
       "Orc1_run_up_7"
     ],
-    "run_left": [
+    "Orc1_run_left": [
       "Orc1_run_left_0",
       "Orc1_run_left_1",
       "Orc1_run_left_2",
@@ -4013,7 +4008,7 @@
       "Orc1_run_left_6",
       "Orc1_run_left_7"
     ],
-    "run_right": [
+    "Orc1_run_right": [
       "Orc1_run_right_0",
       "Orc1_run_right_1",
       "Orc1_run_right_2",
@@ -4023,8 +4018,7 @@
       "Orc1_run_right_6",
       "Orc1_run_right_7"
     ],
-    "walk": [],
-    "walk_down": [
+    "Orc1_walk_down": [
       "Orc1_walk_down_0",
       "Orc1_walk_down_1",
       "Orc1_walk_down_2",
@@ -4032,7 +4026,7 @@
       "Orc1_walk_down_4",
       "Orc1_walk_down_5"
     ],
-    "walk_up": [
+    "Orc1_walk_up": [
       "Orc1_walk_up_0",
       "Orc1_walk_up_1",
       "Orc1_walk_up_2",
@@ -4040,7 +4034,7 @@
       "Orc1_walk_up_4",
       "Orc1_walk_up_5"
     ],
-    "walk_left": [
+    "Orc1_walk_left": [
       "Orc1_walk_left_0",
       "Orc1_walk_left_1",
       "Orc1_walk_left_2",
@@ -4048,7 +4042,7 @@
       "Orc1_walk_left_4",
       "Orc1_walk_left_5"
     ],
-    "walk_right": [
+    "Orc1_walk_right": [
       "Orc1_walk_right_0",
       "Orc1_walk_right_1",
       "Orc1_walk_right_2",

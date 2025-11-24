@@ -4322,7 +4322,7 @@
     }
   },
   "animations": {
-    "atk_down": [
+    "Vampire2_atk_down": [
       "Vampire2_atk_down_0",
       "Vampire2_atk_down_1",
       "Vampire2_atk_down_2",
@@ -4336,7 +4336,7 @@
       "Vampire2_atk_down_10",
       "Vampire2_atk_down_11"
     ],
-    "atk_up": [
+    "Vampire2_atk_up": [
       "Vampire2_atk_up_0",
       "Vampire2_atk_up_1",
       "Vampire2_atk_up_2",
@@ -4350,7 +4350,7 @@
       "Vampire2_atk_up_10",
       "Vampire2_atk_up_11"
     ],
-    "atk_left": [
+    "Vampire2_atk_left": [
       "Vampire2_atk_left_0",
       "Vampire2_atk_left_1",
       "Vampire2_atk_left_2",
@@ -4364,7 +4364,7 @@
       "Vampire2_atk_left_10",
       "Vampire2_atk_left_11"
     ],
-    "atk_right": [
+    "Vampire2_atk_right": [
       "Vampire2_atk_right_0",
       "Vampire2_atk_right_1",
       "Vampire2_atk_right_2",
@@ -4378,7 +4378,7 @@
       "Vampire2_atk_right_10",
       "Vampire2_atk_right_11"
     ],
-    "death_down": [
+    "Vampire2_death_down": [
       "Vampire2_death_down_0",
       "Vampire2_death_down_1",
       "Vampire2_death_down_2",
@@ -4391,7 +4391,7 @@
       "Vampire2_death_down_9",
       "Vampire2_death_down_10"
     ],
-    "death_up": [
+    "Vampire2_death_up": [
       "Vampire2_death_up_0",
       "Vampire2_death_up_1",
       "Vampire2_death_up_2",
@@ -4404,7 +4404,7 @@
       "Vampire2_death_up_9",
       "Vampire2_death_up_10"
     ],
-    "death_left": [
+    "Vampire2_death_left": [
       "Vampire2_death_left_0",
       "Vampire2_death_left_1",
       "Vampire2_death_left_2",
@@ -4417,7 +4417,7 @@
       "Vampire2_death_left_9",
       "Vampire2_death_left_10"
     ],
-    "death_right": [
+    "Vampire2_death_right": [
       "Vampire2_death_right_0",
       "Vampire2_death_right_1",
       "Vampire2_death_right_2",
@@ -4430,55 +4430,55 @@
       "Vampire2_death_right_9",
       "Vampire2_death_right_10"
     ],
-    "hurt_down": [
+    "Vampire2_hurt_down": [
       "Vampire2_hurt_down_0",
       "Vampire2_hurt_down_1",
       "Vampire2_hurt_down_2",
       "Vampire2_hurt_down_3"
     ],
-    "hurt_up": [
+    "Vampire2_hurt_up": [
       "Vampire2_hurt_up_0",
       "Vampire2_hurt_up_1",
       "Vampire2_hurt_up_2",
       "Vampire2_hurt_up_3"
     ],
-    "hurt_left": [
+    "Vampire2_hurt_left": [
       "Vampire2_hurt_left_0",
       "Vampire2_hurt_left_1",
       "Vampire2_hurt_left_2",
       "Vampire2_hurt_left_3"
     ],
-    "hurt_right": [
+    "Vampire2_hurt_right": [
       "Vampire2_hurt_right_0",
       "Vampire2_hurt_right_1",
       "Vampire2_hurt_right_2",
       "Vampire2_hurt_right_3"
     ],
-    "idle_down": [
+    "Vampire2_idle_down": [
       "Vampire2_idle_down_0",
       "Vampire2_idle_down_1",
       "Vampire2_idle_down_2",
       "Vampire2_idle_down_3"
     ],
-    "idle_up": [
+    "Vampire2_idle_up": [
       "Vampire2_idle_up_0",
       "Vampire2_idle_up_1",
       "Vampire2_idle_up_2",
       "Vampire2_idle_up_3"
     ],
-    "idle_left": [
+    "Vampire2_idle_left": [
       "Vampire2_idle_left_0",
       "Vampire2_idle_left_1",
       "Vampire2_idle_left_2",
       "Vampire2_idle_left_3"
     ],
-    "idle_right": [
+    "Vampire2_idle_right": [
       "Vampire2_idle_right_0",
       "Vampire2_idle_right_1",
       "Vampire2_idle_right_2",
       "Vampire2_idle_right_3"
     ],
-    "run_down": [
+    "Vampire2_run_down": [
       "Vampire2_run_down_0",
       "Vampire2_run_down_1",
       "Vampire2_run_down_2",
@@ -4488,7 +4488,7 @@
       "Vampire2_run_down_6",
       "Vampire2_run_down_7"
     ],
-    "run_up": [
+    "Vampire2_run_up": [
       "Vampire2_run_up_0",
       "Vampire2_run_up_1",
       "Vampire2_run_up_2",
@@ -4498,7 +4498,7 @@
       "Vampire2_run_up_6",
       "Vampire2_run_up_7"
     ],
-    "run_left": [
+    "Vampire2_run_left": [
       "Vampire2_run_left_0",
       "Vampire2_run_left_1",
       "Vampire2_run_left_2",
@@ -4508,7 +4508,7 @@
       "Vampire2_run_left_6",
       "Vampire2_run_left_7"
     ],
-    "run_right": [
+    "Vampire2_run_right": [
       "Vampire2_run_right_0",
       "Vampire2_run_right_1",
       "Vampire2_run_right_2",
@@ -4518,7 +4518,7 @@
       "Vampire2_run_right_6",
       "Vampire2_run_right_7"
     ],
-    "walk_down": [
+    "Vampire2_walk_down": [
       "Vampire2_walk_down_0",
       "Vampire2_walk_down_1",
       "Vampire2_walk_down_2",
@@ -4526,7 +4526,7 @@
       "Vampire2_walk_down_4",
       "Vampire2_walk_down_5"
     ],
-    "walk_up": [
+    "Vampire2_walk_up": [
       "Vampire2_walk_up_0",
       "Vampire2_walk_up_1",
       "Vampire2_walk_up_2",
@@ -4534,7 +4534,7 @@
       "Vampire2_walk_up_4",
       "Vampire2_walk_up_5"
     ],
-    "walk_left": [
+    "Vampire2_walk_left": [
       "Vampire2_walk_left_0",
       "Vampire2_walk_left_1",
       "Vampire2_walk_left_2",
@@ -4542,7 +4542,7 @@
       "Vampire2_walk_left_4",
       "Vampire2_walk_left_5"
     ],
-    "walk_right": [
+    "Vampire2_walk_right": [
       "Vampire2_walk_right_0",
       "Vampire2_walk_right_1",
       "Vampire2_walk_right_2",

@@ -3842,7 +3842,7 @@
     }
   },
   "animations": {
-    "atk_down": [
+    "Plant1_atk_down": [
       "Plant1_atk_down_0",
       "Plant1_atk_down_1",
       "Plant1_atk_down_2",
@@ -3851,7 +3851,7 @@
       "Plant1_atk_down_5",
       "Plant1_atk_down_6"
     ],
-    "atk_up": [
+    "Plant1_atk_up": [
       "Plant1_atk_up_0",
       "Plant1_atk_up_1",
       "Plant1_atk_up_2",
@@ -3860,7 +3860,7 @@
       "Plant1_atk_up_5",
       "Plant1_atk_up_6"
     ],
-    "atk_left": [
+    "Plant1_atk_left": [
       "Plant1_atk_left_0",
       "Plant1_atk_left_1",
       "Plant1_atk_left_2",
@@ -3869,7 +3869,7 @@
       "Plant1_atk_left_5",
       "Plant1_atk_left_6"
     ],
-    "atk_right": [
+    "Plant1_atk_right": [
       "Plant1_atk_right_0",
       "Plant1_atk_right_1",
       "Plant1_atk_right_2",
@@ -3878,7 +3878,7 @@
       "Plant1_atk_right_5",
       "Plant1_atk_right_6"
     ],
-    "death_down": [
+    "Plant1_death_down": [
       "Plant1_death_down_0",
       "Plant1_death_down_1",
       "Plant1_death_down_2",
@@ -3890,7 +3890,7 @@
       "Plant1_death_down_8",
       "Plant1_death_down_9"
     ],
-    "death_up": [
+    "Plant1_death_up": [
       "Plant1_death_up_0",
       "Plant1_death_up_1",
       "Plant1_death_up_2",
@@ -3902,7 +3902,7 @@
       "Plant1_death_up_8",
       "Plant1_death_up_9"
     ],
-    "death_left": [
+    "Plant1_death_left": [
       "Plant1_death_left_0",
       "Plant1_death_left_1",
       "Plant1_death_left_2",
@@ -3914,7 +3914,7 @@
       "Plant1_death_left_8",
       "Plant1_death_left_9"
     ],
-    "death_right": [
+    "Plant1_death_right": [
       "Plant1_death_right_0",
       "Plant1_death_right_1",
       "Plant1_death_right_2",
@@ -3926,59 +3926,59 @@
       "Plant1_death_right_8",
       "Plant1_death_right_9"
     ],
-    "hurt_down": [
+    "Plant1_hurt_down": [
       "Plant1_hurt_down_0",
       "Plant1_hurt_down_1",
       "Plant1_hurt_down_2",
       "Plant1_hurt_down_3",
       "Plant1_hurt_down_4"
     ],
-    "hurt_up": [
+    "Plant1_hurt_up": [
       "Plant1_hurt_up_0",
       "Plant1_hurt_up_1",
       "Plant1_hurt_up_2",
       "Plant1_hurt_up_3",
       "Plant1_hurt_up_4"
     ],
-    "hurt_left": [
+    "Plant1_hurt_left": [
       "Plant1_hurt_left_0",
       "Plant1_hurt_left_1",
       "Plant1_hurt_left_2",
       "Plant1_hurt_left_3",
       "Plant1_hurt_left_4"
     ],
-    "hurt_right": [
+    "Plant1_hurt_right": [
       "Plant1_hurt_right_0",
       "Plant1_hurt_right_1",
       "Plant1_hurt_right_2",
       "Plant1_hurt_right_3",
       "Plant1_hurt_right_4"
     ],
-    "idle_down": [
+    "Plant1_idle_down": [
       "Plant1_idle_down_0",
       "Plant1_idle_down_1",
       "Plant1_idle_down_2",
       "Plant1_idle_down_3"
     ],
-    "idle_up": [
+    "Plant1_idle_up": [
       "Plant1_idle_up_0",
       "Plant1_idle_up_1",
       "Plant1_idle_up_2",
       "Plant1_idle_up_3"
     ],
-    "idle_left": [
+    "Plant1_idle_left": [
       "Plant1_idle_left_0",
       "Plant1_idle_left_1",
       "Plant1_idle_left_2",
       "Plant1_idle_left_3"
     ],
-    "idle_right": [
+    "Plant1_idle_right": [
       "Plant1_idle_right_0",
       "Plant1_idle_right_1",
       "Plant1_idle_right_2",
       "Plant1_idle_right_3"
     ],
-    "run_down": [
+    "Plant1_run_down": [
       "Plant1_run_down_0",
       "Plant1_run_down_1",
       "Plant1_run_down_2",
@@ -3988,7 +3988,7 @@
       "Plant1_run_down_6",
       "Plant1_run_down_7"
     ],
-    "run_up": [
+    "Plant1_run_up": [
       "Plant1_run_up_0",
       "Plant1_run_up_1",
       "Plant1_run_up_2",
@@ -3998,7 +3998,7 @@
       "Plant1_run_up_6",
       "Plant1_run_up_7"
     ],
-    "run_left": [
+    "Plant1_run_left": [
       "Plant1_run_left_0",
       "Plant1_run_left_1",
       "Plant1_run_left_2",
@@ -4008,7 +4008,7 @@
       "Plant1_run_left_6",
       "Plant1_run_left_7"
     ],
-    "run_right": [
+    "Plant1_run_right": [
       "Plant1_run_right_0",
       "Plant1_run_right_1",
       "Plant1_run_right_2",
@@ -4018,7 +4018,7 @@
       "Plant1_run_right_6",
       "Plant1_run_right_7"
     ],
-    "walk_down": [
+    "Plant1_walk_down": [
       "Plant1_walk_down_0",
       "Plant1_walk_down_1",
       "Plant1_walk_down_2",
@@ -4026,7 +4026,7 @@
       "Plant1_walk_down_4",
       "Plant1_walk_down_5"
     ],
-    "walk_up": [
+    "Plant1_walk_up": [
       "Plant1_walk_up_0",
       "Plant1_walk_up_1",
       "Plant1_walk_up_2",
@@ -4034,7 +4034,7 @@
       "Plant1_walk_up_4",
       "Plant1_walk_up_5"
     ],
-    "walk_left": [
+    "Plant1_walk_left": [
       "Plant1_walk_left_0",
       "Plant1_walk_left_1",
       "Plant1_walk_left_2",
@@ -4042,7 +4042,7 @@
       "Plant1_walk_left_4",
       "Plant1_walk_left_5"
     ],
-    "walk_right": [
+    "Plant1_walk_right": [
       "Plant1_walk_right_0",
       "Plant1_walk_right_1",
       "Plant1_walk_right_2",

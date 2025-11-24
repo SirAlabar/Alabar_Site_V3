@@ -24,7 +24,7 @@ export class SiteGame
   // Entities
   private player: Player | null = null;
   private slimes: SlimeSpawnData[] = [];
-  private readonly MAX_SLIMES = 15;
+  private readonly MAX_SLIMES = 30;
   
   // Spawn settings
   private readonly RESPAWN_DELAY_MIN = 180; // 3 seconds at 60fps

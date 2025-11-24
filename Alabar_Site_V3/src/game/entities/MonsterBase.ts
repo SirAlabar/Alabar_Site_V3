@@ -341,7 +341,7 @@ export abstract class MonsterBase extends BaseEntity
 /**
  * Prevent monsters from overlapping each other
  */
-protected applySeparation(separationDistance = 35): void
+protected applySeparation(separationDistance = 50): void
 {
     if (!this.nearbyMonsters) return;
 
@@ -411,7 +411,7 @@ protected applySeparation(separationDistance = 35): void
         // Override in child classes for custom fleeing
         break;
     }
-    
+
     this.applySeparation();
   }
   
