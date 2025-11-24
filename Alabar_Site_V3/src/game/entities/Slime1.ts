@@ -27,12 +27,12 @@ export class Slime1 extends MonsterBase
       startX: config.startX,
       startY: config.startY,
       speed: 0.75,
-      spritesheetKey: 'slime1_spritesheet',
-      animationPrefix: 'Slime1',
+      spritesheetKey: 'slime2_spritesheet',
+      animationPrefix: 'Slime2',
       health: 50,
       damage: 10,
       attackRange: 40,
-      detectionRange: 300,
+      detectionRange: 3000,
       bounds: config.bounds
     };
     

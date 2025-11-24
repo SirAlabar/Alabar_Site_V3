@@ -50,6 +50,8 @@ export abstract class MonsterBase extends BaseEntity
   
   // Movement
   protected moveDirection: { x: number; y: number } = { x: 0, y: 0 };
+
+  protected nearbyMonsters: MonsterBase[] = [];
   
   constructor(assetManager: AssetManager, config: MonsterConfig)
   {
@@ -336,6 +338,42 @@ export abstract class MonsterBase extends BaseEntity
     // Override in child classes for custom death behavior
   }
   
+/**
+ * Prevent monsters from overlapping each other
+ */
+protected applySeparation(separationDistance = 35): void
+{
+    if (!this.nearbyMonsters) return;
+
+    let pushX = 0;
+    let pushY = 0;
+
+    for (const other of this.nearbyMonsters)
+    {
+        if (other === this) continue;
+
+        const dx = this.currentPosition.x - other.currentPosition.x;
+        const dy = this.currentPosition.y - other.currentPosition.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+
+        if (dist > 0 && dist < separationDistance)
+        {
+            pushX += dx / dist;
+            pushY += dy / dist;
+        }
+    }
+
+    if (pushX !== 0 || pushY !== 0)
+    {
+        this.currentPosition.x += pushX * 0.5;
+        this.currentPosition.y += pushY * 0.5;
+
+        this.position.set(this.currentPosition.x, this.currentPosition.y);
+    }
+}
+
+
+
   /**
    * Abstract AI decision method - must be implemented by specific monsters
    */
@@ -373,6 +411,8 @@ export abstract class MonsterBase extends BaseEntity
         // Override in child classes for custom fleeing
         break;
     }
+    
+    this.applySeparation();
   }
   
   /**
@@ -387,4 +427,9 @@ export abstract class MonsterBase extends BaseEntity
       behavior: MonsterBehavior[this.behavior]
     };
   }
+
+    public setNearbyMonsters(monsters: MonsterBase[]): void
+    {
+        this.nearbyMonsters = monsters;
+    }
 }

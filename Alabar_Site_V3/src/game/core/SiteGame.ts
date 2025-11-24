@@ -24,7 +24,7 @@ export class SiteGame
   // Entities
   private player: Player | null = null;
   private slimes: SlimeSpawnData[] = [];
-  private readonly MAX_SLIMES = 3;
+  private readonly MAX_SLIMES = 15;
   
   // Spawn settings
   private readonly RESPAWN_DELAY_MIN = 180; // 3 seconds at 60fps
@@ -292,6 +292,11 @@ export class SiteGame
       }
       else
       {
+        spawnData.slime.setNearbyMonsters(
+            this.slimes
+                .filter(s => !s.slime.isDead())
+                .map(s => s.slime)
+        );
         // Update alive slime
         spawnData.slime.update(delta);
       }
