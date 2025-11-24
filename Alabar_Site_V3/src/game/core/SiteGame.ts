@@ -5,6 +5,13 @@
 import { Application, Container } from 'pixi.js';
 import { AssetManager } from '../../managers/AssetManager';
 import { Player } from '../entities/Player';
+import { Slime1 } from '../entities/Slime1';
+
+interface SlimeSpawnData
+{
+  slime: Slime1;
+  respawnTimer: number;
+}
 
 export class SiteGame
 {
@@ -16,6 +23,12 @@ export class SiteGame
   
   // Entities
   private player: Player | null = null;
+  private slimes: SlimeSpawnData[] = [];
+  private readonly MAX_SLIMES = 3;
+  
+  // Spawn settings
+  private readonly RESPAWN_DELAY_MIN = 180; // 3 seconds at 60fps
+  private readonly RESPAWN_DELAY_MAX = 300; // 5 seconds at 60fps
   
   // Game state
   private isRunning: boolean = false;
@@ -76,33 +89,32 @@ export class SiteGame
   /**
    * Position the canvas element in DOM at 60% of background height
    */
-    private positionCanvas(): void
+  private positionCanvas(): void
+  {
+    const bgHeight = this.getBackgroundHeight();
+
+    const gameHeight = bgHeight * 0.50;     
+
+    const canvasY = bgHeight * 0.50;
+
+    const canvasElement = this.gameApp.canvas;
+    const canvasParent = canvasElement.parentElement;
+
+    if (canvasParent)
     {
-        const bgHeight = this.getBackgroundHeight();
-
-        const gameHeight = bgHeight * 0.50;     
-
-        const canvasY = bgHeight * 0.50;
-
-        const canvasElement = this.gameApp.canvas;
-        const canvasParent = canvasElement.parentElement;
-
-        if (canvasParent)
-        {
-            // container DOM (#pixi-game)
-            canvasParent.style.position = "absolute";
-            canvasParent.style.top = `${canvasY}px`;
-            canvasParent.style.left = `0px`;
-            canvasParent.style.width = `100%`;
-            canvasParent.style.height = `${gameHeight}px`;
-        }
-
-        this.gameApp.renderer.resize(
-            this.gameApp.screen.width,
-            gameHeight
-        );
+      // container DOM (#pixi-game)
+      canvasParent.style.position = "absolute";
+      canvasParent.style.top = `${canvasY}px`;
+      canvasParent.style.left = `0px`;
+      canvasParent.style.width = `100%`;
+      canvasParent.style.height = `${gameHeight}px`;
     }
 
+    this.gameApp.renderer.resize(
+      this.gameApp.screen.width,
+      gameHeight
+    );
+  }
   
   /**
    * Calculate game boundaries
@@ -116,15 +128,24 @@ export class SiteGame
 
     this.gameBounds = {
       minX: 25,                       // Small left margin
-      maxX: screenWidth -25,         // Small right margin
+      maxX: screenWidth - 25,         // Small right margin
       minY: 25,                       // Small top margin
-      maxY: greenFieldsHeight -25   // Small bottom margin
+      maxY: greenFieldsHeight - 25   // Small bottom margin
     };
     
     // Update player bounds if player exists
     if (this.player)
     {
       this.player.updateBounds(this.gameBounds);
+    }
+    
+    // Update slime bounds
+    for (const spawnData of this.slimes)
+    {
+      if (spawnData.slime)
+      {
+        spawnData.slime.updateBounds(this.gameBounds);
+      }
     }
   }
   
@@ -141,6 +162,9 @@ export class SiteGame
     
     // Spawn player
     this.spawnPlayer();
+    
+    // Spawn initial slime
+    this.spawnSlime();
     
     // Start game loop
     this.start();
@@ -169,6 +193,121 @@ export class SiteGame
     
     this.player.zIndex = 1000;
     this.gameContainer.addChild(this.player);
+  }
+  
+  /**
+   * Get random spawn position within bounds
+   */
+  private getRandomSpawnPosition(): { x: number; y: number }
+  {
+    const margin = 100; // Keep away from edges
+    
+    const x = this.gameBounds.minX + margin + 
+              Math.random() * (this.gameBounds.maxX - this.gameBounds.minX - margin * 2);
+    const y = this.gameBounds.minY + margin + 
+              Math.random() * (this.gameBounds.maxY - this.gameBounds.minY - margin * 2);
+    
+    return { x, y };
+  }
+  
+  /**
+   * Spawn a slime at random position
+   */
+  private spawnSlime(): void
+  {
+    if (this.slimes.length >= this.MAX_SLIMES)
+    {
+      return;
+    }
+    
+    const spawnPos = this.getRandomSpawnPosition();
+    
+    const slime = new Slime1(this.assetManager, {
+      startX: spawnPos.x,
+      startY: spawnPos.y,
+      bounds: this.gameBounds
+    });
+    
+    slime.scale.set(2.0, 2.0);
+    slime.zIndex = 500;
+    
+    // Set player as target
+    if (this.player)
+    {
+      slime.setTarget(this.player);
+    }
+    
+    this.gameContainer.addChild(slime);
+    
+    this.slimes.push({
+      slime: slime,
+      respawnTimer: 0
+    });
+    
+    console.log('[SiteGame] Slime spawned at', spawnPos);
+  }
+  
+  /**
+   * Get random respawn delay
+   */
+  private getRandomRespawnDelay(): number
+  {
+    return this.RESPAWN_DELAY_MIN + 
+           Math.random() * (this.RESPAWN_DELAY_MAX - this.RESPAWN_DELAY_MIN);
+  }
+  
+  /**
+   * Update slimes
+   */
+  private updateSlimes(delta: number): void
+  {
+    for (let i = this.slimes.length - 1; i >= 0; i--)
+    {
+      const spawnData = this.slimes[i];
+      
+      // Check if slime is dead
+      if (spawnData.slime.isDead())
+      {
+        // Start respawn timer if not already started
+        if (spawnData.respawnTimer === 0)
+        {
+          spawnData.respawnTimer = this.getRandomRespawnDelay();
+          console.log('[SiteGame] Slime died, respawning in', Math.floor(spawnData.respawnTimer / 60), 'seconds');
+        }
+        
+        // Update respawn timer
+        spawnData.respawnTimer--;
+        
+        // Respawn slime
+        if (spawnData.respawnTimer <= 0)
+        {
+          // Remove dead slime
+          this.gameContainer.removeChild(spawnData.slime);
+          spawnData.slime.destroy();
+          this.slimes.splice(i, 1);
+          
+          // Spawn new slime
+          this.spawnSlime();
+        }
+      }
+      else
+      {
+        // Update alive slime
+        spawnData.slime.update(delta);
+      }
+    }
+    
+    // Spawn additional slimes if below max
+    if (this.slimes.length < this.MAX_SLIMES)
+    {
+      // Only count alive slimes
+      const aliveSlimes = this.slimes.filter(s => !s.slime.isDead()).length;
+      
+      if (aliveSlimes < this.MAX_SLIMES)
+      {
+        this.spawnSlime();
+      }
+    }
   }
   
   /**
@@ -233,7 +372,9 @@ export class SiteGame
       this.player.update(delta);
     }
     
-    // TODO: Update enemies
+    // Update slimes
+    this.updateSlimes(delta);
+    
     // TODO: Update chest
     // TODO: Handle collisions
   }
@@ -311,6 +452,17 @@ export class SiteGame
       this.player.destroy();
       this.player = null;
     }
+    
+    // Cleanup slimes
+    for (const spawnData of this.slimes)
+    {
+      if (spawnData.slime)
+      {
+        this.gameContainer.removeChild(spawnData.slime);
+        spawnData.slime.destroy();
+      }
+    }
+    this.slimes = [];
     
     if (this.gameContainer)
     {

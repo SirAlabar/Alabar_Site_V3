@@ -1,6 +1,6 @@
 {
   "frames": {
-    "Leo_Hero_AttackFront_0": {
+    "Leo_Hero_atk_down_0": {
       "frame": {
         "x": 0,
         "y": 0,
@@ -24,7 +24,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_AttackFront_1": {
+    "Leo_Hero_atk_down_1": {
       "frame": {
         "x": 64,
         "y": 0,
@@ -48,7 +48,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_AttackFront_2": {
+    "Leo_Hero_atk_down_2": {
       "frame": {
         "x": 128,
         "y": 0,
@@ -72,7 +72,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_AttackFront_3": {
+    "Leo_Hero_atk_down_3": {
       "frame": {
         "x": 192,
         "y": 0,
@@ -96,7 +96,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_AttackFront_4": {
+    "Leo_Hero_atk_down_4": {
       "frame": {
         "x": 256,
         "y": 0,
@@ -120,7 +120,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_AttackFront_5": {
+    "Leo_Hero_atk_down_5": {
       "frame": {
         "x": 320,
         "y": 0,
@@ -144,7 +144,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_AttackLeft_0": {
+    "Leo_Hero_atk_left_0": {
       "frame": {
         "x": 0,
         "y": 64,
@@ -168,7 +168,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_AttackLeft_1": {
+    "Leo_Hero_atk_left_1": {
       "frame": {
         "x": 64,
         "y": 64,
@@ -192,7 +192,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_AttackLeft_2": {
+    "Leo_Hero_atk_left_2": {
       "frame": {
         "x": 128,
         "y": 64,
@@ -216,7 +216,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_AttackLeft_3": {
+    "Leo_Hero_atk_left_3": {
       "frame": {
         "x": 192,
         "y": 64,
@@ -240,7 +240,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_AttackLeft_4": {
+    "Leo_Hero_atk_left_4": {
       "frame": {
         "x": 256,
         "y": 64,
@@ -264,7 +264,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_AttackLeft_5": {
+    "Leo_Hero_atk_left_5": {
       "frame": {
         "x": 320,
         "y": 64,
@@ -288,7 +288,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_AttackRight_0": {
+    "Leo_Hero_atk_right_0": {
       "frame": {
         "x": 0,
         "y": 128,
@@ -312,7 +312,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_AttackRight_1": {
+    "Leo_Hero_atk_right_1": {
       "frame": {
         "x": 64,
         "y": 128,
@@ -336,7 +336,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_AttackRight_2": {
+    "Leo_Hero_atk_right_2": {
       "frame": {
         "x": 128,
         "y": 128,
@@ -360,7 +360,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_AttackRight_3": {
+    "Leo_Hero_atk_right_3": {
       "frame": {
         "x": 192,
         "y": 128,
@@ -384,7 +384,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_AttackRight_4": {
+    "Leo_Hero_atk_right_4": {
       "frame": {
         "x": 256,
         "y": 128,
@@ -408,7 +408,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_AttackRight_5": {
+    "Leo_Hero_atk_right_5": {
       "frame": {
         "x": 320,
         "y": 128,
@@ -432,7 +432,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_AttackBack_0": {
+    "Leo_Hero_atk_up_0": {
       "frame": {
         "x": 0,
         "y": 192,
@@ -456,7 +456,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_AttackBack_1": {
+    "Leo_Hero_atk_up_1": {
       "frame": {
         "x": 64,
         "y": 192,
@@ -480,7 +480,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_AttackBack_2": {
+    "Leo_Hero_atk_up_2": {
       "frame": {
         "x": 128,
         "y": 192,
@@ -504,7 +504,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_AttackBack_3": {
+    "Leo_Hero_atk_up_3": {
       "frame": {
         "x": 192,
         "y": 192,
@@ -528,7 +528,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_AttackBack_4": {
+    "Leo_Hero_atk_up_4": {
       "frame": {
         "x": 256,
         "y": 192,
@@ -552,7 +552,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_AttackBack_5": {
+    "Leo_Hero_atk_up_5": {
       "frame": {
         "x": 320,
         "y": 192,
@@ -576,7 +576,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_ShadowFront_0": {
+    "Leo_Hero_shadow_down_0": {
       "frame": {
         "x": 0,
         "y": 256,
@@ -600,7 +600,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_ShadowFront_1": {
+    "Leo_Hero_shadow_down_1": {
       "frame": {
         "x": 64,
         "y": 256,
@@ -624,7 +624,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_ShadowFront_2": {
+    "Leo_Hero_shadow_down_2": {
       "frame": {
         "x": 128,
         "y": 256,
@@ -648,7 +648,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_ShadowFront_3": {
+    "Leo_Hero_shadow_down_3": {
       "frame": {
         "x": 192,
         "y": 256,
@@ -672,7 +672,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_ShadowFront_4": {
+    "Leo_Hero_shadow_down_4": {
       "frame": {
         "x": 256,
         "y": 256,
@@ -696,7 +696,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_ShadowFront_5": {
+    "Leo_Hero_shadow_down_5": {
       "frame": {
         "x": 320,
         "y": 256,
@@ -720,7 +720,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_ShadowLeft_0": {
+    "Leo_Hero_shadow_left_0": {
       "frame": {
         "x": 0,
         "y": 320,
@@ -744,7 +744,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_ShadowLeft_1": {
+    "Leo_Hero_shadow_left_1": {
       "frame": {
         "x": 64,
         "y": 320,
@@ -768,7 +768,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_ShadowLeft_2": {
+    "Leo_Hero_shadow_left_2": {
       "frame": {
         "x": 128,
         "y": 320,
@@ -792,7 +792,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_ShadowLeft_3": {
+    "Leo_Hero_shadow_left_3": {
       "frame": {
         "x": 192,
         "y": 320,
@@ -816,7 +816,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_ShadowLeft_4": {
+    "Leo_Hero_shadow_left_4": {
       "frame": {
         "x": 256,
         "y": 320,
@@ -840,7 +840,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_ShadowLeft_5": {
+    "Leo_Hero_shadow_left_5": {
       "frame": {
         "x": 320,
         "y": 320,
@@ -864,7 +864,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_ShadowRight_0": {
+    "Leo_Hero_shadow_right_0": {
       "frame": {
         "x": 0,
         "y": 384,
@@ -888,7 +888,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_ShadowRight_1": {
+    "Leo_Hero_shadow_right_1": {
       "frame": {
         "x": 64,
         "y": 384,
@@ -912,7 +912,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_ShadowRight_2": {
+    "Leo_Hero_shadow_right_2": {
       "frame": {
         "x": 128,
         "y": 384,
@@ -936,7 +936,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_ShadowRight_3": {
+    "Leo_Hero_shadow_right_3": {
       "frame": {
         "x": 192,
         "y": 384,
@@ -960,7 +960,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_ShadowRight_4": {
+    "Leo_Hero_shadow_right_4": {
       "frame": {
         "x": 256,
         "y": 384,
@@ -984,7 +984,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_ShadowRight_5": {
+    "Leo_Hero_shadow_right_5": {
       "frame": {
         "x": 320,
         "y": 384,
@@ -1008,7 +1008,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_ShadowBack_0": {
+    "Leo_Hero_shadow_up_0": {
       "frame": {
         "x": 0,
         "y": 448,
@@ -1032,7 +1032,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_ShadowBack_1": {
+    "Leo_Hero_shadow_up_1": {
       "frame": {
         "x": 64,
         "y": 448,
@@ -1056,7 +1056,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_ShadowBack_2": {
+    "Leo_Hero_shadow_up_2": {
       "frame": {
         "x": 128,
         "y": 448,
@@ -1080,7 +1080,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_ShadowBack_3": {
+    "Leo_Hero_shadow_up_3": {
       "frame": {
         "x": 192,
         "y": 448,
@@ -1104,7 +1104,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_ShadowBack_4": {
+    "Leo_Hero_shadow_up_4": {
       "frame": {
         "x": 256,
         "y": 448,
@@ -1128,7 +1128,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_ShadowBack_5": {
+    "Leo_Hero_shadow_up_5": {
       "frame": {
         "x": 320,
         "y": 448,
@@ -1152,7 +1152,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtFront_0": {
+    "Leo_Hero_hurt_down_0": {
       "frame": {
         "x": 0,
         "y": 512,
@@ -1176,7 +1176,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtFront_1": {
+    "Leo_Hero_hurt_down_1": {
       "frame": {
         "x": 64,
         "y": 512,
@@ -1200,7 +1200,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtFront_2": {
+    "Leo_Hero_hurt_down_2": {
       "frame": {
         "x": 128,
         "y": 512,
@@ -1224,7 +1224,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtFront_3": {
+    "Leo_Hero_hurt_down_3": {
       "frame": {
         "x": 192,
         "y": 512,
@@ -1248,7 +1248,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtFront_4": {
+    "Leo_Hero_hurt_down_4": {
       "frame": {
         "x": 256,
         "y": 512,
@@ -1272,7 +1272,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtLeft_0": {
+    "Leo_Hero_hurt_left_0": {
       "frame": {
         "x": 0,
         "y": 576,
@@ -1296,7 +1296,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtLeft_1": {
+    "Leo_Hero_hurt_left_1": {
       "frame": {
         "x": 64,
         "y": 576,
@@ -1320,7 +1320,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtLeft_2": {
+    "Leo_Hero_hurt_left_2": {
       "frame": {
         "x": 128,
         "y": 576,
@@ -1344,7 +1344,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtLeft_3": {
+    "Leo_Hero_hurt_left_3": {
       "frame": {
         "x": 192,
         "y": 576,
@@ -1368,7 +1368,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtLeft_4": {
+    "Leo_Hero_hurt_left_4": {
       "frame": {
         "x": 256,
         "y": 576,
@@ -1392,7 +1392,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtRight_0": {
+    "Leo_Hero_hurt_right_0": {
       "frame": {
         "x": 0,
         "y": 640,
@@ -1416,7 +1416,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtRight_1": {
+    "Leo_Hero_hurt_right_1": {
       "frame": {
         "x": 64,
         "y": 640,
@@ -1440,7 +1440,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtRight_2": {
+    "Leo_Hero_hurt_right_2": {
       "frame": {
         "x": 128,
         "y": 640,
@@ -1464,7 +1464,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtRight_3": {
+    "Leo_Hero_hurt_right_3": {
       "frame": {
         "x": 192,
         "y": 640,
@@ -1488,7 +1488,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtRight_4": {
+    "Leo_Hero_hurt_right_4": {
       "frame": {
         "x": 256,
         "y": 640,
@@ -1512,7 +1512,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtBack_0": {
+    "Leo_Hero_hurt_up_0": {
       "frame": {
         "x": 0,
         "y": 704,
@@ -1536,7 +1536,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtBack_1": {
+    "Leo_Hero_hurt_up_1": {
       "frame": {
         "x": 64,
         "y": 704,
@@ -1560,7 +1560,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtBack_2": {
+    "Leo_Hero_hurt_up_2": {
       "frame": {
         "x": 128,
         "y": 704,
@@ -1584,7 +1584,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtBack_3": {
+    "Leo_Hero_hurt_up_3": {
       "frame": {
         "x": 192,
         "y": 704,
@@ -1608,7 +1608,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtBack_4": {
+    "Leo_Hero_hurt_up_4": {
       "frame": {
         "x": 256,
         "y": 704,
@@ -1632,7 +1632,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtShadowFront_0": {
+    "Leo_Hero_hurtshadow_down_0": {
       "frame": {
         "x": 0,
         "y": 768,
@@ -1656,7 +1656,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtShadowFront_1": {
+    "Leo_Hero_hurtshadow_down_1": {
       "frame": {
         "x": 64,
         "y": 768,
@@ -1680,7 +1680,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtShadowFront_2": {
+    "Leo_Hero_hurtshadow_down_2": {
       "frame": {
         "x": 128,
         "y": 768,
@@ -1704,7 +1704,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtShadowFront_3": {
+    "Leo_Hero_hurtshadow_down_3": {
       "frame": {
         "x": 192,
         "y": 768,
@@ -1728,7 +1728,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtShadowFront_4": {
+    "Leo_Hero_hurtshadow_down_4": {
       "frame": {
         "x": 256,
         "y": 768,
@@ -1752,7 +1752,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtShadowLeft_0": {
+    "Leo_Hero_hurtshadow_left_0": {
       "frame": {
         "x": 0,
         "y": 832,
@@ -1776,7 +1776,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtShadowLeft_1": {
+    "Leo_Hero_hurtshadow_left_1": {
       "frame": {
         "x": 64,
         "y": 832,
@@ -1800,7 +1800,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtShadowLeft_2": {
+    "Leo_Hero_hurtshadow_left_2": {
       "frame": {
         "x": 128,
         "y": 832,
@@ -1824,7 +1824,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtShadowLeft_3": {
+    "Leo_Hero_hurtshadow_left_3": {
       "frame": {
         "x": 192,
         "y": 832,
@@ -1848,7 +1848,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtShadowLeft_4": {
+    "Leo_Hero_hurtshadow_left_4": {
       "frame": {
         "x": 256,
         "y": 832,
@@ -1872,7 +1872,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtShadowRight_0": {
+    "Leo_Hero_hurtshadow_right_0": {
       "frame": {
         "x": 0,
         "y": 896,
@@ -1896,7 +1896,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtShadowRight_1": {
+    "Leo_Hero_hurtshadow_right_1": {
       "frame": {
         "x": 64,
         "y": 896,
@@ -1920,7 +1920,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtShadowRight_2": {
+    "Leo_Hero_hurtshadow_right_2": {
       "frame": {
         "x": 128,
         "y": 896,
@@ -1944,7 +1944,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtShadowRight_3": {
+    "Leo_Hero_hurtshadow_right_3": {
       "frame": {
         "x": 192,
         "y": 896,
@@ -1968,7 +1968,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtShadowRight_4": {
+    "Leo_Hero_hurtshadow_right_4": {
       "frame": {
         "x": 256,
         "y": 896,
@@ -1992,7 +1992,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtShadowBack_0": {
+    "Leo_Hero_hurtshadow_up_0": {
       "frame": {
         "x": 0,
         "y": 960,
@@ -2016,7 +2016,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtShadowBack_1": {
+    "Leo_Hero_hurtshadow_up_1": {
       "frame": {
         "x": 64,
         "y": 960,
@@ -2040,7 +2040,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtShadowBack_2": {
+    "Leo_Hero_hurtshadow_up_2": {
       "frame": {
         "x": 128,
         "y": 960,
@@ -2064,7 +2064,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtShadowBack_3": {
+    "Leo_Hero_hurtshadow_up_3": {
       "frame": {
         "x": 192,
         "y": 960,
@@ -2088,7 +2088,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_HurtShadowBack_4": {
+    "Leo_Hero_hurtshadow_up_4": {
       "frame": {
         "x": 256,
         "y": 960,
@@ -2112,7 +2112,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleFront_0": {
+    "Leo_Hero_idle_down_0": {
       "frame": {
         "x": 0,
         "y": 1024,
@@ -2136,7 +2136,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleFront_1": {
+    "Leo_Hero_idle_down_1": {
       "frame": {
         "x": 64,
         "y": 1024,
@@ -2160,7 +2160,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleFront_2": {
+    "Leo_Hero_idle_down_2": {
       "frame": {
         "x": 128,
         "y": 1024,
@@ -2184,7 +2184,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleFront_3": {
+    "Leo_Hero_idle_down_3": {
       "frame": {
         "x": 192,
         "y": 1024,
@@ -2208,7 +2208,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleFront_4": {
+    "Leo_Hero_idle_down_4": {
       "frame": {
         "x": 256,
         "y": 1024,
@@ -2232,7 +2232,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleFront_5": {
+    "Leo_Hero_idle_down_5": {
       "frame": {
         "x": 320,
         "y": 1024,
@@ -2256,7 +2256,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleFront_6": {
+    "Leo_Hero_idle_down_6": {
       "frame": {
         "x": 384,
         "y": 1024,
@@ -2280,7 +2280,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleFront_7": {
+    "Leo_Hero_idle_down_7": {
       "frame": {
         "x": 448,
         "y": 1024,
@@ -2304,7 +2304,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleFront_8": {
+    "Leo_Hero_idle_down_8": {
       "frame": {
         "x": 512,
         "y": 1024,
@@ -2328,7 +2328,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleFront_9": {
+    "Leo_Hero_idle_down_9": {
       "frame": {
         "x": 576,
         "y": 1024,
@@ -2352,7 +2352,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleFront_10": {
+    "Leo_Hero_idle_down_10": {
       "frame": {
         "x": 640,
         "y": 1024,
@@ -2376,7 +2376,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleFront_11": {
+    "Leo_Hero_idle_down_11": {
       "frame": {
         "x": 704,
         "y": 1024,
@@ -2400,7 +2400,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleLeft_0": {
+    "Leo_Hero_idle_left_0": {
       "frame": {
         "x": 0,
         "y": 1088,
@@ -2424,7 +2424,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleLeft_1": {
+    "Leo_Hero_idle_left_1": {
       "frame": {
         "x": 64,
         "y": 1088,
@@ -2448,7 +2448,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleLeft_2": {
+    "Leo_Hero_idle_left_2": {
       "frame": {
         "x": 128,
         "y": 1088,
@@ -2472,7 +2472,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleLeft_3": {
+    "Leo_Hero_idle_left_3": {
       "frame": {
         "x": 192,
         "y": 1088,
@@ -2496,7 +2496,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleLeft_4": {
+    "Leo_Hero_idle_left_4": {
       "frame": {
         "x": 256,
         "y": 1088,
@@ -2520,7 +2520,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleLeft_5": {
+    "Leo_Hero_idle_left_5": {
       "frame": {
         "x": 320,
         "y": 1088,
@@ -2544,7 +2544,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleLeft_6": {
+    "Leo_Hero_idle_left_6": {
       "frame": {
         "x": 384,
         "y": 1088,
@@ -2568,7 +2568,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleLeft_7": {
+    "Leo_Hero_idle_left_7": {
       "frame": {
         "x": 448,
         "y": 1088,
@@ -2592,7 +2592,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleLeft_8": {
+    "Leo_Hero_idle_left_8": {
       "frame": {
         "x": 512,
         "y": 1088,
@@ -2616,7 +2616,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleLeft_9": {
+    "Leo_Hero_idle_left_9": {
       "frame": {
         "x": 576,
         "y": 1088,
@@ -2640,7 +2640,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleLeft_10": {
+    "Leo_Hero_idle_left_10": {
       "frame": {
         "x": 640,
         "y": 1088,
@@ -2664,7 +2664,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleLeft_11": {
+    "Leo_Hero_idle_left_11": {
       "frame": {
         "x": 704,
         "y": 1088,
@@ -2688,7 +2688,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleRight_0": {
+    "Leo_Hero_idle_right_0": {
       "frame": {
         "x": 0,
         "y": 1152,
@@ -2712,7 +2712,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleRight_1": {
+    "Leo_Hero_idle_right_1": {
       "frame": {
         "x": 64,
         "y": 1152,
@@ -2736,7 +2736,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleRight_2": {
+    "Leo_Hero_idle_right_2": {
       "frame": {
         "x": 128,
         "y": 1152,
@@ -2760,7 +2760,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleRight_3": {
+    "Leo_Hero_idle_right_3": {
       "frame": {
         "x": 192,
         "y": 1152,
@@ -2784,7 +2784,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleRight_4": {
+    "Leo_Hero_idle_right_4": {
       "frame": {
         "x": 256,
         "y": 1152,
@@ -2808,7 +2808,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleRight_5": {
+    "Leo_Hero_idle_right_5": {
       "frame": {
         "x": 320,
         "y": 1152,
@@ -2832,7 +2832,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleRight_6": {
+    "Leo_Hero_idle_right_6": {
       "frame": {
         "x": 384,
         "y": 1152,
@@ -2856,7 +2856,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleRight_7": {
+    "Leo_Hero_idle_right_7": {
       "frame": {
         "x": 448,
         "y": 1152,
@@ -2880,7 +2880,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleRight_8": {
+    "Leo_Hero_idle_right_8": {
       "frame": {
         "x": 512,
         "y": 1152,
@@ -2904,7 +2904,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleRight_9": {
+    "Leo_Hero_idle_right_9": {
       "frame": {
         "x": 576,
         "y": 1152,
@@ -2928,7 +2928,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleRight_10": {
+    "Leo_Hero_idle_right_10": {
       "frame": {
         "x": 640,
         "y": 1152,
@@ -2952,7 +2952,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleRight_11": {
+    "Leo_Hero_idle_right_11": {
       "frame": {
         "x": 704,
         "y": 1152,
@@ -2976,7 +2976,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleBack_0": {
+    "Leo_Hero_idle_up_0": {
       "frame": {
         "x": 0,
         "y": 1216,
@@ -3000,7 +3000,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleBack_1": {
+    "Leo_Hero_idle_up_1": {
       "frame": {
         "x": 64,
         "y": 1216,
@@ -3024,7 +3024,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleBack_2": {
+    "Leo_Hero_idle_up_2": {
       "frame": {
         "x": 128,
         "y": 1216,
@@ -3048,7 +3048,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleBack_3": {
+    "Leo_Hero_idle_up_3": {
       "frame": {
         "x": 192,
         "y": 1216,
@@ -3072,7 +3072,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowFront_0": {
+    "Leo_Hero_idleshadow_down_0": {
       "frame": {
         "x": 0,
         "y": 1280,
@@ -3096,7 +3096,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowFront_1": {
+    "Leo_Hero_idleshadow_down_1": {
       "frame": {
         "x": 64,
         "y": 1280,
@@ -3120,7 +3120,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowFront_2": {
+    "Leo_Hero_idleshadow_down_2": {
       "frame": {
         "x": 128,
         "y": 1280,
@@ -3144,7 +3144,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowFront_3": {
+    "Leo_Hero_idleshadow_down_3": {
       "frame": {
         "x": 192,
         "y": 1280,
@@ -3168,7 +3168,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowFront_4": {
+    "Leo_Hero_idleshadow_down_4": {
       "frame": {
         "x": 256,
         "y": 1280,
@@ -3192,7 +3192,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowFront_5": {
+    "Leo_Hero_idleshadow_down_5": {
       "frame": {
         "x": 320,
         "y": 1280,
@@ -3216,7 +3216,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowFront_6": {
+    "Leo_Hero_idleshadow_down_6": {
       "frame": {
         "x": 384,
         "y": 1280,
@@ -3240,7 +3240,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowFront_7": {
+    "Leo_Hero_idleshadow_down_7": {
       "frame": {
         "x": 448,
         "y": 1280,
@@ -3264,7 +3264,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowFront_8": {
+    "Leo_Hero_idleshadow_down_8": {
       "frame": {
         "x": 512,
         "y": 1280,
@@ -3288,7 +3288,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowFront_9": {
+    "Leo_Hero_idleshadow_down_9": {
       "frame": {
         "x": 576,
         "y": 1280,
@@ -3312,7 +3312,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowFront_10": {
+    "Leo_Hero_idleshadow_down_10": {
       "frame": {
         "x": 640,
         "y": 1280,
@@ -3336,7 +3336,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowFront_11": {
+    "Leo_Hero_idleshadow_down_11": {
       "frame": {
         "x": 704,
         "y": 1280,
@@ -3360,7 +3360,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowLeft_0": {
+    "Leo_Hero_idleshadow_left_0": {
       "frame": {
         "x": 0,
         "y": 1344,
@@ -3384,7 +3384,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowLeft_1": {
+    "Leo_Hero_idleshadow_left_1": {
       "frame": {
         "x": 64,
         "y": 1344,
@@ -3408,7 +3408,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowLeft_2": {
+    "Leo_Hero_idleshadow_left_2": {
       "frame": {
         "x": 128,
         "y": 1344,
@@ -3432,7 +3432,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowLeft_3": {
+    "Leo_Hero_idleshadow_left_3": {
       "frame": {
         "x": 192,
         "y": 1344,
@@ -3456,7 +3456,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowLeft_4": {
+    "Leo_Hero_idleshadow_left_4": {
       "frame": {
         "x": 256,
         "y": 1344,
@@ -3480,7 +3480,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowLeft_5": {
+    "Leo_Hero_idleshadow_left_5": {
       "frame": {
         "x": 320,
         "y": 1344,
@@ -3504,7 +3504,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowLeft_6": {
+    "Leo_Hero_idleshadow_left_6": {
       "frame": {
         "x": 384,
         "y": 1344,
@@ -3528,7 +3528,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowLeft_7": {
+    "Leo_Hero_idleshadow_left_7": {
       "frame": {
         "x": 448,
         "y": 1344,
@@ -3552,7 +3552,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowLeft_8": {
+    "Leo_Hero_idleshadow_left_8": {
       "frame": {
         "x": 512,
         "y": 1344,
@@ -3576,7 +3576,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowLeft_9": {
+    "Leo_Hero_idleshadow_left_9": {
       "frame": {
         "x": 576,
         "y": 1344,
@@ -3600,7 +3600,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowLeft_10": {
+    "Leo_Hero_idleshadow_left_10": {
       "frame": {
         "x": 640,
         "y": 1344,
@@ -3624,7 +3624,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowLeft_11": {
+    "Leo_Hero_idleshadow_left_11": {
       "frame": {
         "x": 704,
         "y": 1344,
@@ -3648,7 +3648,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowRight_0": {
+    "Leo_Hero_idleshadow_right_0": {
       "frame": {
         "x": 0,
         "y": 1408,
@@ -3672,7 +3672,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowRight_1": {
+    "Leo_Hero_idleshadow_right_1": {
       "frame": {
         "x": 64,
         "y": 1408,
@@ -3696,7 +3696,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowRight_2": {
+    "Leo_Hero_idleshadow_right_2": {
       "frame": {
         "x": 128,
         "y": 1408,
@@ -3720,7 +3720,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowRight_3": {
+    "Leo_Hero_idleshadow_right_3": {
       "frame": {
         "x": 192,
         "y": 1408,
@@ -3744,7 +3744,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowRight_4": {
+    "Leo_Hero_idleshadow_right_4": {
       "frame": {
         "x": 256,
         "y": 1408,
@@ -3768,7 +3768,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowRight_5": {
+    "Leo_Hero_idleshadow_right_5": {
       "frame": {
         "x": 320,
         "y": 1408,
@@ -3792,7 +3792,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowRight_6": {
+    "Leo_Hero_idleshadow_right_6": {
       "frame": {
         "x": 384,
         "y": 1408,
@@ -3816,7 +3816,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowRight_7": {
+    "Leo_Hero_idleshadow_right_7": {
       "frame": {
         "x": 448,
         "y": 1408,
@@ -3840,7 +3840,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowRight_8": {
+    "Leo_Hero_idleshadow_right_8": {
       "frame": {
         "x": 512,
         "y": 1408,
@@ -3864,7 +3864,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowRight_9": {
+    "Leo_Hero_idleshadow_right_9": {
       "frame": {
         "x": 576,
         "y": 1408,
@@ -3888,7 +3888,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowRight_10": {
+    "Leo_Hero_idleshadow_right_10": {
       "frame": {
         "x": 640,
         "y": 1408,
@@ -3912,7 +3912,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowRight_11": {
+    "Leo_Hero_idleshadow_right_11": {
       "frame": {
         "x": 704,
         "y": 1408,
@@ -3936,7 +3936,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowBack_0": {
+    "Leo_Hero_idleshadow_up_0": {
       "frame": {
         "x": 0,
         "y": 1472,
@@ -3960,7 +3960,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowBack_1": {
+    "Leo_Hero_idleshadow_up_1": {
       "frame": {
         "x": 64,
         "y": 1472,
@@ -3984,7 +3984,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowBack_2": {
+    "Leo_Hero_idleshadow_up_2": {
       "frame": {
         "x": 128,
         "y": 1472,
@@ -4008,7 +4008,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_IdleShadowBack_3": {
+    "Leo_Hero_idleshadow_up_3": {
       "frame": {
         "x": 192,
         "y": 1472,
@@ -4032,7 +4032,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_WalkFront_0": {
+    "Leo_Hero_walk_up_0": {
       "frame": {
         "x": 0,
         "y": 1536,
@@ -4056,7 +4056,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_WalkFront_1": {
+    "Leo_Hero_walk_up_1": {
       "frame": {
         "x": 64,
         "y": 1536,
@@ -4080,7 +4080,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_WalkFront_2": {
+    "Leo_Hero_walk_up_2": {
       "frame": {
         "x": 128,
         "y": 1536,
@@ -4104,7 +4104,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_WalkFront_3": {
+    "Leo_Hero_walk_up_3": {
       "frame": {
         "x": 192,
         "y": 1536,
@@ -4128,7 +4128,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_WalkFront_4": {
+    "Leo_Hero_walk_up_4": {
       "frame": {
         "x": 256,
         "y": 1536,
@@ -4152,7 +4152,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_WalkFront_5": {
+    "Leo_Hero_walk_up_5": {
       "frame": {
         "x": 320,
         "y": 1536,
@@ -4176,7 +4176,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_WalkLeft_0": {
+    "Leo_Hero_walk_left_0": {
       "frame": {
         "x": 0,
         "y": 1600,
@@ -4200,7 +4200,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_WalkLeft_1": {
+    "Leo_Hero_walk_left_1": {
       "frame": {
         "x": 64,
         "y": 1600,
@@ -4224,7 +4224,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_WalkLeft_2": {
+    "Leo_Hero_walk_left_2": {
       "frame": {
         "x": 128,
         "y": 1600,
@@ -4248,7 +4248,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_WalkLeft_3": {
+    "Leo_Hero_walk_left_3": {
       "frame": {
         "x": 192,
         "y": 1600,
@@ -4272,7 +4272,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_WalkLeft_4": {
+    "Leo_Hero_walk_left_4": {
       "frame": {
         "x": 256,
         "y": 1600,
@@ -4296,7 +4296,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_WalkLeft_5": {
+    "Leo_Hero_walk_left_5": {
       "frame": {
         "x": 320,
         "y": 1600,
@@ -4320,7 +4320,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_WalkRight_0": {
+    "Leo_Hero_walk_right_0": {
       "frame": {
         "x": 0,
         "y": 1664,
@@ -4344,7 +4344,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_WalkRight_1": {
+    "Leo_Hero_walk_right_1": {
       "frame": {
         "x": 64,
         "y": 1664,
@@ -4368,7 +4368,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_WalkRight_2": {
+    "Leo_Hero_walk_right_2": {
       "frame": {
         "x": 128,
         "y": 1664,
@@ -4392,7 +4392,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_WalkRight_3": {
+    "Leo_Hero_walk_right_3": {
       "frame": {
         "x": 192,
         "y": 1664,
@@ -4416,7 +4416,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_WalkRight_4": {
+    "Leo_Hero_walk_right_4": {
       "frame": {
         "x": 256,
         "y": 1664,
@@ -4440,7 +4440,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_WalkRight_5": {
+    "Leo_Hero_walk_right_5": {
       "frame": {
         "x": 320,
         "y": 1664,
@@ -4464,7 +4464,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_WalkBack_0": {
+    "Leo_Hero_walk_down_0": {
       "frame": {
         "x": 0,
         "y": 1728,
@@ -4488,7 +4488,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_WalkBack_1": {
+    "Leo_Hero_walk_down_1": {
       "frame": {
         "x": 64,
         "y": 1728,
@@ -4512,7 +4512,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_WalkBack_2": {
+    "Leo_Hero_walk_down_2": {
       "frame": {
         "x": 128,
         "y": 1728,
@@ -4536,7 +4536,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_WalkBack_3": {
+    "Leo_Hero_walk_down_3": {
       "frame": {
         "x": 192,
         "y": 1728,
@@ -4560,7 +4560,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_WalkBack_4": {
+    "Leo_Hero_walk_down_4": {
       "frame": {
         "x": 256,
         "y": 1728,
@@ -4584,7 +4584,7 @@
         "y": 0.5
       }
     },
-    "Leo_Hero_WalkBack_5": {
+    "Leo_Hero_walk_down_5": {
       "frame": {
         "x": 320,
         "y": 1728,
@@ -4610,253 +4610,253 @@
     }
   },
   "animations": {
-    "Leo_Hero_AttackFront": [
-      "Leo_Hero_AttackFront_0",
-      "Leo_Hero_AttackFront_1",
-      "Leo_Hero_AttackFront_2",
-      "Leo_Hero_AttackFront_3",
-      "Leo_Hero_AttackFront_4",
-      "Leo_Hero_AttackFront_5"
+    "Leo_Hero_atk_down": [
+      "Leo_Hero_atk_down_0",
+      "Leo_Hero_atk_down_1",
+      "Leo_Hero_atk_down_2",
+      "Leo_Hero_atk_down_3",
+      "Leo_Hero_atk_down_4",
+      "Leo_Hero_atk_down_5"
     ],
-    "Leo_Hero_AttackLeft": [
-      "Leo_Hero_AttackLeft_0",
-      "Leo_Hero_AttackLeft_1",
-      "Leo_Hero_AttackLeft_2",
-      "Leo_Hero_AttackLeft_3",
-      "Leo_Hero_AttackLeft_4",
-      "Leo_Hero_AttackLeft_5"
+    "Leo_Hero_atk_left": [
+      "Leo_Hero_atk_left_0",
+      "Leo_Hero_atk_left_1",
+      "Leo_Hero_atk_left_2",
+      "Leo_Hero_atk_left_3",
+      "Leo_Hero_atk_left_4",
+      "Leo_Hero_atk_left_5"
     ],
-    "Leo_Hero_AttackRight": [
-      "Leo_Hero_AttackRight_0",
-      "Leo_Hero_AttackRight_1",
-      "Leo_Hero_AttackRight_2",
-      "Leo_Hero_AttackRight_3",
-      "Leo_Hero_AttackRight_4",
-      "Leo_Hero_AttackRight_5"
+    "Leo_Hero_atk_right": [
+      "Leo_Hero_atk_right_0",
+      "Leo_Hero_atk_right_1",
+      "Leo_Hero_atk_right_2",
+      "Leo_Hero_atk_right_3",
+      "Leo_Hero_atk_right_4",
+      "Leo_Hero_atk_right_5"
     ],
-    "Leo_Hero_AttackBack": [
-      "Leo_Hero_AttackBack_0",
-      "Leo_Hero_AttackBack_1",
-      "Leo_Hero_AttackBack_2",
-      "Leo_Hero_AttackBack_3",
-      "Leo_Hero_AttackBack_4",
-      "Leo_Hero_AttackBack_5"
+    "Leo_Hero_atk_up": [
+      "Leo_Hero_atk_up_0",
+      "Leo_Hero_atk_up_1",
+      "Leo_Hero_atk_up_2",
+      "Leo_Hero_atk_up_3",
+      "Leo_Hero_atk_up_4",
+      "Leo_Hero_atk_up_5"
     ],
-    "Leo_Hero_ShadowFront": [
-      "Leo_Hero_ShadowFront_0",
-      "Leo_Hero_ShadowFront_1",
-      "Leo_Hero_ShadowFront_2",
-      "Leo_Hero_ShadowFront_3",
-      "Leo_Hero_ShadowFront_4",
-      "Leo_Hero_ShadowFront_5"
+    "Leo_Hero_shadow_down": [
+      "Leo_Hero_shadow_down_0",
+      "Leo_Hero_shadow_down_1",
+      "Leo_Hero_shadow_down_2",
+      "Leo_Hero_shadow_down_3",
+      "Leo_Hero_shadow_down_4",
+      "Leo_Hero_shadow_down_5"
     ],
-    "Leo_Hero_ShadowLeft": [
-      "Leo_Hero_ShadowLeft_0",
-      "Leo_Hero_ShadowLeft_1",
-      "Leo_Hero_ShadowLeft_2",
-      "Leo_Hero_ShadowLeft_3",
-      "Leo_Hero_ShadowLeft_4",
-      "Leo_Hero_ShadowLeft_5"
+    "Leo_Hero_shadow_left": [
+      "Leo_Hero_shadow_left_0",
+      "Leo_Hero_shadow_left_1",
+      "Leo_Hero_shadow_left_2",
+      "Leo_Hero_shadow_left_3",
+      "Leo_Hero_shadow_left_4",
+      "Leo_Hero_shadow_left_5"
     ],
-    "Leo_Hero_ShadowRight": [
-      "Leo_Hero_ShadowRight_0",
-      "Leo_Hero_ShadowRight_1",
-      "Leo_Hero_ShadowRight_2",
-      "Leo_Hero_ShadowRight_3",
-      "Leo_Hero_ShadowRight_4",
-      "Leo_Hero_ShadowRight_5"
+    "Leo_Hero_shadow_right": [
+      "Leo_Hero_shadow_right_0",
+      "Leo_Hero_shadow_right_1",
+      "Leo_Hero_shadow_right_2",
+      "Leo_Hero_shadow_right_3",
+      "Leo_Hero_shadow_right_4",
+      "Leo_Hero_shadow_right_5"
     ],
-    "Leo_Hero_ShadowBack": [
-      "Leo_Hero_ShadowBack_0",
-      "Leo_Hero_ShadowBack_1",
-      "Leo_Hero_ShadowBack_2",
-      "Leo_Hero_ShadowBack_3",
-      "Leo_Hero_ShadowBack_4",
-      "Leo_Hero_ShadowBack_5"
+    "Leo_Hero_shadow_up": [
+      "Leo_Hero_shadow_up_0",
+      "Leo_Hero_shadow_up_1",
+      "Leo_Hero_shadow_up_2",
+      "Leo_Hero_shadow_up_3",
+      "Leo_Hero_shadow_up_4",
+      "Leo_Hero_shadow_up_5"
     ],
-    "Leo_Hero_HurtFront": [
-      "Leo_Hero_HurtFront_0",
-      "Leo_Hero_HurtFront_1",
-      "Leo_Hero_HurtFront_2",
-      "Leo_Hero_HurtFront_3",
-      "Leo_Hero_HurtFront_4"
+    "Leo_Hero_hurt_down": [
+      "Leo_Hero_hurt_down_0",
+      "Leo_Hero_hurt_down_1",
+      "Leo_Hero_hurt_down_2",
+      "Leo_Hero_hurt_down_3",
+      "Leo_Hero_hurt_down_4"
     ],
-    "Leo_Hero_HurtLeft": [
-      "Leo_Hero_HurtLeft_0",
-      "Leo_Hero_HurtLeft_1",
-      "Leo_Hero_HurtLeft_2",
-      "Leo_Hero_HurtLeft_3",
-      "Leo_Hero_HurtLeft_4"
+    "Leo_Hero_hurt_left": [
+      "Leo_Hero_hurt_left_0",
+      "Leo_Hero_hurt_left_1",
+      "Leo_Hero_hurt_left_2",
+      "Leo_Hero_hurt_left_3",
+      "Leo_Hero_hurt_left_4"
     ],
-    "Leo_Hero_HurtRight": [
-      "Leo_Hero_HurtRight_0",
-      "Leo_Hero_HurtRight_1",
-      "Leo_Hero_HurtRight_2",
-      "Leo_Hero_HurtRight_3",
-      "Leo_Hero_HurtRight_4"
+    "Leo_Hero_hurt_right": [
+      "Leo_Hero_hurt_right_0",
+      "Leo_Hero_hurt_right_1",
+      "Leo_Hero_hurt_right_2",
+      "Leo_Hero_hurt_right_3",
+      "Leo_Hero_hurt_right_4"
     ],
-    "Leo_Hero_HurtBack": [
-      "Leo_Hero_HurtBack_0",
-      "Leo_Hero_HurtBack_1",
-      "Leo_Hero_HurtBack_2",
-      "Leo_Hero_HurtBack_3",
-      "Leo_Hero_HurtBack_4"
+    "Leo_Hero_hurt_up": [
+      "Leo_Hero_hurt_up_0",
+      "Leo_Hero_hurt_up_1",
+      "Leo_Hero_hurt_up_2",
+      "Leo_Hero_hurt_up_3",
+      "Leo_Hero_hurt_up_4"
     ],
-    "Leo_Hero_HurtShadowFront": [
-      "Leo_Hero_HurtShadowFront_0",
-      "Leo_Hero_HurtShadowFront_1",
-      "Leo_Hero_HurtShadowFront_2",
-      "Leo_Hero_HurtShadowFront_3",
-      "Leo_Hero_HurtShadowFront_4"
+    "Leo_Hero_hurtshadow_down": [
+      "Leo_Hero_hurtshadow_down_0",
+      "Leo_Hero_hurtshadow_down_1",
+      "Leo_Hero_hurtshadow_down_2",
+      "Leo_Hero_hurtshadow_down_3",
+      "Leo_Hero_hurtshadow_down_4"
     ],
-    "Leo_Hero_HurtShadowLeft": [
-      "Leo_Hero_HurtShadowLeft_0",
-      "Leo_Hero_HurtShadowLeft_1",
-      "Leo_Hero_HurtShadowLeft_2",
-      "Leo_Hero_HurtShadowLeft_3",
-      "Leo_Hero_HurtShadowLeft_4"
+    "Leo_Hero_hurtshadow_left": [
+      "Leo_Hero_hurtshadow_left_0",
+      "Leo_Hero_hurtshadow_left_1",
+      "Leo_Hero_hurtshadow_left_2",
+      "Leo_Hero_hurtshadow_left_3",
+      "Leo_Hero_hurtshadow_left_4"
     ],
-    "Leo_Hero_HurtShadowRight": [
-      "Leo_Hero_HurtShadowRight_0",
-      "Leo_Hero_HurtShadowRight_1",
-      "Leo_Hero_HurtShadowRight_2",
-      "Leo_Hero_HurtShadowRight_3",
-      "Leo_Hero_HurtShadowRight_4"
+    "Leo_Hero_hurtshadow_right": [
+      "Leo_Hero_hurtshadow_right_0",
+      "Leo_Hero_hurtshadow_right_1",
+      "Leo_Hero_hurtshadow_right_2",
+      "Leo_Hero_hurtshadow_right_3",
+      "Leo_Hero_hurtshadow_right_4"
     ],
-    "Leo_Hero_HurtShadowBack": [
-      "Leo_Hero_HurtShadowBack_0",
-      "Leo_Hero_HurtShadowBack_1",
-      "Leo_Hero_HurtShadowBack_2",
-      "Leo_Hero_HurtShadowBack_3",
-      "Leo_Hero_HurtShadowBack_4"
+    "Leo_Hero_hurtshadow_up": [
+      "Leo_Hero_hurtshadow_up_0",
+      "Leo_Hero_hurtshadow_up_1",
+      "Leo_Hero_hurtshadow_up_2",
+      "Leo_Hero_hurtshadow_up_3",
+      "Leo_Hero_hurtshadow_up_4"
     ],
-    "Leo_Hero_IdleFront": [
-      "Leo_Hero_IdleFront_0",
-      "Leo_Hero_IdleFront_1",
-      "Leo_Hero_IdleFront_2",
-      "Leo_Hero_IdleFront_3",
-      "Leo_Hero_IdleFront_4",
-      "Leo_Hero_IdleFront_5",
-      "Leo_Hero_IdleFront_6",
-      "Leo_Hero_IdleFront_7",
-      "Leo_Hero_IdleFront_8",
-      "Leo_Hero_IdleFront_9",
-      "Leo_Hero_IdleFront_10",
-      "Leo_Hero_IdleFront_11"
+    "Leo_Hero_idle_down": [
+      "Leo_Hero_idle_down_0",
+      "Leo_Hero_idle_down_1",
+      "Leo_Hero_idle_down_2",
+      "Leo_Hero_idle_down_3",
+      "Leo_Hero_idle_down_4",
+      "Leo_Hero_idle_down_5",
+      "Leo_Hero_idle_down_6",
+      "Leo_Hero_idle_down_7",
+      "Leo_Hero_idle_down_8",
+      "Leo_Hero_idle_down_9",
+      "Leo_Hero_idle_down_10",
+      "Leo_Hero_idle_down_11"
     ],
-    "Leo_Hero_IdleLeft": [
-      "Leo_Hero_IdleLeft_0",
-      "Leo_Hero_IdleLeft_1",
-      "Leo_Hero_IdleLeft_2",
-      "Leo_Hero_IdleLeft_3",
-      "Leo_Hero_IdleLeft_4",
-      "Leo_Hero_IdleLeft_5",
-      "Leo_Hero_IdleLeft_6",
-      "Leo_Hero_IdleLeft_7",
-      "Leo_Hero_IdleLeft_8",
-      "Leo_Hero_IdleLeft_9",
-      "Leo_Hero_IdleLeft_10",
-      "Leo_Hero_IdleLeft_11"
+    "Leo_Hero_idle_left": [
+      "Leo_Hero_idle_left_0",
+      "Leo_Hero_idle_left_1",
+      "Leo_Hero_idle_left_2",
+      "Leo_Hero_idle_left_3",
+      "Leo_Hero_idle_left_4",
+      "Leo_Hero_idle_left_5",
+      "Leo_Hero_idle_left_6",
+      "Leo_Hero_idle_left_7",
+      "Leo_Hero_idle_left_8",
+      "Leo_Hero_idle_left_9",
+      "Leo_Hero_idle_left_10",
+      "Leo_Hero_idle_left_11"
     ],
-    "Leo_Hero_IdleRight": [
-      "Leo_Hero_IdleRight_0",
-      "Leo_Hero_IdleRight_1",
-      "Leo_Hero_IdleRight_2",
-      "Leo_Hero_IdleRight_3",
-      "Leo_Hero_IdleRight_4",
-      "Leo_Hero_IdleRight_5",
-      "Leo_Hero_IdleRight_6",
-      "Leo_Hero_IdleRight_7",
-      "Leo_Hero_IdleRight_8",
-      "Leo_Hero_IdleRight_9",
-      "Leo_Hero_IdleRight_10",
-      "Leo_Hero_IdleRight_11"
+    "Leo_Hero_idle_right": [
+      "Leo_Hero_idle_right_0",
+      "Leo_Hero_idle_right_1",
+      "Leo_Hero_idle_right_2",
+      "Leo_Hero_idle_right_3",
+      "Leo_Hero_idle_right_4",
+      "Leo_Hero_idle_right_5",
+      "Leo_Hero_idle_right_6",
+      "Leo_Hero_idle_right_7",
+      "Leo_Hero_idle_right_8",
+      "Leo_Hero_idle_right_9",
+      "Leo_Hero_idle_right_10",
+      "Leo_Hero_idle_right_11"
     ],
-    "Leo_Hero_IdleBack": [
-      "Leo_Hero_IdleBack_0",
-      "Leo_Hero_IdleBack_1",
-      "Leo_Hero_IdleBack_2",
-      "Leo_Hero_IdleBack_3"
+    "Leo_Hero_idle_up": [
+      "Leo_Hero_idle_up_0",
+      "Leo_Hero_idle_up_1",
+      "Leo_Hero_idle_up_2",
+      "Leo_Hero_idle_up_3"
     ],
-    "Leo_Hero_IdleShadowFront": [
-      "Leo_Hero_IdleShadowFront_0",
-      "Leo_Hero_IdleShadowFront_1",
-      "Leo_Hero_IdleShadowFront_2",
-      "Leo_Hero_IdleShadowFront_3",
-      "Leo_Hero_IdleShadowFront_4",
-      "Leo_Hero_IdleShadowFront_5",
-      "Leo_Hero_IdleShadowFront_6",
-      "Leo_Hero_IdleShadowFront_7",
-      "Leo_Hero_IdleShadowFront_8",
-      "Leo_Hero_IdleShadowFront_9",
-      "Leo_Hero_IdleShadowFront_10",
-      "Leo_Hero_IdleShadowFront_11"
+    "Leo_Hero_idleshadow_down": [
+      "Leo_Hero_idleshadow_down_0",
+      "Leo_Hero_idleshadow_down_1",
+      "Leo_Hero_idleshadow_down_2",
+      "Leo_Hero_idleshadow_down_3",
+      "Leo_Hero_idleshadow_down_4",
+      "Leo_Hero_idleshadow_down_5",
+      "Leo_Hero_idleshadow_down_6",
+      "Leo_Hero_idleshadow_down_7",
+      "Leo_Hero_idleshadow_down_8",
+      "Leo_Hero_idleshadow_down_9",
+      "Leo_Hero_idleshadow_down_10",
+      "Leo_Hero_idleshadow_down_11"
     ],
-    "Leo_Hero_IdleShadowLeft": [
-      "Leo_Hero_IdleShadowLeft_0",
-      "Leo_Hero_IdleShadowLeft_1",
-      "Leo_Hero_IdleShadowLeft_2",
-      "Leo_Hero_IdleShadowLeft_3",
-      "Leo_Hero_IdleShadowLeft_4",
-      "Leo_Hero_IdleShadowLeft_5",
-      "Leo_Hero_IdleShadowLeft_6",
-      "Leo_Hero_IdleShadowLeft_7",
-      "Leo_Hero_IdleShadowLeft_8",
-      "Leo_Hero_IdleShadowLeft_9",
-      "Leo_Hero_IdleShadowLeft_10",
-      "Leo_Hero_IdleShadowLeft_11"
+    "Leo_Hero_idleshadow_left": [
+      "Leo_Hero_idleshadow_left_0",
+      "Leo_Hero_idleshadow_left_1",
+      "Leo_Hero_idleshadow_left_2",
+      "Leo_Hero_idleshadow_left_3",
+      "Leo_Hero_idleshadow_left_4",
+      "Leo_Hero_idleshadow_left_5",
+      "Leo_Hero_idleshadow_left_6",
+      "Leo_Hero_idleshadow_left_7",
+      "Leo_Hero_idleshadow_left_8",
+      "Leo_Hero_idleshadow_left_9",
+      "Leo_Hero_idleshadow_left_10",
+      "Leo_Hero_idleshadow_left_11"
     ],
-    "Leo_Hero_IdleShadowRight": [
-      "Leo_Hero_IdleShadowRight_0",
-      "Leo_Hero_IdleShadowRight_1",
-      "Leo_Hero_IdleShadowRight_2",
-      "Leo_Hero_IdleShadowRight_3",
-      "Leo_Hero_IdleShadowRight_4",
-      "Leo_Hero_IdleShadowRight_5",
-      "Leo_Hero_IdleShadowRight_6",
-      "Leo_Hero_IdleShadowRight_7",
-      "Leo_Hero_IdleShadowRight_8",
-      "Leo_Hero_IdleShadowRight_9",
-      "Leo_Hero_IdleShadowRight_10",
-      "Leo_Hero_IdleShadowRight_11"
+    "Leo_Hero_idleshadow_right": [
+      "Leo_Hero_idleshadow_right_0",
+      "Leo_Hero_idleshadow_right_1",
+      "Leo_Hero_idleshadow_right_2",
+      "Leo_Hero_idleshadow_right_3",
+      "Leo_Hero_idleshadow_right_4",
+      "Leo_Hero_idleshadow_right_5",
+      "Leo_Hero_idleshadow_right_6",
+      "Leo_Hero_idleshadow_right_7",
+      "Leo_Hero_idleshadow_right_8",
+      "Leo_Hero_idleshadow_right_9",
+      "Leo_Hero_idleshadow_right_10",
+      "Leo_Hero_idleshadow_right_11"
     ],
-    "Leo_Hero_IdleShadowBack": [
-      "Leo_Hero_IdleShadowBack_0",
-      "Leo_Hero_IdleShadowBack_1",
-      "Leo_Hero_IdleShadowBack_2",
-      "Leo_Hero_IdleShadowBack_3"
+    "Leo_Hero_idleshadow_up": [
+      "Leo_Hero_idleshadow_up_0",
+      "Leo_Hero_idleshadow_up_1",
+      "Leo_Hero_idleshadow_up_2",
+      "Leo_Hero_idleshadow_up_3"
     ],
-    "Leo_Hero_WalkFront": [
-      "Leo_Hero_WalkFront_0",
-      "Leo_Hero_WalkFront_1",
-      "Leo_Hero_WalkFront_2",
-      "Leo_Hero_WalkFront_3",
-      "Leo_Hero_WalkFront_4",
-      "Leo_Hero_WalkFront_5"
+    "Leo_Hero_walk_down": [
+      "Leo_Hero_walk_down_0",
+      "Leo_Hero_walk_down_1",
+      "Leo_Hero_walk_down_2",
+      "Leo_Hero_walk_down_3",
+      "Leo_Hero_walk_down_4",
+      "Leo_Hero_walk_down_5"
     ],
-    "Leo_Hero_WalkLeft": [
-      "Leo_Hero_WalkLeft_0",
-      "Leo_Hero_WalkLeft_1",
-      "Leo_Hero_WalkLeft_2",
-      "Leo_Hero_WalkLeft_3",
-      "Leo_Hero_WalkLeft_4",
-      "Leo_Hero_WalkLeft_5"
+    "Leo_Hero_walk_left": [
+      "Leo_Hero_walk_left_0",
+      "Leo_Hero_walk_left_1",
+      "Leo_Hero_walk_left_2",
+      "Leo_Hero_walk_left_3",
+      "Leo_Hero_walk_left_4",
+      "Leo_Hero_walk_left_5"
     ],
-    "Leo_Hero_WalkRight": [
-      "Leo_Hero_WalkRight_0",
-      "Leo_Hero_WalkRight_1",
-      "Leo_Hero_WalkRight_2",
-      "Leo_Hero_WalkRight_3",
-      "Leo_Hero_WalkRight_4",
-      "Leo_Hero_WalkRight_5"
+    "Leo_Hero_walk_right": [
+      "Leo_Hero_walk_right_0",
+      "Leo_Hero_walk_right_1",
+      "Leo_Hero_walk_right_2",
+      "Leo_Hero_walk_right_3",
+      "Leo_Hero_walk_right_4",
+      "Leo_Hero_walk_right_5"
     ],
-    "Leo_Hero_WalkBack": [
-      "Leo_Hero_WalkBack_0",
-      "Leo_Hero_WalkBack_1",
-      "Leo_Hero_WalkBack_2",
-      "Leo_Hero_WalkBack_3",
-      "Leo_Hero_WalkBack_4",
-      "Leo_Hero_WalkBack_5"
+    "Leo_Hero_walk_up": [
+      "Leo_Hero_walk_up_0",
+      "Leo_Hero_walk_up_1",
+      "Leo_Hero_walk_up_2",
+      "Leo_Hero_walk_up_3",
+      "Leo_Hero_walk_up_4",
+      "Leo_Hero_walk_up_5"
     ]
   },
   "meta": {

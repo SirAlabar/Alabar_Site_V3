@@ -65,7 +65,7 @@
   width: 100%;
   z-index: 20;
   pointer-events: none;
-  border: 3px solid red;
+  /* border: 3px solid red; */
 }
 
 #pixi-game canvas

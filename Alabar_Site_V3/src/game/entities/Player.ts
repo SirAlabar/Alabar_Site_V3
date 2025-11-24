@@ -1,13 +1,12 @@
 /**
- * Player.ts - Player entity 
+ * Player.ts - Player entity extending BaseEntity
  */
 
-import { AnimatedSprite, Container, Texture } from 'pixi.js';
 import { AssetManager } from '../../managers/AssetManager';
 import { InputManager, Direction } from '../core/Input';
-import { MovementSystem, Position } from '../systems/Movement';
+import { BaseEntity, EntityConfig, EntityState, FacingDirection } from './BaseEntity';
 
-// Player states
+// Player-specific states
 enum PlayerState
 {
   WALKING,
@@ -16,13 +15,14 @@ enum PlayerState
   ATTACKING
 }
 
-type FacingDirection = 'Front' | 'Back' | 'Left' | 'Right';
-
 interface PlayerConfig
 {
   startX: number;
   startY: number;
   speed: number;
+  health?: number;
+  damage?: number;
+  attackRange?: number;
   bounds?: {
     minX: number;
     maxX: number;
@@ -31,109 +31,46 @@ interface PlayerConfig
   };
 }
 
-export class Player extends Container
+export class Player extends BaseEntity
 {
-  // Core components
-  private assetManager: AssetManager;
+  // Input manager
   private inputManager: InputManager;
-  private movementSystem: MovementSystem;
   
-  // Animation
-  private sprite: AnimatedSprite | null = null;
-  private facingDirection: FacingDirection = 'Front';
+  // Player-specific state machine
+  private playerState: PlayerState = PlayerState.STANDING;
   private lastDirection: Direction = null;
-  
-  // State machine
-  private currentState: PlayerState = PlayerState.STANDING;
   
   // Standing state timer
   private standingTimer: number = 0;
   private readonly STANDING_DURATION = 300; // 5 seconds at 60fps
   
-  // Position
-  private currentPosition: Position;
+  // Combat stats (player-specific)
+  private damage: number;
+  private attackRange: number;
   
   constructor(assetManager: AssetManager, config: PlayerConfig)
   {
-    super();
-    
-    this.assetManager = assetManager;
-    this.inputManager = InputManager.getInstance();
-    
-    // Initialize movement system
-    this.movementSystem = new MovementSystem({
+    // Call BaseEntity constructor with EntityConfig
+    const entityConfig: EntityConfig = {
+      startX: config.startX,
+      startY: config.startY,
       speed: config.speed,
+      spritesheetKey: 'player_spritesheet',
+      animationPrefix: 'Leo_Hero',
+      health: config.health ?? 100,
       bounds: config.bounds
-    });
-    
-    // Set starting position
-    this.currentPosition = {
-      x: config.startX,
-      y: config.startY
     };
     
-    this.position.set(this.currentPosition.x, this.currentPosition.y);
+    super(assetManager, entityConfig);
     
-    // Initialize sprite and animations
-    this.initializeSprite();
-  }
-  
-  /**
-   * Initialize player sprite with animations
-   */
-  private initializeSprite(): void
-  {
-    const spritesheet = this.assetManager.getSpritesheet('player_spritesheet');
+    this.inputManager = InputManager.getInstance();
     
-    if (!spritesheet)
-    {
-      console.error('Player spritesheet not found!');
-      return;
-    }
+    // Initialize player-specific combat stats
+    this.damage = config.damage ?? 25;
+    this.attackRange = config.attackRange ?? 50;
     
-    // Create animated sprite with idle front frame 0 as default
-    const idleFrames = this.getAnimationFrames('idle', 'Front');
-    if (idleFrames.length === 0)
-    {
-      console.error('No idle frames found for player!');
-      return;
-    }
-    
-    this.sprite = new AnimatedSprite(idleFrames);
-    this.sprite.anchor.set(0.5, 0.5);
-    this.sprite.animationSpeed = 0.04;
-    this.sprite.loop = false;
-    
-    this.sprite.gotoAndStop(0);
-
-    this.standingTimer = this.STANDING_DURATION;
-    
-    this.addChild(this.sprite);
-  }
-  
-  /**
-   * Get animation frames for a specific state and direction
-   */
-  private getAnimationFrames(state: 'idle' | 'walk' | 'attack', direction: FacingDirection): Texture[]
-  {
-    const spritesheet = this.assetManager.getSpritesheet('player_spritesheet');
-    if (!spritesheet || !spritesheet.animations)
-    {
-      return [];
-    }
-    
-    const stateName = state.charAt(0).toUpperCase() + state.slice(1);
-    const animationName = `Leo_Hero_${stateName}${direction}`;
-    
-    const frames = spritesheet.animations[animationName];
-    
-    if (!frames || frames.length === 0)
-    {
-      console.warn(`Animation not found: ${animationName}`);
-      return [];
-    }
-    
-    return frames;
+    // Initialize player to standing state
+    this.transitionToStanding();
   }
   
   /**
@@ -157,11 +94,11 @@ export class Player extends Container
   }
   
   /**
-   * Get state name for debugging
+   * Get player state name for debugging
    */
-  private getStateName(): string
+  private getPlayerStateName(): string
   {
-    switch (this.currentState)
+    switch (this.playerState)
     {
       case PlayerState.WALKING: return 'WALKING';
       case PlayerState.STANDING: return 'STANDING';
@@ -176,18 +113,13 @@ export class Player extends Container
    */
   private transitionToWalking(newDirection: FacingDirection): void
   {
-    if (!this.sprite) return;
+    this.playAnimation('walk', newDirection, {
+      loop: true,
+      speed: 0.125
+    });
     
-    const frames = this.getAnimationFrames('walk', newDirection);
-    if (frames.length === 0) return;
-    
-    this.sprite.textures = frames;
-    this.sprite.animationSpeed = 0.125;
-    this.sprite.loop = true;
-    this.sprite.gotoAndPlay(0);
-    
-    this.facingDirection = newDirection;
-    this.currentState = PlayerState.WALKING;
+    this.playerState = PlayerState.WALKING;
+    this.setState(EntityState.MOVING);
   }
   
   /**
@@ -195,16 +127,16 @@ export class Player extends Container
    */
   private transitionToStanding(): void
   {
-    if (!this.sprite) return;
+    this.playAnimation('idle', this.facingDirection, {
+      loop: false,
+      speed: 0.04
+    });
     
-    const frames = this.getAnimationFrames('idle', this.facingDirection);
-    if (frames.length === 0) return;
-    
-    this.sprite.textures = frames;
-    this.sprite.gotoAndStop(0);
+    this.stopAnimation(0);
     
     this.standingTimer = this.STANDING_DURATION;
-    this.currentState = PlayerState.STANDING;
+    this.playerState = PlayerState.STANDING;
+    this.setState(EntityState.IDLE);
   }
   
   /**
@@ -212,29 +144,16 @@ export class Player extends Container
    */
   private transitionToIdlePlaying(): void
   {
-    if (!this.sprite)
-    {
-        return;
-    }
+    this.playAnimation('idle', this.facingDirection, {
+      loop: false,
+      speed: 0.08,
+      onComplete: () => {
+        this.transitionToStanding();
+      }
+    });
     
-    const frames = this.getAnimationFrames('idle', this.facingDirection);
-    if (frames.length === 0)
-    {
-        return;
-    }
-
-    this.sprite.textures = frames;
-    this.sprite.animationSpeed = 0.08;
-    this.sprite.loop = false;
-    this.sprite.gotoAndPlay(0);
-    
-    // Listen for animation complete
-    this.sprite.onComplete = () => {
-      this.transitionToStanding();
-    };
-    
-    this.currentState = PlayerState.IDLE_PLAYING;
-
+    this.playerState = PlayerState.IDLE_PLAYING;
+    this.setState(EntityState.IDLE);
   }
   
   /**
@@ -242,29 +161,24 @@ export class Player extends Container
    */
   private transitionToAttacking(): void
   {
-    if (!this.sprite)
-    {
-        return;
-    }
-    
-    const frames = this.getAnimationFrames('attack', this.facingDirection);
+    const frames = this.getAnimationFrames('atk', this.facingDirection);
     if (frames.length === 0)
     {
-        return;
+      return;
     }
     
     const frameCount = frames.length;
-    this.sprite.textures = frames;
-    this.sprite.animationSpeed = frameCount / 48;
-    this.sprite.loop = false;
-    this.sprite.gotoAndPlay(0);
     
-    // Listen for animation complete
-    this.sprite.onComplete = () => {
-      this.transitionToStanding();
-    };
+    this.playAnimation('atk', this.facingDirection, {
+      loop: false,
+      speed: frameCount / 48,
+      onComplete: () => {
+        this.transitionToStanding();
+      }
+    });
     
-    this.currentState = PlayerState.ATTACKING;
+    this.playerState = PlayerState.ATTACKING;
+    this.setState(EntityState.ATTACKING);
   }
   
   /**
@@ -273,7 +187,7 @@ export class Player extends Container
   private handleAttack(): void
   {
     // Can only attack from non-attacking states
-    if (this.currentState === PlayerState.ATTACKING)
+    if (this.playerState === PlayerState.ATTACKING)
     {
       return;
     }
@@ -290,7 +204,7 @@ export class Player extends Container
   private handleMovement(): void
   {
     // Can't move during attack
-    if (this.currentState === PlayerState.ATTACKING)
+    if (this.playerState === PlayerState.ATTACKING)
     {
       return;
     }
@@ -312,14 +226,14 @@ export class Player extends Container
       this.currentPosition = newPos;
       this.position.set(newPos.x, newPos.y);
       
-      if (this.currentState !== PlayerState.WALKING || newFacing !== this.facingDirection)
+      if (this.playerState !== PlayerState.WALKING || newFacing !== this.facingDirection)
       {
         this.transitionToWalking(newFacing);
       }
     }
     else
     {
-      if (this.currentState === PlayerState.WALKING)
+      if (this.playerState === PlayerState.WALKING)
       {
         if (this.lastDirection)
         {
@@ -346,16 +260,20 @@ export class Player extends Container
       }
     }
   }
-
   
   /**
-   * Main update loop
+   * Main update loop (implementation of BaseEntity abstract method)
    */
   update(_delta: number): void
   {
+    // Don't update if dead
+    if (this.isDead())
+    {
+      return;
+    }
     
     // Update state-specific logic
-    if (this.currentState === PlayerState.STANDING)
+    if (this.playerState === PlayerState.STANDING)
     {
       this.updateStandingState();
     }
@@ -366,65 +284,61 @@ export class Player extends Container
   }
   
   /**
-   * Get player position
-   */
-  getPosition(): Position
-  {
-    return { ...this.currentPosition };
-  }
-  
-  /**
-   * Set player position
-   */
-  setPosition(x: number, y: number): void
-  {
-    this.currentPosition = { x, y };
-    this.position.set(x, y);
-  }
-  
-  /**
-   * Get facing direction
-   */
-  getFacingDirection(): FacingDirection
-  {
-    return this.facingDirection;
-  }
-  
-  /**
    * Check if player is attacking
    */
   isPlayerAttacking(): boolean
   {
-    return this.currentState === PlayerState.ATTACKING;
+    return this.playerState === PlayerState.ATTACKING;
   }
   
   /**
-   * Get current state (for debugging)
+   * Get current player state (for debugging)
    */
-  getCurrentState(): string
+  getCurrentPlayerState(): string
   {
-    return this.getStateName();
+    return this.getPlayerStateName();
   }
   
   /**
-   * Update movement bounds (useful for screen resize)
+   * Get player damage value
    */
-  updateBounds(bounds: { minX: number; maxX: number; minY: number; maxY: number }): void
+  getDamage(): number
   {
-    this.movementSystem.setBounds(bounds);
+    return this.damage;
   }
   
   /**
-   * Cleanup
+   * Get player attack range
    */
-  destroy(options?: any): void
+  getAttackRange(): number
   {
-    if (this.sprite)
+    return this.attackRange;
+  }
+  
+  /**
+   * Override takeDamage to add player death handling
+   */
+  takeDamage(amount: number): void
+  {
+    if (this.isDead())
     {
-      this.sprite.destroy();
-      this.sprite = null;
+      return;
     }
     
-    super.destroy(options);
+    super.takeDamage(amount);
+    
+    if (this.isDead())
+    {
+      this.onPlayerDeath();
+    }
+  }
+  
+  /**
+   * Handle player death
+   */
+  private onPlayerDeath(): void
+  {
+    this.playerState = PlayerState.STANDING;
+    this.stopAnimation(0);
   }
 }
