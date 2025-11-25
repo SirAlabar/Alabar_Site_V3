@@ -137,8 +137,8 @@ export class AssetManager
       }
     },
     powers: {
-      spritesheet: '/assets/images/powers/powers.png',
-      data: '/assets/images/powers/powers.json'
+      spritesheet: '/assets/images/powers.png',
+      data: '/assets/images/powers.json'
     }
   };
   
