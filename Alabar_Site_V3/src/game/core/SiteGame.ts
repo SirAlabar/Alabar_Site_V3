@@ -6,6 +6,7 @@ import { Application, Container } from 'pixi.js';
 import { AssetManager } from '../../managers/AssetManager';
 import { Player } from '../entities/Player';
 import { Slime1 } from '../entities/Slime1';
+import { CollisionSystem } from '../systems/Collision';
 
 interface SlimeSpawnData
 {
@@ -21,10 +22,13 @@ export class SiteGame
   // Game container
   private gameContainer: Container;
   
+  // Systems
+  private collisionSystem: CollisionSystem;
+  
   // Entities
   private player: Player | null = null;
   private slimes: SlimeSpawnData[] = [];
-  private readonly MAX_SLIMES = 30;
+  private readonly MAX_SLIMES = 5;
   
   // Spawn settings
   private readonly RESPAWN_DELAY_MIN = 180; // 3 seconds at 60fps
@@ -46,6 +50,14 @@ export class SiteGame
   {
     this.gameApp = gameApp;
     this.assetManager = assetManager;
+    
+    // Initialize collision system
+    this.collisionSystem = new CollisionSystem({
+      playerRadius: 20,
+      monsterRadius: 25,
+      projectileRadius: 8,
+      xpRadius: 30
+    });
     
     // Create game container
     this.gameContainer = new Container();
@@ -268,35 +280,46 @@ export class SiteGame
       // Check if slime is dead
       if (spawnData.slime.isDead())
       {
-        // Start respawn timer if not already started
-        if (spawnData.respawnTimer === 0)
+        // Wait for death animation to complete before hiding
+        if (spawnData.slime.isDeathAnimationComplete())
         {
-          spawnData.respawnTimer = this.getRandomRespawnDelay();
-          console.log('[SiteGame] Slime died, respawning in', Math.floor(spawnData.respawnTimer / 60), 'seconds');
-        }
-        
-        // Update respawn timer
-        spawnData.respawnTimer--;
-        
-        // Respawn slime
-        if (spawnData.respawnTimer <= 0)
-        {
-          // Remove dead slime
-          this.gameContainer.removeChild(spawnData.slime);
-          spawnData.slime.destroy();
-          this.slimes.splice(i, 1);
+          // Start respawn timer if not already started
+          if (spawnData.respawnTimer === 0)
+          {
+            spawnData.respawnTimer = this.getRandomRespawnDelay();
+            console.log('[SiteGame] Slime death animation complete, respawning in', Math.floor(spawnData.respawnTimer / 60), 'seconds');
+            
+            // Hide the dead slime
+            spawnData.slime.visible = false;
+          }
           
-          // Spawn new slime
-          this.spawnSlime();
+          // Update respawn timer
+          spawnData.respawnTimer--;
+          
+          // Respawn slime
+          if (spawnData.respawnTimer <= 0)
+          {
+            // Remove dead slime
+            this.gameContainer.removeChild(spawnData.slime);
+            spawnData.slime.destroy();
+            this.slimes.splice(i, 1);
+            
+            // Spawn new slime
+            this.spawnSlime();
+            console.log('[SiteGame] Slime respawned!');
+          }
         }
+        // Death animation still playing - don't update or move
       }
       else
       {
+        // Update nearby monsters for separation
         spawnData.slime.setNearbyMonsters(
             this.slimes
                 .filter(s => !s.slime.isDead())
                 .map(s => s.slime)
         );
+        
         // Update alive slime
         spawnData.slime.update(delta);
       }
@@ -375,13 +398,36 @@ export class SiteGame
     if (this.player)
     {
       this.player.update(delta);
+      
+      // Get alive slimes
+      const aliveSlimes = this.slimes
+        .filter(s => !s.slime.isDead())
+        .map(s => s.slime);
+      
+      // Check player attack collision (impact frames)
+      if (this.player.isPlayerAttacking())
+      {
+        const hitMonsters = this.collisionSystem.applyAttackDamageOnImpactFrames(
+          this.player,
+          aliveSlimes
+        );
+        
+        // Debug logging
+        if (hitMonsters.length > 0)
+        {
+          console.log(`[Attack] Hit ${hitMonsters.length} monsters at impact frame!`);
+        }
+      }
+      
+      // Apply monster touch damage to player (DPS model)
+      this.collisionSystem.applyTouchDamage(this.player, aliveSlimes, delta);
     }
     
     // Update slimes
     this.updateSlimes(delta);
     
     // TODO: Update chest
-    // TODO: Handle collisions
+    // TODO: Handle other collisions
   }
   
   /**

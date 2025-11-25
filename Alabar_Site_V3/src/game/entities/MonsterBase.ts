@@ -53,6 +53,17 @@ export abstract class MonsterBase extends BaseEntity
 
   protected nearbyMonsters: MonsterBase[] = [];
   
+  // Death animation
+  protected isPlayingDeathAnimation: boolean = false;
+  
+  // Hurt animation
+  protected isPlayingHurtAnimation: boolean = false;
+  
+  // Animation watchdog - prevents stuck animations
+  private lastAnimationFrame: number = 0;
+  private framesStuckCount: number = 0;
+  private readonly MAX_FRAMES_STUCK = 120; // 2 seconds at 60fps
+  
   constructor(assetManager: AssetManager, config: MonsterConfig)
   {
     // Call BaseEntity constructor
@@ -199,6 +210,7 @@ export abstract class MonsterBase extends BaseEntity
   {
     this.behavior = MonsterBehavior.CHASING;
     this.setState(EntityState.MOVING);
+    // Animation will be set by moveTowardsTarget
   }
   
   /**
@@ -271,7 +283,7 @@ export abstract class MonsterBase extends BaseEntity
     {
       return;
     }
-    
+
     super.takeDamage(amount);
     
     if (this.isDead())
@@ -326,7 +338,50 @@ export abstract class MonsterBase extends BaseEntity
    */
   protected onHurt(): void
   {
-    // Override in child classes for custom hurt behavior
+    // Allow hurt to interrupt attacks (stagger mechanic)
+    if (this.currentState === EntityState.ATTACKING)
+    {
+      // Clear attacking state and cooldown
+      this.attackCooldown = this.attackCooldownMax; // Reset cooldown
+      this.setState(EntityState.MOVING);
+    }
+    
+    // Play hurt animation without blocking movement
+    if (!this.isPlayingHurtAnimation)
+    {
+      this.isPlayingHurtAnimation = true;
+
+      // Store current behavior before hurt animation
+      const behaviorBeforeHurt = this.behavior;
+      
+      // Play hurt animation
+      this.playAnimation('hurt', this.facingDirection, {
+        loop: false,
+        speed: 0.2, // Fast hurt animation
+        onComplete: () => {
+          this.isPlayingHurtAnimation = false;
+          
+          // Force resume the correct animation based on behavior when hurt started
+          if (behaviorBeforeHurt === MonsterBehavior.CHASING || 
+              behaviorBeforeHurt === MonsterBehavior.ROAMING ||
+              behaviorBeforeHurt === MonsterBehavior.FLEEING)
+          {
+            this.playAnimation('run', this.facingDirection, {
+              loop: true,
+              speed: 0.125
+            });
+          }
+          else
+          {
+            this.playAnimation('idle', this.facingDirection, {
+              loop: true,
+              speed: 0.08
+            });
+          }
+        }
+      });
+    }
+    // Override in child classes for additional hurt behavior (knockback, etc.)
   }
   
   /**
@@ -335,7 +390,19 @@ export abstract class MonsterBase extends BaseEntity
   protected onDeath(): void
   {
     this.setState(EntityState.DEAD);
-    // Override in child classes for custom death behavior
+    this.isPlayingDeathAnimation = true;
+    
+    // Play death animation
+    this.playAnimation('death', this.facingDirection, {
+      loop: false,
+      speed: 0.12,
+      onComplete: () => {
+        this.isPlayingDeathAnimation = false;
+        // Animation complete - entity can now be removed
+      }
+    });
+    
+    // Override in child classes for custom death behavior (drop XP, etc.)
   }
   
 /**
@@ -375,6 +442,67 @@ protected applySeparation(separationDistance = 50): void
 
 
   /**
+   * Check if animation is stuck and force reset if needed
+   * Safety mechanism to prevent permanent animation freeze
+   */
+  protected checkAnimationWatchdog(): void
+  {
+    if (!this.sprite || this.isDead())
+    {
+      return;
+    }
+    
+    const currentFrame = Math.floor(this.sprite.currentFrame);
+    
+    // Check if animation is stuck on same frame
+    if (currentFrame === this.lastAnimationFrame)
+    {
+      this.framesStuckCount++;
+      
+      // Animation stuck for too long - force reset
+      if (this.framesStuckCount >= this.MAX_FRAMES_STUCK)
+      {
+        console.warn('[Monster] Animation STUCK detected! Frame:', currentFrame, 'Forcing reset. Behavior:', MonsterBehavior[this.behavior]);
+        
+        // Clear flags
+        this.isPlayingHurtAnimation = false;
+        this.framesStuckCount = 0;
+        
+        // Force appropriate animation based on behavior
+        if (this.behavior === MonsterBehavior.CHASING || 
+            this.behavior === MonsterBehavior.ROAMING ||
+            this.behavior === MonsterBehavior.FLEEING)
+        {
+          console.warn('[Monster] Forcing RUN animation');
+          this.playAnimation('run', this.facingDirection, {
+            loop: true,
+            speed: 0.125
+          });
+        }
+        else if (this.behavior === MonsterBehavior.ATTACKING)
+        {
+          console.warn('[Monster] Forcing attack completion');
+          this.onAttackComplete();
+        }
+        else // IDLE
+        {
+          console.warn('[Monster] Forcing IDLE animation');
+          this.playAnimation('idle', this.facingDirection, {
+            loop: true,
+            speed: 0.08
+          });
+        }
+      }
+    }
+    else
+    {
+      // Animation is progressing normally
+      this.framesStuckCount = 0;
+      this.lastAnimationFrame = currentFrame;
+    }
+  }
+  
+  /**
    * Abstract AI decision method - must be implemented by specific monsters
    */
   protected abstract makeAIDecision(): void;
@@ -390,8 +518,17 @@ protected applySeparation(separationDistance = 50): void
       return;
     }
     
+    // Check for stuck animations (safety mechanism)
+    this.checkAnimationWatchdog();
+    
     // Update cooldowns
     this.updateAttackCooldown();
+    
+    // Freeze during hurt animation (brief stagger effect)
+    if (this.isPlayingHurtAnimation)
+    {
+      return;
+    }
     
     // Make AI decision
     this.makeAIDecision();
@@ -431,5 +568,13 @@ protected applySeparation(separationDistance = 50): void
     public setNearbyMonsters(monsters: MonsterBase[]): void
     {
         this.nearbyMonsters = monsters;
+    }
+    
+    /**
+     * Check if death animation is complete
+     */
+    public isDeathAnimationComplete(): boolean
+    {
+      return this.isDead() && !this.isPlayingDeathAnimation;
     }
 }

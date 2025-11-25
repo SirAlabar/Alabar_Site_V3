@@ -12,7 +12,8 @@ enum PlayerState
   WALKING,
   STANDING,
   IDLE_PLAYING,
-  ATTACKING
+  ATTACKING,
+  HURT
 }
 
 interface PlayerConfig
@@ -48,6 +49,10 @@ export class Player extends BaseEntity
   private damage: number;
   private attackRange: number;
   
+  // Attack tracking
+  private attackImpactFrames: number[] = [2, 3]; // Frames where attack hitbox is active
+  private monstersHitThisAttack: Set<any> = new Set(); // Track hit monsters per attack
+  
   constructor(assetManager: AssetManager, config: PlayerConfig)
   {
     // Call BaseEntity constructor with EntityConfig
@@ -66,7 +71,7 @@ export class Player extends BaseEntity
     this.inputManager = InputManager.getInstance();
     
     // Initialize player-specific combat stats
-    this.damage = config.damage ?? 25;
+    this.damage = config.damage ?? 8;
     this.attackRange = config.attackRange ?? 50;
     
     // Initialize player to standing state
@@ -104,6 +109,7 @@ export class Player extends BaseEntity
       case PlayerState.STANDING: return 'STANDING';
       case PlayerState.IDLE_PLAYING: return 'IDLE_PLAYING';
       case PlayerState.ATTACKING: return 'ATTACKING';
+      case PlayerState.HURT: return 'HURT';
       default: return 'UNKNOWN';
     }
   }
@@ -157,6 +163,23 @@ export class Player extends BaseEntity
   }
   
   /**
+   * Transition to HURT state
+   */
+  private transitionToHurt(): void
+  {
+    this.playAnimation('hurt', this.facingDirection, {
+      loop: false,
+      speed: 0.15,
+      onComplete: () => {
+        this.transitionToStanding();
+      }
+    });
+    
+    this.playerState = PlayerState.HURT;
+    this.setState(EntityState.HURT);
+  }
+  
+  /**
    * Transition to ATTACKING state
    */
   private transitionToAttacking(): void
@@ -168,6 +191,9 @@ export class Player extends BaseEntity
     }
     
     const frameCount = frames.length;
+    
+    // Reset hit list for new attack
+    this.monstersHitThisAttack.clear();
     
     this.playAnimation('atk', this.facingDirection, {
       loop: false,
@@ -203,12 +229,6 @@ export class Player extends BaseEntity
    */
   private handleMovement(): void
   {
-    // Can't move during attack
-    if (this.playerState === PlayerState.ATTACKING)
-    {
-      return;
-    }
-    
     const direction = this.inputManager.getDirection();
     
     if (direction)
@@ -226,13 +246,19 @@ export class Player extends BaseEntity
       this.currentPosition = newPos;
       this.position.set(newPos.x, newPos.y);
       
-      if (this.playerState !== PlayerState.WALKING || newFacing !== this.facingDirection)
+      // Only change animation if NOT attacking or hurt
+      if (this.playerState !== PlayerState.ATTACKING && 
+          this.playerState !== PlayerState.HURT)
       {
-        this.transitionToWalking(newFacing);
+        if (this.playerState !== PlayerState.WALKING || newFacing !== this.facingDirection)
+        {
+          this.transitionToWalking(newFacing);
+        }
       }
     }
     else
     {
+      // Only transition to standing if NOT attacking or hurt
       if (this.playerState === PlayerState.WALKING)
       {
         if (this.lastDirection)
@@ -316,7 +342,45 @@ export class Player extends BaseEntity
   }
   
   /**
-   * Override takeDamage to add player death handling
+   * Check if currently at impact frame (hitbox is active)
+   */
+  isAtAttackImpactFrame(): boolean
+  {
+    if (!this.isPlayerAttacking() || !this.sprite)
+    {
+      return false;
+    }
+    
+    const currentFrame = Math.floor(this.sprite.currentFrame);
+    return this.attackImpactFrames.includes(currentFrame);
+  }
+  
+  /**
+   * Check if monster was already hit during this attack
+   */
+  hasHitMonster(monster: any): boolean
+  {
+    return this.monstersHitThisAttack.has(monster);
+  }
+  
+  /**
+   * Mark monster as hit during this attack
+   */
+  markMonsterAsHit(monster: any): void
+  {
+    this.monstersHitThisAttack.add(monster);
+  }
+  
+  /**
+   * Get list of monsters hit this attack (for debugging)
+   */
+  getMonstersHitThisAttack(): Set<any>
+  {
+    return this.monstersHitThisAttack;
+  }
+  
+  /**
+   * Override takeDamage to add player death handling and hurt animation
    */
   takeDamage(amount: number): void
   {
@@ -330,6 +394,15 @@ export class Player extends BaseEntity
     if (this.isDead())
     {
       this.onPlayerDeath();
+    }
+    else
+    {
+      // Play hurt animation only if not attacking or already hurt
+      if (this.playerState !== PlayerState.HURT && 
+          this.playerState !== PlayerState.ATTACKING)
+      {
+        this.transitionToHurt();
+      }
     }
   }
   
