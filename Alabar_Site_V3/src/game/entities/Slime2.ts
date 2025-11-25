@@ -22,7 +22,7 @@ export class Slime2 extends MonsterBase
 {
   constructor(assetManager: AssetManager, config: Slime2Config)
   {
-    // Define Slime2-specific stats (from progression_and_behaviors.md)
+    // Define Slime2-specific stats
     const monsterConfig: MonsterConfig = {
       startX: config.startX,
       startY: config.startY,
@@ -43,7 +43,7 @@ export class Slime2 extends MonsterBase
   }
   
   /**
-   * Slime2 AI decision logic (same as Slime1 - basic follow behavior)
+   * Slime2 AI decision logic
    */
   protected makeAIDecision(): void
   {

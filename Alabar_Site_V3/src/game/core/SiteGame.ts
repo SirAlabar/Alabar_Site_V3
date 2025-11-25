@@ -6,6 +6,19 @@ import { Application, Container } from 'pixi.js';
 import { AssetManager } from '../../managers/AssetManager';
 import { Player } from '../entities/Player';
 import { Slime1 } from '../entities/Slime1';
+import { Slime2 } from '../entities/Slime2';
+import { Slime3 } from '../entities/Slime3';
+import { Plant1 } from '../entities/Plant1';
+import { Plant2 } from '../entities/Plant2';
+import { Plant3 } from '../entities/Plant3';
+import { Vampire1 } from '../entities/Vampire1';
+import { Vampire2 } from '../entities/Vampire2';
+import { Vampire3 } from '../entities/Vampire3';
+import { Orc1 } from '../entities/Orc1';
+import { Orc2 } from '../entities/Orc2';
+import { Orc3 } from '../entities/Orc3';
+
+
 import { CollisionSystem } from '../systems/Collision';
 
 interface SlimeSpawnData
@@ -197,7 +210,7 @@ export class SiteGame
     this.player = new Player(this.assetManager, {
       startX: startX,
       startY: startY,
-      speed: 2.5,
+      speed: 1.5,
       bounds: this.gameBounds
     });
     

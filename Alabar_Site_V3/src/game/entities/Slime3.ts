@@ -1,12 +1,12 @@
 /**
- * Slime1.ts - Slime monster implementation
+ * Slime3.ts - Slime monster implementation (Tier 3 - Strongest slime)
  */
 
 import { AssetManager } from '../../managers/AssetManager';
 import { MonsterBase, MonsterConfig, MonsterBehavior } from './MonsterBase';
 import { EntityState } from './BaseEntity';
 
-export interface Slime1Config
+export interface Slime3Config
 {
   startX: number;
   startY: number;
@@ -18,19 +18,18 @@ export interface Slime1Config
   };
 }
 
-export class Slime1 extends MonsterBase
+export class Slime3 extends MonsterBase
 {
-  constructor(assetManager: AssetManager, config: Slime1Config)
+  constructor(assetManager: AssetManager, config: Slime3Config)
   {
-    // Define Slime-specific stats
     const monsterConfig: MonsterConfig = {
       startX: config.startX,
       startY: config.startY,
-      speed: 0.65,
-      spritesheetKey: 'slime1_spritesheet',
-      animationPrefix: 'Slime1',
+      speed: 0.75,
+      spritesheetKey: 'slime3_spritesheet',
+      animationPrefix: 'Slime3',
       health: 18,
-      damage: 2,
+      damage: 2.5,
       attackRange: 40,
       detectionRange: 3000,
       bounds: config.bounds
@@ -43,7 +42,7 @@ export class Slime1 extends MonsterBase
   }
   
   /**
-   * Slime AI decision logic
+   * Slime3 AI decision logic
    */
   protected makeAIDecision(): void
   {
