@@ -11,8 +11,6 @@ import { App } from './App';
  */
 async function initApp(): Promise<void>
 {
-  console.log('🏰 Alabar Site V3 - Initializing...');
-  
   try
   {
     // Initialize App singleton
@@ -22,8 +20,6 @@ async function initApp(): Promise<void>
     
     // Build test content in #content-mount
     buildTestContent();
-    
-    console.log('🚀 Application ready!');
   }
   catch (error)
   {

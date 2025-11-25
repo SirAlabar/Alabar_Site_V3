@@ -12,6 +12,5 @@ export default class HomePage extends BaseComponent {
 
   mount(selector: string): void {
     // PIXI ContentManager handles the home page content
-    console.log('HomePage mounted');
   }
 }

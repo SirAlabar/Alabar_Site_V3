@@ -882,7 +882,6 @@ export class CloudsManager
    */
   destroy(): void
   {
-    console.log('CloudsManager: Destroying');
     this.isDestroyed = true;
     
     // Clear interval

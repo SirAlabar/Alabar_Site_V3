@@ -30,7 +30,6 @@ export function mountLayout(): void
   if (!headerMount || !contentMount)
   {
     layout.mount('#app');
-    console.log('✅ Layout structure created');
   }
 }
 

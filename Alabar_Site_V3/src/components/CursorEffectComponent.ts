@@ -120,8 +120,6 @@ export class CursorEffectComponent
     
     // Start update loop
     this.startUpdateLoop();
-    
-    console.log('[CursorEffect] Initialized on cursorApp');
   }
   
   private initCursorSprite(): void

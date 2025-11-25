@@ -246,8 +246,6 @@ export async function navigateTo(path: string): Promise<void>
     
     // Store current route
     routerState.currentRoute = { ...route, path: pathname };
-    
-    console.log(`[Router] Navigated to: ${pathname}`);
   }
   catch (error)
   {
@@ -414,8 +412,6 @@ export function initRouter(): void
       }
     }, 100);
   }
-  
-  console.log('[Router] Initialized');
 }
 
 /**
@@ -443,8 +439,6 @@ export function destroyRouter(): void
   routerState.isInitialized = false;
   routerState.currentRoute = null;
   routerState.isNavigating = false;
-  
-  console.log('[Router] Destroyed');
 }
 
 /**

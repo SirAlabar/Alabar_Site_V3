@@ -85,7 +85,6 @@ export class App
       this.hideLoading();
       
       this.isInitialized = true;
-      console.log('[OK] App initialized successfully');
     }
     catch (error)
     {
@@ -98,7 +97,6 @@ export class App
   private showLoading(): void
   {
     this.loadingUI = new LoadingUI();
-    console.log('[OK] Loading UI shown');
   }
   
   private hideLoading(): void
@@ -174,8 +172,6 @@ export class App
     
     // Setup resize handler
     window.addEventListener('resize', this.handleResize.bind(this));
-    
-    console.log('[OK] Three PIXI apps initialized');
   }
   
   private async initAssets(): Promise<void>
@@ -208,8 +204,6 @@ export class App
     
     // Mount the layout structure (#header-mount, #content-mount)
     mountLayout();
-    
-    console.log('[OK] Layout Manager initialized');
   }
   
   private initHeader(): void
@@ -219,8 +213,6 @@ export class App
     
     // Mount default header
     mountHeader('default');
-    
-    console.log('[OK] Header Manager initialized');
   }
 
     private initSiteGame(): void
@@ -232,8 +224,6 @@ export class App
 
       this.siteGame = new SiteGame(this.gameApp, this.assetManager);
       this.siteGame.initialize();
-
-      console.log('[OK] SiteGame initialized');
     }
   
   private handleResize(): void
@@ -296,8 +286,6 @@ export class App
     
     // Set background group and initialize
     this.sceneManager.setBackgroundGroup(backgroundGroup, this.bgApp);
-    
-    console.log('[OK] Scene Manager initialized (bgApp)');
   }
   
   /**
@@ -322,16 +310,12 @@ export class App
         particlesLifespan: 60
       }
     );
-    
-    console.log('[OK] Cursor Manager initialized (cursorApp)');
   }
   
   private initRouter(): void
   {
     this.router = Router.getInstance();
     this.router.initialize();
-    
-    console.log('[OK] Router initialized');
   }
   
   // Public getters

@@ -229,8 +229,6 @@ export class SceneManager
     
     // Update body attribute for CSS
     document.body.setAttribute('data-theme', theme);
-    
-    console.log(`[SceneManager] Applied ${theme} theme`);
   }
   
   /**
