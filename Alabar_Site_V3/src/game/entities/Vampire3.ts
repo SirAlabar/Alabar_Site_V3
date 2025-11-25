@@ -26,26 +26,67 @@ export class Vampire3 extends MonsterBase
   private readonly DASH_DISTANCE: number = 60; // Longer dash
   private readonly DASH_CHANCE: number = 0.5; // 50% chance
   
+  // Dash system
+  private isDashing: boolean = false;
+  private dashVelocityX: number = 0;
+  private dashVelocityY: number = 0;
+  private dashFramesRemaining: number = 0;
+  private readonly DASH_DURATION_FRAMES: number = 7;
+  
   constructor(assetManager: AssetManager, config: Vampire3Config)
   {
     // Define Vampire3-specific stats
     const monsterConfig: MonsterConfig = {
       startX: config.startX,
       startY: config.startY,
-      speed: 1.35, // Fastest vampire!
+      speed: 1.35,
       spritesheetKey: 'vampire3_spritesheet',
       animationPrefix: 'Vampire3',
       health: 50,
       damage: 8.5,
       attackRange: 40,
-      detectionRange: 4000, // Longer detection
+      detectionRange: 4000,
       bounds: config.bounds
     };
     
     super(assetManager, monsterConfig);
     
-    // Very short attack cooldown
+    // Attack cooldown
     this.attackCooldownMax = 60; // 1 second
+  }
+  
+  /**
+   * Update dash movement
+   */
+  private updateDash(): void
+  {
+    if (!this.isDashing)
+    {
+      return;
+    }
+    
+    // Apply dash velocity
+    const newX = this.currentPosition.x + this.dashVelocityX;
+    const newY = this.currentPosition.y + this.dashVelocityY;
+    
+    // Apply bounds
+    const bounds = this.movementSystem.getBounds();
+    const boundedX = bounds ? Math.max(bounds.minX, Math.min(bounds.maxX, newX)) : newX;
+    const boundedY = bounds ? Math.max(bounds.minY, Math.min(bounds.maxY, newY)) : newY;
+    
+    this.setPosition(boundedX, boundedY);
+    
+    // Decrease remaining frames
+    this.dashFramesRemaining--;
+    
+    // Check if dash is complete
+    if (this.dashFramesRemaining <= 0)
+    {
+      this.isDashing = false;
+      this.dashVelocityX = 0;
+      this.dashVelocityY = 0;
+      console.log('[Vampire3] Dash complete!');
+    }
   }
   
   /**
@@ -53,7 +94,7 @@ export class Vampire3 extends MonsterBase
    */
   private performDash(): void
   {
-    if (!this.target || this.dashCooldown > 0)
+    if (!this.target || this.dashCooldown > 0 || this.isDashing)
     {
       return;
     }
@@ -69,16 +110,19 @@ export class Vampire3 extends MonsterBase
       {
         console.log('[Vampire3] Performing AGGRESSIVE DASH!');
         
-        // Apply dash movement
-        const dashX = this.currentPosition.x + (direction.x * this.DASH_DISTANCE);
-        const dashY = this.currentPosition.y + (direction.y * this.DASH_DISTANCE);
+        // Calculate velocity per frame (distance / duration)
+        this.dashVelocityX = (direction.x * this.DASH_DISTANCE) / this.DASH_DURATION_FRAMES;
+        this.dashVelocityY = (direction.y * this.DASH_DISTANCE) / this.DASH_DURATION_FRAMES;
         
-        // Apply bounds
-        const bounds = this.movementSystem.getBounds();
-        const newX = bounds ? Math.max(bounds.minX, Math.min(bounds.maxX, dashX)) : dashX;
-        const newY = bounds ? Math.max(bounds.minY, Math.min(bounds.maxY, dashY)) : dashY;
+        // Start dash
+        this.isDashing = true;
+        this.dashFramesRemaining = this.DASH_DURATION_FRAMES;
         
-        this.setPosition(newX, newY);
+        // Increase animation speed during dash
+        if (this.sprite && this.sprite.animationSpeed)
+        {
+          this.sprite.animationSpeed = 0.4; // Even faster animation during dash
+        }
         
         // Set cooldown
         this.dashCooldown = this.DASH_COOLDOWN_MAX;
@@ -102,8 +146,17 @@ export class Vampire3 extends MonsterBase
    */
   protected makeAIDecision(): void
   {
-    // Can't make decisions while attacking
-    if (this.currentState === EntityState.ATTACKING)
+    // Update dash first
+    this.updateDash();
+    
+    // Reset animation speed when not dashing
+    if (!this.isDashing && this.sprite && this.sprite.animationSpeed !== 0.125)
+    {
+      this.sprite.animationSpeed = 0.125; // Normal animation speed
+    }
+    
+    // Can't make decisions while attacking or dashing
+    if (this.currentState === EntityState.ATTACKING || this.isDashing)
     {
       return;
     }
