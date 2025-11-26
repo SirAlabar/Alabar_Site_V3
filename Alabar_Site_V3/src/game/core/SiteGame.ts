@@ -208,7 +208,7 @@ export class SiteGame
     this.player = new Player(this.assetManager, {
       startX: startX,
       startY: startY,
-      speed: 1.5,
+      speed: 2.0,
       bounds: this.gameBounds
     });
     
@@ -524,7 +524,7 @@ export class SiteGame
       return;
     }
     
-    const delta = ticker.deltaTime;
+    const delta = ticker.deltaTime / 60;
     
     // Update player
     if (this.player)

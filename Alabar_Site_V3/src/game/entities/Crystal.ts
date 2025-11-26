@@ -43,8 +43,8 @@ export class CrystalPickup extends PickupBase
       y: config.y,
       spritesheetKey: spritesheetKey,
       frameName: frameName, // Static frame
-      magnetRadius: config.magnetRadius ?? 150,
-      magnetSpeed: config.magnetSpeed ?? 3.5,
+      magnetRadius: config.magnetRadius ?? 75,
+      magnetSpeed: config.magnetSpeed ?? 2.5,
       lifetime: config.lifetime ?? 0, // Infinite by default
       particleContainer: config.particleContainer
     };

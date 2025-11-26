@@ -49,7 +49,7 @@ export class Player extends BaseEntity
   
   // Standing state timer
   private standingTimer: number = 0;
-  private readonly STANDING_DURATION = 300; // 5 seconds at 60fps
+  private readonly STANDING_DURATION = 5; // 5 seconds
   
   // Combat stats (player-specific)
   private damage: number;
@@ -290,7 +290,7 @@ export class Player extends BaseEntity
   /**
    * Handle movement input
    */
-  private handleMovement(): void
+  private handleMovement(delta: number): void
   {
     const direction = this.inputManager.getDirection();
     
@@ -303,7 +303,8 @@ export class Player extends BaseEntity
       // Calculate and apply new position
       const newPos = this.movementSystem.calculateNewPosition(
         this.currentPosition,
-        direction
+        direction,
+        delta
       );
       
       this.currentPosition = newPos;
@@ -337,13 +338,13 @@ export class Player extends BaseEntity
   /**
    * Update STANDING state
    */
-  private updateStandingState(): void
+  private updateStandingState(delta: number): void
   {
     if (this.standingTimer > 0)
     {
-      this.standingTimer--;
+      this.standingTimer -= delta;
       
-      if (this.standingTimer === 0)
+      if (this.standingTimer <= 0)
       {
         this.transitionToIdlePlaying();
       }
@@ -353,7 +354,7 @@ export class Player extends BaseEntity
   /**
    * Main update loop (implementation of BaseEntity abstract method)
    */
-  update(_delta: number): void
+  update(delta: number): void
   {
     // Don't update if dead
     if (this.isDead())
@@ -364,12 +365,12 @@ export class Player extends BaseEntity
     // Update state-specific logic
     if (this.playerState === PlayerState.STANDING)
     {
-      this.updateStandingState();
+      this.updateStandingState(delta);
     }
     
     // Handle input (respecting state restrictions)
     this.handleAttack();
-    this.handleMovement();
+    this.handleMovement(delta);
   }
   
   /**

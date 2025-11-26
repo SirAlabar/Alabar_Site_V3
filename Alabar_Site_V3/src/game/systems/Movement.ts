@@ -36,41 +36,43 @@ export class MovementSystem
   /**
    * Calculate new position based on direction
    */
-  calculateNewPosition(currentPos: Position, direction: Direction): Position
-  {
-    if (!direction)
+    calculateNewPosition(currentPos: Position, direction: Direction, delta: number): Position
     {
-      return currentPos;
+        if (!direction)
+        {
+            return currentPos;
+        }
+
+        const newPos: Position = { ...currentPos };
+
+        const deltaSpeed = this.speed * delta * 60;
+
+        switch (direction)
+        {
+            case 'up':
+            newPos.y -= deltaSpeed;
+            break;
+            case 'down':
+            newPos.y += deltaSpeed;
+            break;
+            case 'left':
+            newPos.x -= deltaSpeed;
+            break;
+            case 'right':
+            newPos.x += deltaSpeed;
+            break;
+        }
+
+        // Boundary
+        if (this.bounds)
+        {
+            newPos.x = Math.max(this.bounds.minX, Math.min(this.bounds.maxX, newPos.x));
+            newPos.y = Math.max(this.bounds.minY, Math.min(this.bounds.maxY, newPos.y));
+        }
+
+        return newPos;
     }
-    
-    const newPos: Position = { ...currentPos };
-    
-    // Apply movement based on direction (4-directional only)
-    switch (direction)
-    {
-      case 'up':
-        newPos.y -= this.speed;
-        break;
-      case 'down':
-        newPos.y += this.speed;
-        break;
-      case 'left':
-        newPos.x -= this.speed;
-        break;
-      case 'right':
-        newPos.x += this.speed;
-        break;
-    }
-    
-    // Apply boundary constraints if defined
-    if (this.bounds)
-    {
-      newPos.x = Math.max(this.bounds.minX, Math.min(this.bounds.maxX, newPos.x));
-      newPos.y = Math.max(this.bounds.minY, Math.min(this.bounds.maxY, newPos.y));
-    }
-    
-    return newPos;
-  }
+
   
   /**
    * Check if position is within bounds

@@ -92,7 +92,7 @@ export class CollisionSystem
       {
         // Apply DPS damage: damage per second * deltaTime
         // deltaTime is normalized (1.0 = 1 frame at 60fps)
-        const damageThisFrame = monster.getStats().damage * (delta / 60);
+        const damageThisFrame = monster.getStats().damage * delta;
         player.takeDamage(damageThisFrame);
       }
     }

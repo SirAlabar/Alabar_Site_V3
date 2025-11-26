@@ -58,7 +58,7 @@ export abstract class PickupBase extends Container
     this.position.set(config.x, config.y);
     
     // Magnet settings
-    this.magnetRadius = config.magnetRadius ?? 150;
+    this.magnetRadius = config.magnetRadius ?? 75;
     this.magnetSpeed = config.magnetSpeed ?? 3.0;
     
     // Lifetime (0 = infinite)
