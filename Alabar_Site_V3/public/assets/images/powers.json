@@ -1896,10 +1896,202 @@
         "y": 0.5
       }
     },
-    "Power_windcut_lvl1_0": {
+    "Power_flower_0": {
       "frame": {
         "x": 0,
         "y": 640,
+        "w": 64,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 64,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 64,
+        "h": 64
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "Power_flower_1": {
+      "frame": {
+        "x": 64,
+        "y": 640,
+        "w": 64,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 64,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 64,
+        "h": 64
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "Power_flower_2": {
+      "frame": {
+        "x": 128,
+        "y": 640,
+        "w": 64,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 64,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 64,
+        "h": 64
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "Power_flower_3": {
+      "frame": {
+        "x": 192,
+        "y": 640,
+        "w": 64,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 64,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 64,
+        "h": 64
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "Power_flower_4": {
+      "frame": {
+        "x": 256,
+        "y": 640,
+        "w": 64,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 64,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 64,
+        "h": 64
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "Power_flower_5": {
+      "frame": {
+        "x": 320,
+        "y": 640,
+        "w": 64,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 64,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 64,
+        "h": 64
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "Power_flower_6": {
+      "frame": {
+        "x": 384,
+        "y": 640,
+        "w": 64,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 64,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 64,
+        "h": 64
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "Power_flower_7": {
+      "frame": {
+        "x": 448,
+        "y": 640,
+        "w": 64,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 64,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 64,
+        "h": 64
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "Power_windcut_lvl1_0": {
+      "frame": {
+        "x": 0,
+        "y": 704,
         "w": 64,
         "h": 64
       },
@@ -1923,7 +2115,7 @@
     "Power_windcut_lvl1_1": {
       "frame": {
         "x": 64,
-        "y": 640,
+        "y": 704,
         "w": 64,
         "h": 64
       },
@@ -1947,7 +2139,7 @@
     "Power_windcut_lvl1_2": {
       "frame": {
         "x": 128,
-        "y": 640,
+        "y": 704,
         "w": 64,
         "h": 64
       },
@@ -1971,7 +2163,7 @@
     "Power_windcut_lvl2_0": {
       "frame": {
         "x": 0,
-        "y": 704,
+        "y": 768,
         "w": 64,
         "h": 64
       },
@@ -1995,7 +2187,7 @@
     "Power_windcut_lvl2_1": {
       "frame": {
         "x": 64,
-        "y": 704,
+        "y": 768,
         "w": 64,
         "h": 64
       },
@@ -2019,7 +2211,7 @@
     "Power_windcut_lvl2_2": {
       "frame": {
         "x": 128,
-        "y": 704,
+        "y": 768,
         "w": 64,
         "h": 64
       },
@@ -2043,7 +2235,7 @@
     "Power_windcut_lvl3_0": {
       "frame": {
         "x": 0,
-        "y": 768,
+        "y": 832,
         "w": 64,
         "h": 64
       },
@@ -2067,7 +2259,7 @@
     "Power_windcut_lvl3_1": {
       "frame": {
         "x": 64,
-        "y": 768,
+        "y": 832,
         "w": 64,
         "h": 64
       },
@@ -2091,7 +2283,7 @@
     "Power_windcut_lvl3_2": {
       "frame": {
         "x": 128,
-        "y": 768,
+        "y": 832,
         "w": 64,
         "h": 64
       },
@@ -2115,7 +2307,7 @@
     "Power_aura_lvl1_0": {
       "frame": {
         "x": 0,
-        "y": 832,
+        "y": 896,
         "w": 64,
         "h": 64
       },
@@ -2139,7 +2331,7 @@
     "Power_aura_lvl1_1": {
       "frame": {
         "x": 64,
-        "y": 832,
+        "y": 896,
         "w": 64,
         "h": 64
       },
@@ -2163,7 +2355,7 @@
     "Power_aura_lvl1_2": {
       "frame": {
         "x": 128,
-        "y": 832,
+        "y": 896,
         "w": 64,
         "h": 64
       },
@@ -2187,7 +2379,7 @@
     "Power_aura_lvl1_3": {
       "frame": {
         "x": 192,
-        "y": 832,
+        "y": 896,
         "w": 64,
         "h": 64
       },
@@ -2211,7 +2403,7 @@
     "Power_aura_lvl1_4": {
       "frame": {
         "x": 256,
-        "y": 832,
+        "y": 896,
         "w": 64,
         "h": 64
       },
@@ -2235,7 +2427,7 @@
     "Power_aura_lvl1_5": {
       "frame": {
         "x": 320,
-        "y": 832,
+        "y": 896,
         "w": 64,
         "h": 64
       },
@@ -2259,7 +2451,7 @@
     "Power_aura_lvl1_6": {
       "frame": {
         "x": 384,
-        "y": 832,
+        "y": 896,
         "w": 64,
         "h": 64
       },
@@ -2283,7 +2475,7 @@
     "Power_aura_lvl1_7": {
       "frame": {
         "x": 448,
-        "y": 832,
+        "y": 896,
         "w": 64,
         "h": 64
       },
@@ -2307,7 +2499,7 @@
     "Power_aura_lvl1_8": {
       "frame": {
         "x": 512,
-        "y": 832,
+        "y": 896,
         "w": 64,
         "h": 64
       },
@@ -2331,7 +2523,7 @@
     "Power_aura_lvl1_9": {
       "frame": {
         "x": 576,
-        "y": 832,
+        "y": 896,
         "w": 64,
         "h": 64
       },
@@ -2355,7 +2547,7 @@
     "Power_aura_lvl1_10": {
       "frame": {
         "x": 640,
-        "y": 832,
+        "y": 896,
         "w": 64,
         "h": 64
       },
@@ -2379,7 +2571,7 @@
     "Power_aura_lvl1_11": {
       "frame": {
         "x": 704,
-        "y": 832,
+        "y": 896,
         "w": 64,
         "h": 64
       },
@@ -2403,7 +2595,7 @@
     "Power_aura_lvl1_12": {
       "frame": {
         "x": 768,
-        "y": 832,
+        "y": 896,
         "w": 64,
         "h": 64
       },
@@ -2427,7 +2619,7 @@
     "Power_aura_lvl1_13": {
       "frame": {
         "x": 832,
-        "y": 832,
+        "y": 896,
         "w": 64,
         "h": 64
       },
@@ -2451,7 +2643,7 @@
     "Power_aura_lvl2_0": {
       "frame": {
         "x": 0,
-        "y": 896,
+        "y": 960,
         "w": 64,
         "h": 64
       },
@@ -2475,7 +2667,7 @@
     "Power_aura_lvl2_1": {
       "frame": {
         "x": 64,
-        "y": 896,
+        "y": 960,
         "w": 64,
         "h": 64
       },
@@ -2499,7 +2691,7 @@
     "Power_aura_lvl2_2": {
       "frame": {
         "x": 128,
-        "y": 896,
+        "y": 960,
         "w": 64,
         "h": 64
       },
@@ -2523,7 +2715,7 @@
     "Power_aura_lvl2_3": {
       "frame": {
         "x": 192,
-        "y": 896,
+        "y": 960,
         "w": 64,
         "h": 64
       },
@@ -2547,7 +2739,7 @@
     "Power_aura_lvl2_4": {
       "frame": {
         "x": 256,
-        "y": 896,
+        "y": 960,
         "w": 64,
         "h": 64
       },
@@ -2571,7 +2763,7 @@
     "Power_aura_lvl2_5": {
       "frame": {
         "x": 320,
-        "y": 896,
+        "y": 960,
         "w": 64,
         "h": 64
       },
@@ -2595,7 +2787,7 @@
     "Power_aura_lvl2_6": {
       "frame": {
         "x": 384,
-        "y": 896,
+        "y": 960,
         "w": 64,
         "h": 64
       },
@@ -2619,7 +2811,7 @@
     "Power_aura_lvl2_7": {
       "frame": {
         "x": 448,
-        "y": 896,
+        "y": 960,
         "w": 64,
         "h": 64
       },
@@ -2643,7 +2835,7 @@
     "Power_aura_lvl2_8": {
       "frame": {
         "x": 512,
-        "y": 896,
+        "y": 960,
         "w": 64,
         "h": 64
       },
@@ -2667,7 +2859,7 @@
     "Power_aura_lvl2_9": {
       "frame": {
         "x": 576,
-        "y": 896,
+        "y": 960,
         "w": 64,
         "h": 64
       },
@@ -2691,7 +2883,7 @@
     "Power_aura_lvl2_10": {
       "frame": {
         "x": 640,
-        "y": 896,
+        "y": 960,
         "w": 64,
         "h": 64
       },
@@ -2715,7 +2907,7 @@
     "Power_aura_lvl2_11": {
       "frame": {
         "x": 704,
-        "y": 896,
+        "y": 960,
         "w": 64,
         "h": 64
       },
@@ -2739,7 +2931,7 @@
     "Power_aura_lvl2_12": {
       "frame": {
         "x": 768,
-        "y": 896,
+        "y": 960,
         "w": 64,
         "h": 64
       },
@@ -2763,7 +2955,7 @@
     "Power_aura_lvl2_13": {
       "frame": {
         "x": 832,
-        "y": 896,
+        "y": 960,
         "w": 64,
         "h": 64
       },
@@ -2787,7 +2979,7 @@
     "Power_aura_lvl3_0": {
       "frame": {
         "x": 0,
-        "y": 960,
+        "y": 1024,
         "w": 64,
         "h": 64
       },
@@ -2811,7 +3003,7 @@
     "Power_aura_lvl3_1": {
       "frame": {
         "x": 64,
-        "y": 960,
+        "y": 1024,
         "w": 64,
         "h": 64
       },
@@ -2835,7 +3027,7 @@
     "Power_aura_lvl3_2": {
       "frame": {
         "x": 128,
-        "y": 960,
+        "y": 1024,
         "w": 64,
         "h": 64
       },
@@ -2859,7 +3051,7 @@
     "Power_aura_lvl3_3": {
       "frame": {
         "x": 192,
-        "y": 960,
+        "y": 1024,
         "w": 64,
         "h": 64
       },
@@ -2883,7 +3075,7 @@
     "Power_aura_lvl3_4": {
       "frame": {
         "x": 256,
-        "y": 960,
+        "y": 1024,
         "w": 64,
         "h": 64
       },
@@ -2907,7 +3099,7 @@
     "Power_aura_lvl3_5": {
       "frame": {
         "x": 320,
-        "y": 960,
+        "y": 1024,
         "w": 64,
         "h": 64
       },
@@ -2931,7 +3123,7 @@
     "Power_aura_lvl3_6": {
       "frame": {
         "x": 384,
-        "y": 960,
+        "y": 1024,
         "w": 64,
         "h": 64
       },
@@ -2955,7 +3147,7 @@
     "Power_aura_lvl3_7": {
       "frame": {
         "x": 448,
-        "y": 960,
+        "y": 1024,
         "w": 64,
         "h": 64
       },
@@ -2979,7 +3171,7 @@
     "Power_aura_lvl3_8": {
       "frame": {
         "x": 512,
-        "y": 960,
+        "y": 1024,
         "w": 64,
         "h": 64
       },
@@ -3003,7 +3195,7 @@
     "Power_aura_lvl3_9": {
       "frame": {
         "x": 576,
-        "y": 960,
+        "y": 1024,
         "w": 64,
         "h": 64
       },
@@ -3027,7 +3219,7 @@
     "Power_aura_lvl3_10": {
       "frame": {
         "x": 640,
-        "y": 960,
+        "y": 1024,
         "w": 64,
         "h": 64
       },
@@ -3051,7 +3243,7 @@
     "Power_aura_lvl3_11": {
       "frame": {
         "x": 704,
-        "y": 960,
+        "y": 1024,
         "w": 64,
         "h": 64
       },
@@ -3075,7 +3267,7 @@
     "Power_aura_lvl3_12": {
       "frame": {
         "x": 768,
-        "y": 960,
+        "y": 1024,
         "w": 64,
         "h": 64
       },
@@ -3099,7 +3291,7 @@
     "Power_aura_lvl3_13": {
       "frame": {
         "x": 832,
-        "y": 960,
+        "y": 1024,
         "w": 64,
         "h": 64
       },
@@ -3123,7 +3315,7 @@
     "Power_aura_lvl4_0": {
       "frame": {
         "x": 0,
-        "y": 1024,
+        "y": 1088,
         "w": 64,
         "h": 64
       },
@@ -3147,7 +3339,7 @@
     "Power_aura_lvl4_1": {
       "frame": {
         "x": 64,
-        "y": 1024,
+        "y": 1088,
         "w": 64,
         "h": 64
       },
@@ -3171,7 +3363,7 @@
     "Power_aura_lvl4_2": {
       "frame": {
         "x": 128,
-        "y": 1024,
+        "y": 1088,
         "w": 64,
         "h": 64
       },
@@ -3195,7 +3387,7 @@
     "Power_aura_lvl4_3": {
       "frame": {
         "x": 192,
-        "y": 1024,
+        "y": 1088,
         "w": 64,
         "h": 64
       },
@@ -3219,7 +3411,7 @@
     "Power_aura_lvl4_4": {
       "frame": {
         "x": 256,
-        "y": 1024,
+        "y": 1088,
         "w": 64,
         "h": 64
       },
@@ -3243,7 +3435,7 @@
     "Power_aura_lvl4_5": {
       "frame": {
         "x": 320,
-        "y": 1024,
+        "y": 1088,
         "w": 64,
         "h": 64
       },
@@ -3267,7 +3459,7 @@
     "Power_aura_lvl4_6": {
       "frame": {
         "x": 384,
-        "y": 1024,
+        "y": 1088,
         "w": 64,
         "h": 64
       },
@@ -3291,7 +3483,7 @@
     "Power_aura_lvl4_7": {
       "frame": {
         "x": 448,
-        "y": 1024,
+        "y": 1088,
         "w": 64,
         "h": 64
       },
@@ -3315,7 +3507,7 @@
     "Power_aura_lvl4_8": {
       "frame": {
         "x": 512,
-        "y": 1024,
+        "y": 1088,
         "w": 64,
         "h": 64
       },
@@ -3339,7 +3531,7 @@
     "Power_aura_lvl4_9": {
       "frame": {
         "x": 576,
-        "y": 1024,
+        "y": 1088,
         "w": 64,
         "h": 64
       },
@@ -3363,7 +3555,7 @@
     "Power_aura_lvl4_10": {
       "frame": {
         "x": 640,
-        "y": 1024,
+        "y": 1088,
         "w": 64,
         "h": 64
       },
@@ -3387,7 +3579,7 @@
     "Power_aura_lvl4_11": {
       "frame": {
         "x": 704,
-        "y": 1024,
+        "y": 1088,
         "w": 64,
         "h": 64
       },
@@ -3411,7 +3603,7 @@
     "Power_aura_lvl4_12": {
       "frame": {
         "x": 768,
-        "y": 1024,
+        "y": 1088,
         "w": 64,
         "h": 64
       },
@@ -3435,30 +3627,6 @@
     "Power_aura_lvl4_13": {
       "frame": {
         "x": 832,
-        "y": 1024,
-        "w": 64,
-        "h": 64
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 64,
-        "h": 64
-      },
-      "sourceSize": {
-        "w": 64,
-        "h": 64
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    "Weapon_shiriken_0": {
-      "frame": {
-        "x": 0,
         "y": 1088,
         "w": 64,
         "h": 64
@@ -3480,10 +3648,34 @@
         "y": 0.5
       }
     },
-    "Weapon_shiriken_1": {
+    "Weapon_shuriken_0": {
+      "frame": {
+        "x": 0,
+        "y": 1152,
+        "w": 64,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 64,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 64,
+        "h": 64
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "Weapon_shuriken_1": {
       "frame": {
         "x": 64,
-        "y": 1088,
+        "y": 1152,
         "w": 64,
         "h": 64
       },
@@ -3504,10 +3696,10 @@
         "y": 0.5
       }
     },
-    "Weapon_shiriken_2": {
+    "Weapon_shuriken_2": {
       "frame": {
         "x": 128,
-        "y": 1088,
+        "y": 1152,
         "w": 64,
         "h": 64
       },
@@ -3528,10 +3720,10 @@
         "y": 0.5
       }
     },
-    "Weapon_shiriken_3": {
+    "Weapon_shuriken_3": {
       "frame": {
         "x": 192,
-        "y": 1088,
+        "y": 1152,
         "w": 64,
         "h": 64
       },
@@ -3552,10 +3744,10 @@
         "y": 0.5
       }
     },
-    "Weapon_shiriken_4": {
+    "Weapon_shuriken_4": {
       "frame": {
         "x": 256,
-        "y": 1088,
+        "y": 1152,
         "w": 64,
         "h": 64
       },
@@ -3579,7 +3771,7 @@
     "Weapon_sword_0": {
       "frame": {
         "x": 0,
-        "y": 1152,
+        "y": 1216,
         "w": 64,
         "h": 64
       },
@@ -3603,7 +3795,7 @@
     "Weapon_sword_1": {
       "frame": {
         "x": 64,
-        "y": 1152,
+        "y": 1216,
         "w": 64,
         "h": 64
       },
@@ -3627,7 +3819,7 @@
     "Weapon_sword_2": {
       "frame": {
         "x": 128,
-        "y": 1152,
+        "y": 1216,
         "w": 64,
         "h": 64
       },
@@ -3651,7 +3843,7 @@
     "Weapon_sword_3": {
       "frame": {
         "x": 192,
-        "y": 1152,
+        "y": 1216,
         "w": 64,
         "h": 64
       },
@@ -3675,7 +3867,7 @@
     "Weapon_sword_4": {
       "frame": {
         "x": 256,
-        "y": 1152,
+        "y": 1216,
         "w": 64,
         "h": 64
       },
@@ -3797,6 +3989,16 @@
       "Power_firebolt_6",
       "Power_firebolt_7"
     ],
+    "Power_flower": [
+      "Power_flower_0",
+      "Power_flower_1",
+      "Power_flower_2",
+      "Power_flower_3",
+      "Power_flower_4",
+      "Power_flower_5",
+      "Power_flower_6",
+      "Power_flower_7"
+    ],
     "Power_windcut_lvl1": [
       "Power_windcut_lvl1_0",
       "Power_windcut_lvl1_1",
@@ -3876,12 +4078,12 @@
       "Power_aura_lvl4_12",
       "Power_aura_lvl4_13"
     ],
-    "Weapon_shiriken": [
-      "Weapon_shiriken_0",
-      "Weapon_shiriken_1",
-      "Weapon_shiriken_2",
-      "Weapon_shiriken_3",
-      "Weapon_shiriken_4"
+    "Weapon_shuriken": [
+      "Weapon_shuriken_0",
+      "Weapon_shuriken_1",
+      "Weapon_shuriken_2",
+      "Weapon_shuriken_3",
+      "Weapon_shuriken_4"
     ],
     "Weapon_sword": [
       "Weapon_sword_0",
@@ -3898,7 +4100,7 @@
     "format": "RGBA8888",
     "size": {
       "w": 896,
-      "h": 1216
+      "h": 1280
     },
     "scale": "1"
   }

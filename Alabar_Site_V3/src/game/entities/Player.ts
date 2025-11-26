@@ -5,6 +5,7 @@
 import { AssetManager } from '../../managers/AssetManager';
 import { InputManager, Direction } from '../core/Input';
 import { BaseEntity, EntityConfig, EntityState, FacingDirection } from './BaseEntity';
+import { HPBar } from "../ui/HPBar";
 
 // Player-specific states
 enum PlayerState
@@ -49,6 +50,8 @@ export class Player extends BaseEntity
   private damage: number;
   private attackRange: number;
   
+  private hpBar: HPBar;
+
   // Attack tracking
   private attackImpactFrames: number[] = [2, 3]; // Frames where attack hitbox is active
   private monstersHitThisAttack: Set<any> = new Set(); // Track hit monsters per attack
@@ -67,7 +70,16 @@ export class Player extends BaseEntity
     };
     
     super(assetManager, entityConfig);
+
+    this.hpBar = new HPBar();
+    this.addChild(this.hpBar);
     
+    if (this.sprite) 
+    {
+        this.hpBar.y = this.sprite.height * 0.25;
+        this.hpBar.x = -(this.hpBar.width / 2);
+    }
+
     this.inputManager = InputManager.getInstance();
     
     // Initialize player-specific combat stats
@@ -390,6 +402,9 @@ export class Player extends BaseEntity
     }
     
     super.takeDamage(amount);
+
+    const hpPercent = this.getHealth() / this.getMaxHealth();
+    this.hpBar.update(hpPercent);
     
     if (this.isDead())
     {
