@@ -2,9 +2,9 @@
  * Vampire3.ts - Vampire monster implementation
  */
 
-import { AssetManager } from '../../managers/AssetManager';
+import { AssetManager } from '../../../managers/AssetManager';
 import { MonsterBase, MonsterConfig, MonsterBehavior } from './MonsterBase';
-import { EntityState } from './BaseEntity';
+import { EntityState } from '../BaseEntity';
 
 export interface Vampire3Config
 {

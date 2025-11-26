@@ -1,11 +1,13 @@
 /**
  * Player.ts - Player entity extending BaseEntity
+ * With XP and Leveling System Integration
  */
 
 import { AssetManager } from '../../managers/AssetManager';
 import { InputManager, Direction } from '../core/Input';
 import { BaseEntity, EntityConfig, EntityState, FacingDirection } from './BaseEntity';
 import { HPBar } from "../ui/HPBar";
+import { XPManager } from '../systems/XP';
 
 // Player-specific states
 enum PlayerState
@@ -37,6 +39,9 @@ export class Player extends BaseEntity
 {
   // Input manager
   private inputManager: InputManager;
+  
+  // XP Manager
+  private xpManager: XPManager;
   
   // Player-specific state machine
   private playerState: PlayerState = PlayerState.STANDING;
@@ -86,8 +91,54 @@ export class Player extends BaseEntity
     this.damage = config.damage ?? 8;
     this.attackRange = config.attackRange ?? 50;
     
+    // Initialize XP Manager
+    this.xpManager = new XPManager({
+      startingLevel: 1,
+      startingXP: 0,
+      onLevelUp: (newLevel: number) => {
+        console.log(`[Player] LEVEL UP! Now level ${newLevel}`);
+        // TODO: Trigger level-up card selection UI
+      }
+    });
+    
     // Initialize player to standing state
     this.transitionToStanding();
+  }
+  
+  /**
+   * Add XP to player
+   */
+  addXP(amount: number): void
+  {
+    this.xpManager.addXP(amount);
+    
+    // TODO: Update XP bar UI when we have it
+    // const progress = this.xpManager.getXPProgress();
+    // this.xpBar.update(progress, this.xpManager.getLevel());
+  }
+  
+  /**
+   * Get current level
+   */
+  getLevel(): number
+  {
+    return this.xpManager.getLevel();
+  }
+  
+  /**
+   * Get current XP
+   */
+  getCurrentXP(): number
+  {
+    return this.xpManager.getCurrentXP();
+  }
+  
+  /**
+   * Get XP needed for next level
+   */
+  getXPNeeded(): number
+  {
+    return this.xpManager.getXPNeeded();
   }
   
   /**

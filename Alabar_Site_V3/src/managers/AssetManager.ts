@@ -23,6 +23,7 @@ interface AssetPaths
     cursors: { light: string; dark: string };
   };
   powers: { spritesheet: string; data: string };
+  collectables: { spritesheet: string; data: string };
 }
 
 export class AssetManager
@@ -139,6 +140,10 @@ export class AssetManager
     powers: {
       spritesheet: '/assets/images/powers.png',
       data: '/assets/images/powers.json'
+    },
+    collectables: {
+      spritesheet: '/assets/images/collectables.png',
+      data: '/assets/images/collectables.json'
     }
   };
   
@@ -268,6 +273,12 @@ export class AssetManager
       alias: 'powers_spritesheet',
       src: this.assetPaths.powers.data
     });
+
+    // Collectables spritesheet
+    assets.push({
+      alias: 'collectables_spritesheet',
+      src: this.assetPaths.collectables.data
+    });
     
     // Light background textures (plain images, no JSON)
     for (const [key, path] of Object.entries(this.assetPaths.backgrounds.light))
@@ -353,7 +364,8 @@ export class AssetManager
       'player_spritesheet',
       'clouds_spritesheet',
       ...Object.keys(this.assetPaths.monsters).map(key => `${key}_spritesheet`),
-      'powers_spritesheet'
+      'powers_spritesheet',
+      'collectables_spritesheet'
     ];
     
     for (const alias of spritesheetAliases)

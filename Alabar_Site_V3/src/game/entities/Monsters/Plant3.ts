@@ -1,12 +1,12 @@
 /**
- * Plant1.ts - Plant monster implementation
+ * Plant3.ts - Plant monster implementation
  */
 
-import { AssetManager } from '../../managers/AssetManager';
+import { AssetManager } from '../../../managers/AssetManager';
 import { MonsterBase, MonsterConfig, MonsterBehavior } from './MonsterBase';
-import { EntityState } from './BaseEntity';
+import { EntityState } from '../BaseEntity';
 
-export interface Plant1Config
+export interface Plant3Config
 {
   startX: number;
   startY: number;
@@ -18,34 +18,34 @@ export interface Plant1Config
   };
 }
 
-export class Plant1 extends MonsterBase
+export class Plant3 extends MonsterBase
 {
-  // Ranged attack properties
+  // Ranged attack properties (strongest plant)
   private shootCooldown: number = 0;
-  private readonly SHOOT_COOLDOWN_MAX: number = 120; // 2 seconds
-  private readonly SHOOT_RANGE: number = 400; // Will shoot when player is within 400 units
-  private readonly MOVEMENT_CHANCE: number = 0.05; // 5% chance to reposition per frame
+  private readonly SHOOT_COOLDOWN_MAX: number = 90; // 1.5 seconds
+  private readonly SHOOT_RANGE: number = 500; // Longest range
+  private readonly MOVEMENT_CHANCE: number = 0.10; // Most mobile plant
   
-  constructor(assetManager: AssetManager, config: Plant1Config)
+  constructor(assetManager: AssetManager, config: Plant3Config)
   {
-    // Define Plant1-specific stats
+    // Define Plant3-specific stats
     const monsterConfig: MonsterConfig = {
       startX: config.startX,
       startY: config.startY,
-      speed: 0.40, // Very slow
-      spritesheetKey: 'plant1_spritesheet',
-      animationPrefix: 'Plant1',
-      health: 30,
-      damage: 3.5,
-      attackRange: 400, // Ranged attack range
-      detectionRange: 500,
+      speed: 0.50, // Fastest plant
+      spritesheetKey: 'plant3_spritesheet',
+      animationPrefix: 'Plant3',
+      health: 70, // Very tanky!
+      damage: 6,
+      attackRange: 500, // Longest ranged attack
+      detectionRange: 600,
       bounds: config.bounds
     };
     
     super(assetManager, monsterConfig);
     
-    // Attack cooldown for shooting
-    this.attackCooldownMax = 120; // 2 seconds between shots
+    // Fastest attack cooldown among plants
+    this.attackCooldownMax = 90; // 1.5 seconds
   }
   
   /**
@@ -69,7 +69,7 @@ export class Plant1 extends MonsterBase
   }
   
   /**
-   * Shoot projectile towards target
+   * Shoot powerful projectile towards target
    */
   private shootAtTarget(): void
   {
@@ -78,7 +78,7 @@ export class Plant1 extends MonsterBase
       return;
     }
     
-    console.log('[Plant1] Shooting at target!');
+    console.log('[Plant3] Shooting POWERFUL projectile at target!');
     
     // Play attack animation
     this.playAnimation('atk', this.facingDirection, {
@@ -96,8 +96,8 @@ export class Plant1 extends MonsterBase
     const distance = this.getDistanceToTarget();
     if (distance <= this.SHOOT_RANGE)
     {
-      // Apply damage directly
-      this.target.takeDamage(this.damage * 0.016); // ~1 damage per second at 60fps
+      // Apply strongest plant damage
+      this.target.takeDamage(this.damage * 0.016);
     }
   }
   
@@ -108,9 +108,9 @@ export class Plant1 extends MonsterBase
   {
     if (Math.random() < this.MOVEMENT_CHANCE)
     {
-      // Move very slightly in a random direction
+      // Move in a random direction
       const randomAngle = Math.random() * Math.PI * 2;
-      const moveDistance = 20;
+      const moveDistance = 30;
       
       const newX = this.currentPosition.x + Math.cos(randomAngle) * moveDistance;
       const newY = this.currentPosition.y + Math.sin(randomAngle) * moveDistance;
@@ -125,7 +125,7 @@ export class Plant1 extends MonsterBase
   }
   
   /**
-   * Plant1 AI decision logic
+   * Plant3 AI decision logic
    */
   protected makeAIDecision(): void
   {

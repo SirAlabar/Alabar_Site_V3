@@ -3,7 +3,7 @@
  * Handles circle-based collisions for entities
  */
 
-import { MonsterBase } from '../entities/MonsterBase';
+import { MonsterBase } from '../entities/Monsters/MonsterBase';
 import { Player } from '../entities/Player';
 
 export interface CollisionConfig

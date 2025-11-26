@@ -2,9 +2,9 @@
  * Orc1.ts - Orc monster implementation
  */
 
-import { AssetManager } from '../../managers/AssetManager';
+import { AssetManager } from '../../../managers/AssetManager';
 import { MonsterBase, MonsterConfig, MonsterBehavior } from './MonsterBase';
-import { EntityState } from './BaseEntity';
+import { EntityState } from '../BaseEntity';
 
 export interface Orc1Config
 {

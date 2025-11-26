@@ -1,29 +1,23 @@
 /**
  * SiteGame.ts - Interactive website game layer
+ * With Drop System and Pickup Integration
  */
 
 import { Application, Container } from 'pixi.js';
 import { AssetManager } from '../../managers/AssetManager';
 import { Player } from '../entities/Player';
-import { Slime1 } from '../entities/Slime1';
-import { Slime2 } from '../entities/Slime2';
-import { Slime3 } from '../entities/Slime3';
-import { Plant1 } from '../entities/Plant1';
-import { Plant2 } from '../entities/Plant2';
-import { Plant3 } from '../entities/Plant3';
-import { Vampire1 } from '../entities/Vampire1';
-import { Vampire2 } from '../entities/Vampire2';
-import { Vampire3 } from '../entities/Vampire3';
-import { Orc1 } from '../entities/Orc1';
-import { Orc2 } from '../entities/Orc2';
-import { Orc3 } from '../entities/Orc3';
-
-
+import { MonsterBase } from '../entities/Monsters/MonsterBase';
+import { Slime1 } from '../entities/Monsters/Slime1';
 import { CollisionSystem } from '../systems/Collision';
+import { DropManager, MonsterType } from '../systems/DropManager';
+import { PickupBase } from '../entities/PickupBase';
+import { CrystalPickup } from '../entities/Crystal';
+import { FoodPickup, FoodTier } from '../entities/Food';
 
-interface SlimeSpawnData
+interface MonsterSpawnData
 {
-  slime: Slime1;
+  monster: MonsterBase;
+  monsterType: MonsterType;
   respawnTimer: number;
 }
 
@@ -37,11 +31,13 @@ export class SiteGame
   
   // Systems
   private collisionSystem: CollisionSystem;
+  private dropManager: DropManager;
   
   // Entities
   private player: Player | null = null;
-  private slimes: SlimeSpawnData[] = [];
-  private readonly MAX_SLIMES = 5;
+  private monsters: MonsterSpawnData[] = [];
+  private pickups: PickupBase[] = [];
+  private readonly MAX_MONSTERS = 5;
   
   // Spawn settings
   private readonly RESPAWN_DELAY_MIN = 180; // 3 seconds at 60fps
@@ -64,13 +60,15 @@ export class SiteGame
     this.gameApp = gameApp;
     this.assetManager = assetManager;
     
-    // Initialize collision system
+    // Initialize systems
     this.collisionSystem = new CollisionSystem({
       playerRadius: 20,
       monsterRadius: 25,
       projectileRadius: 8,
       xpRadius: 30
     });
+    
+    this.dropManager = new DropManager();
     
     // Create game container
     this.gameContainer = new Container();
@@ -112,7 +110,7 @@ export class SiteGame
   }
   
   /**
-   * Position the canvas element in DOM at 60% of background height
+   * Position the canvas element in DOM at 50% of background height
    */
   private positionCanvas(): void
   {
@@ -164,12 +162,12 @@ export class SiteGame
       this.player.updateBounds(this.gameBounds);
     }
     
-    // Update slime bounds
-    for (const spawnData of this.slimes)
+    // Update monster bounds
+    for (const spawnData of this.monsters)
     {
-      if (spawnData.slime)
+      if (spawnData.monster)
       {
-        spawnData.slime.updateBounds(this.gameBounds);
+        spawnData.monster.updateBounds(this.gameBounds);
       }
     }
   }
@@ -188,8 +186,8 @@ export class SiteGame
     // Spawn player
     this.spawnPlayer();
     
-    // Spawn initial slime
-    this.spawnSlime();
+    // Spawn initial monster (Slime1 for testing)
+    this.spawnMonster('Slime1');
     
     // Start game loop
     this.start();
@@ -225,7 +223,7 @@ export class SiteGame
    */
   private getRandomSpawnPosition(): { x: number; y: number }
   {
-    const margin = 100; // Keep away from edges
+    const margin = 25; // Keep away from edges
     
     const x = this.gameBounds.minX + margin + 
               Math.random() * (this.gameBounds.maxX - this.gameBounds.minX - margin * 2);
@@ -236,40 +234,107 @@ export class SiteGame
   }
   
   /**
-   * Spawn a slime at random position
+   * Spawn a monster at random position
+   * Currently only spawns Slime1 for testing
    */
-  private spawnSlime(): void
+  private spawnMonster(monsterType: MonsterType): void
   {
-    if (this.slimes.length >= this.MAX_SLIMES)
+    if (this.monsters.length >= this.MAX_MONSTERS)
     {
       return;
     }
     
     const spawnPos = this.getRandomSpawnPosition();
     
-    const slime = new Slime1(this.assetManager, {
-      startX: spawnPos.x,
-      startY: spawnPos.y,
-      bounds: this.gameBounds
-    });
+    let monster: MonsterBase;
     
-    slime.scale.set(2.0, 2.0);
-    slime.zIndex = 500;
+    // For now, only spawn Slime1 for testing drops
+    switch (monsterType)
+    {
+      case 'Slime1':
+      default:
+        monster = new Slime1(this.assetManager, {
+          startX: spawnPos.x,
+          startY: spawnPos.y,
+          bounds: this.gameBounds
+        });
+        break;
+    }
+    
+    monster.scale.set(2.0, 2.0);
+    monster.zIndex = 500;
     
     // Set player as target
     if (this.player)
     {
-      slime.setTarget(this.player);
+      monster.setTarget(this.player);
     }
     
-    this.gameContainer.addChild(slime);
+    this.gameContainer.addChild(monster);
     
-    this.slimes.push({
-      slime: slime,
+    this.monsters.push({
+      monster: monster,
+      monsterType: monsterType,
       respawnTimer: 0
     });
     
-    console.log('[SiteGame] Slime spawned at', spawnPos);
+    console.log(`[SiteGame] ${monsterType} spawned at`, spawnPos);
+  }
+  
+  /**
+   * Spawn pickup from drop result
+   */
+  private spawnPickup(x: number, y: number, monsterType: MonsterType): void
+  {
+    // Roll for drop
+    const drop = this.dropManager.rollDrop(monsterType);
+    
+    if (drop.type === 'none')
+    {
+      console.log(`[SiteGame] ${monsterType} dropped nothing`);
+      return;
+    }
+    
+    let pickup: PickupBase;
+    
+    if (drop.type === 'crystal')
+    {
+      pickup = new CrystalPickup(this.assetManager, {
+        x: x,
+        y: y,
+        tier: drop.tier!,
+        xpValue: drop.xpValue!,
+        particleContainer: this.gameContainer
+      });
+      
+      console.log(`[SiteGame] Spawned Crystal Tier ${drop.tier} (${drop.xpValue} XP) at (${x}, ${y})`);
+    }
+    else // food
+    {
+      // Map heal percent to food tier
+      let foodTier: FoodTier = 'eggs';
+      
+      if (drop.healPercent === 0.50) foodTier = 'bacon';
+      else if (drop.healPercent === 0.40) foodTier = 'ribs';
+      else if (drop.healPercent === 0.30) foodTier = 'steak';
+      else if (drop.healPercent === 0.20) foodTier = 'chiken_leg';
+      else if (drop.healPercent === 0.10) foodTier = 'eggs';
+      else if (drop.healPercent === -0.05) foodTier = 'worm';
+      
+      pickup = new FoodPickup(this.assetManager, {
+        x: x,
+        y: y,
+        tier: foodTier,
+        particleContainer: this.gameContainer
+      });
+      
+      console.log(`[SiteGame] Spawned Food ${foodTier} at (${x}, ${y})`);
+    }
+    
+    pickup.zIndex = 100;
+    
+    this.gameContainer.addChild(pickup);
+    this.pickups.push(pickup);
   }
   
   /**
@@ -282,44 +347,48 @@ export class SiteGame
   }
   
   /**
-   * Update slimes
+   * Update monsters
    */
-  private updateSlimes(delta: number): void
+  private updateMonsters(delta: number): void
   {
-    for (let i = this.slimes.length - 1; i >= 0; i--)
+    for (let i = this.monsters.length - 1; i >= 0; i--)
     {
-      const spawnData = this.slimes[i];
+      const spawnData = this.monsters[i];
       
-      // Check if slime is dead
-      if (spawnData.slime.isDead())
+      // Check if monster is dead
+      if (spawnData.monster.isDead())
       {
         // Wait for death animation to complete before hiding
-        if (spawnData.slime.isDeathAnimationComplete())
+        if (spawnData.monster.isDeathAnimationComplete())
         {
           // Start respawn timer if not already started
           if (spawnData.respawnTimer === 0)
           {
             spawnData.respawnTimer = this.getRandomRespawnDelay();
-            console.log('[SiteGame] Slime death animation complete, respawning in', Math.floor(spawnData.respawnTimer / 60), 'seconds');
+            console.log(`[SiteGame] ${spawnData.monsterType} death animation complete, respawning in`, Math.floor(spawnData.respawnTimer / 60), 'seconds');
             
-            // Hide the dead slime
-            spawnData.slime.visible = false;
+            // Spawn pickup at death position
+            const deathPos = spawnData.monster.getPosition();
+            this.spawnPickup(deathPos.x, deathPos.y, spawnData.monsterType);
+            
+            // Hide the dead monster
+            spawnData.monster.visible = false;
           }
           
           // Update respawn timer
           spawnData.respawnTimer--;
           
-          // Respawn slime
+          // Respawn monster
           if (spawnData.respawnTimer <= 0)
           {
-            // Remove dead slime
-            this.gameContainer.removeChild(spawnData.slime);
-            spawnData.slime.destroy();
-            this.slimes.splice(i, 1);
+            // Remove dead monster
+            this.gameContainer.removeChild(spawnData.monster);
+            spawnData.monster.destroy();
+            this.monsters.splice(i, 1);
             
-            // Spawn new slime
-            this.spawnSlime();
-            console.log('[SiteGame] Slime respawned!');
+            // Spawn new monster
+            this.spawnMonster(spawnData.monsterType);
+            console.log(`[SiteGame] ${spawnData.monsterType} respawned!`);
           }
         }
         // Death animation still playing - don't update or move
@@ -327,26 +396,76 @@ export class SiteGame
       else
       {
         // Update nearby monsters for separation
-        spawnData.slime.setNearbyMonsters(
-            this.slimes
-                .filter(s => !s.slime.isDead())
-                .map(s => s.slime)
+        spawnData.monster.setNearbyMonsters(
+            this.monsters
+                .filter(s => !s.monster.isDead())
+                .map(s => s.monster)
         );
         
-        // Update alive slime
-        spawnData.slime.update(delta);
+        // Update alive monster
+        spawnData.monster.update(delta);
       }
     }
     
-    // Spawn additional slimes if below max
-    if (this.slimes.length < this.MAX_SLIMES)
+    // Spawn additional monsters if below max
+    if (this.monsters.length < this.MAX_MONSTERS)
     {
-      // Only count alive slimes
-      const aliveSlimes = this.slimes.filter(s => !s.slime.isDead()).length;
+      // Only count alive monsters
+      const aliveMonsters = this.monsters.filter(s => !s.monster.isDead()).length;
       
-      if (aliveSlimes < this.MAX_SLIMES)
+      if (aliveMonsters < this.MAX_MONSTERS)
       {
-        this.spawnSlime();
+        this.spawnMonster('Slime1'); // Only Slime1 for now
+      }
+    }
+  }
+  
+  /**
+   * Update pickups (magnet + collision)
+   */
+  private updatePickups(_delta: number): void
+  {
+    if (!this.player)
+    {
+      return;
+    }
+    
+    for (let i = this.pickups.length - 1; i >= 0; i--)
+    {
+      const pickup = this.pickups[i];
+      
+      // Skip if already picked up
+      if (pickup.wasPickedUp())
+      {
+        continue;
+      }
+      
+      // Update pickup (age/lifetime)
+      pickup.update(_delta);
+      
+      // Get player position
+      const playerPos = this.player.getPosition();
+      
+      // Update magnet behavior
+      pickup.updateMagnet(playerPos.x, playerPos.y);
+      
+      // Check collision with player
+      const pickupPos = pickup.getPosition();
+      const dx = playerPos.x - pickupPos.x;
+      const dy = playerPos.y - pickupPos.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      
+      const collisionDistance = this.collisionSystem['playerRadius'] + pickup.getPickupRadius();
+      
+      if (distance <= collisionDistance)
+      {
+        // Pickup collected!
+        pickup.onPickup(this.player);
+        
+        // Remove from array
+        this.gameContainer.removeChild(pickup);
+        pickup.destroy();
+        this.pickups.splice(i, 1);
       }
     }
   }
@@ -412,17 +531,17 @@ export class SiteGame
     {
       this.player.update(delta);
       
-      // Get alive slimes
-      const aliveSlimes = this.slimes
-        .filter(s => !s.slime.isDead())
-        .map(s => s.slime);
+      // Get alive monsters
+      const aliveMonsters = this.monsters
+        .filter(s => !s.monster.isDead())
+        .map(s => s.monster);
       
       // Check player attack collision (impact frames)
       if (this.player.isPlayerAttacking())
       {
         const hitMonsters = this.collisionSystem.applyAttackDamageOnImpactFrames(
           this.player,
-          aliveSlimes
+          aliveMonsters
         );
         
         // Debug logging
@@ -433,14 +552,14 @@ export class SiteGame
       }
       
       // Apply monster touch damage to player (DPS model)
-      this.collisionSystem.applyTouchDamage(this.player, aliveSlimes, delta);
+      this.collisionSystem.applyTouchDamage(this.player, aliveMonsters, delta);
     }
     
-    // Update slimes
-    this.updateSlimes(delta);
+    // Update monsters
+    this.updateMonsters(delta);
     
-    // TODO: Update chest
-    // TODO: Handle other collisions
+    // Update pickups
+    this.updatePickups(delta);
   }
   
   /**
@@ -517,16 +636,27 @@ export class SiteGame
       this.player = null;
     }
     
-    // Cleanup slimes
-    for (const spawnData of this.slimes)
+    // Cleanup monsters
+    for (const spawnData of this.monsters)
     {
-      if (spawnData.slime)
+      if (spawnData.monster)
       {
-        this.gameContainer.removeChild(spawnData.slime);
-        spawnData.slime.destroy();
+        this.gameContainer.removeChild(spawnData.monster);
+        spawnData.monster.destroy();
       }
     }
-    this.slimes = [];
+    this.monsters = [];
+    
+    // Cleanup pickups
+    for (const pickup of this.pickups)
+    {
+      if (pickup)
+      {
+        this.gameContainer.removeChild(pickup);
+        pickup.destroy();
+      }
+    }
+    this.pickups = [];
     
     if (this.gameContainer)
     {

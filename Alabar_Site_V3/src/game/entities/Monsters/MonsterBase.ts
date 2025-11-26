@@ -2,8 +2,8 @@
  * MonsterBase.ts - Abstract base class for all monster entities
  */
 
-import { AssetManager } from '../../managers/AssetManager';
-import { BaseEntity, EntityConfig, EntityState, FacingDirection } from './BaseEntity';
+import { AssetManager } from '../../../managers/AssetManager';
+import { BaseEntity, EntityConfig, EntityState, FacingDirection } from '../BaseEntity';
 
 export enum MonsterBehavior
 {

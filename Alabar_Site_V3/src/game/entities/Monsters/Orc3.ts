@@ -1,12 +1,12 @@
 /**
- * Orc2.ts - Orc monster implementation
+ * Orc3.ts - Orc monster implementation
  */
 
-import { AssetManager } from '../../managers/AssetManager';
+import { AssetManager } from '../../../managers/AssetManager';
 import { MonsterBase, MonsterConfig, MonsterBehavior } from './MonsterBase';
-import { EntityState } from './BaseEntity';
+import { EntityState } from '../BaseEntity';
 
-export interface Orc2Config
+export interface Orc3Config
 {
   startX: number;
   startY: number;
@@ -18,21 +18,21 @@ export interface Orc2Config
   };
 }
 
-export class Orc2 extends MonsterBase
+export class Orc3 extends MonsterBase
 {
   // Heavy behavior properties
   private chargeCooldown: number = 0;
-  private readonly CHARGE_COOLDOWN_MAX: number = 210; // 3.5 seconds
-  private readonly CHARGE_RANGE: number = 180; // Longer charge range
-  private readonly CHARGE_DISTANCE: number = 90;
-  private readonly CHARGE_CHANCE: number = 0.5; // 50% chance 
+  private readonly CHARGE_COOLDOWN_MAX: number = 180; // 3 seconds
+  private readonly CHARGE_RANGE: number = 200; // Longest charge range
+  private readonly CHARGE_DISTANCE: number = 100; // Longest charge distance
+  private readonly CHARGE_CHANCE: number = 0.6; // 60% chance
   
   // Dash system
   private isDashing: boolean = false;
   private dashVelocityX: number = 0;
   private dashVelocityY: number = 0;
   private dashFramesRemaining: number = 0;
-  private readonly DASH_DURATION_FRAMES: number = 13; // Medium speed dash (0.22 seconds at 60fps)
+  private readonly DASH_DURATION_FRAMES: number = 12; // Dash over 12 frames (0.2 seconds at 60fps)
   
   // Enrage mechanic
   private isEnraged: boolean = false;
@@ -42,30 +42,30 @@ export class Orc2 extends MonsterBase
   private baseSpeed: number;
   private baseDamage: number;
   
-  constructor(assetManager: AssetManager, config: Orc2Config)
+  constructor(assetManager: AssetManager, config: Orc3Config)
   {
-    // Define Orc2-specific stats
+    // Define Orc3-specific stats
     const monsterConfig: MonsterConfig = {
       startX: config.startX,
       startY: config.startY,
-      speed: 0.60,
-      spritesheetKey: 'orc2_spritesheet',
-      animationPrefix: 'Orc2',
-      health: 70,
-      damage: 10,
+      speed: 0.65, // Fastest orc
+      spritesheetKey: 'orc3_spritesheet',
+      animationPrefix: 'Orc3',
+      health: 110,
+      damage: 14,
       attackRange: 40,
-      detectionRange: 3200,
+      detectionRange: 3500,
       bounds: config.bounds
     };
     
     super(assetManager, monsterConfig);
     
     // Store base stats for enrage
-    this.baseSpeed = 0.60;
-    this.baseDamage = 10;
+    this.baseSpeed = 0.65;
+    this.baseDamage = 14;
     
-    // Attack cooldown
-    this.attackCooldownMax = 110; // 1.83 seconds
+    // Fast attack cooldown for such a strong enemy
+    this.attackCooldownMax = 100; // 1.67 seconds
   }
   
   /**
@@ -79,12 +79,18 @@ export class Orc2 extends MonsterBase
     if (!this.isEnraged && healthPercentage <= this.ENRAGE_THRESHOLD)
     {
       this.isEnraged = true;
-      console.log('[Orc2] ENRAGED! Speed and damage increased!');
+      console.warn('[Orc3] ⚠️ ENRAGED! EXTREMELY DANGEROUS! Speed and damage increased!');
       
       // Apply enrage multipliers
       const newSpeed = this.baseSpeed * this.ENRAGE_SPEED_MULTIPLIER;
       this.movementSystem.setSpeed(newSpeed);
       this.damage = this.baseDamage * this.ENRAGE_DAMAGE_MULTIPLIER;
+      
+      // Reduce charge cooldown when enraged
+      if (this.chargeCooldown > 60)
+      {
+        this.chargeCooldown = 60; // Reset to 1 second if longer
+      }
     }
   }
   
@@ -139,12 +145,12 @@ export class Orc2 extends MonsterBase
       this.isDashing = false;
       this.dashVelocityX = 0;
       this.dashVelocityY = 0;
-      console.log('[Orc2] Dash complete!');
+      console.log('[Orc3] Dash complete!');
     }
   }
   
   /**
-   * Perform short charge towards player (more aggressive when enraged)
+   * Perform devastating charge towards player
    */
   private performCharge(): void
   {
@@ -155,27 +161,27 @@ export class Orc2 extends MonsterBase
     
     const distance = this.getDistanceToTarget();
     
-    // Charge range increases when enraged
-    const effectiveChargeRange = this.isEnraged ? this.CHARGE_RANGE * 1.3 : this.CHARGE_RANGE;
+    // Charge range dramatically increases when enraged
+    const effectiveChargeRange = this.isEnraged ? this.CHARGE_RANGE * 1.5 : this.CHARGE_RANGE;
     
-    // Only charge when player is close
+    // Only charge when player is in range
     if (distance <= effectiveChargeRange && distance > 50)
     {
-      // Higher chance when enraged
-      const effectiveChance = this.isEnraged ? this.CHARGE_CHANCE * 1.5 : this.CHARGE_CHANCE;
+      // Very high chance when enraged
+      const effectiveChance = this.isEnraged ? Math.min(this.CHARGE_CHANCE * 1.8, 0.95) : this.CHARGE_CHANCE;
       
       if (Math.random() < effectiveChance)
       {
-        const enrageText = this.isEnraged ? 'ENRAGED ' : '';
-        console.log(`[Orc2] Performing ${enrageText}HEAVY CHARGE!`);
+        const enrageText = this.isEnraged ? '⚠️ ENRAGED ' : '';
+        console.log(`[Orc3] ${enrageText}DEVASTATING CHARGE!`);
         
         const direction = this.getDirectionToTarget();
         
-        // Calculate total charge distance (longer when enraged)
-        const chargeDistance = this.isEnraged ? this.CHARGE_DISTANCE * 1.2 : this.CHARGE_DISTANCE;
+        // Calculate total charge distance
+        const chargeDistance = this.isEnraged ? this.CHARGE_DISTANCE * 1.4 : this.CHARGE_DISTANCE;
         
         // Calculate velocity per frame (distance / duration)
-        const dashFrames = this.isEnraged ? this.DASH_DURATION_FRAMES * 0.8 : this.DASH_DURATION_FRAMES;
+        const dashFrames = this.isEnraged ? this.DASH_DURATION_FRAMES * 0.7 : this.DASH_DURATION_FRAMES;
         this.dashVelocityX = (direction.x * chargeDistance) / dashFrames;
         this.dashVelocityY = (direction.y * chargeDistance) / dashFrames;
         
@@ -183,20 +189,20 @@ export class Orc2 extends MonsterBase
         this.isDashing = true;
         this.dashFramesRemaining = dashFrames;
         
-        // Increase animation speed during dash (more when enraged)
+        // Increase animation speed during dash
         if (this.sprite && this.sprite.animationSpeed)
         {
-          this.sprite.animationSpeed = this.isEnraged ? 0.35 : 0.28;
+          this.sprite.animationSpeed = 0.3; // Faster animation during dash
         }
         
         // Set cooldown
-        this.chargeCooldown = this.CHARGE_COOLDOWN_MAX;
+        this.chargeCooldown = this.isEnraged ? this.CHARGE_COOLDOWN_MAX * 0.7 : this.CHARGE_COOLDOWN_MAX;
       }
     }
   }
   
   /**
-   * Apply separation with reduced pushback
+   * Apply separation with minimal pushback
    */
   protected applySeparation(separationDistance = 50): void
   {
@@ -223,14 +229,14 @@ export class Orc2 extends MonsterBase
 
     if (pushX !== 0 || pushY !== 0)
     {
-        this.currentPosition.x += pushX * 0.25;
-        this.currentPosition.y += pushY * 0.25;
+        this.currentPosition.x += pushX * 0.15;
+        this.currentPosition.y += pushY * 0.15;
         this.position.set(this.currentPosition.x, this.currentPosition.y);
     }
   }
   
   /**
-   * Orc2 AI decision logic
+   * Orc3 AI decision logic
    */
   protected makeAIDecision(): void
   {
@@ -285,13 +291,13 @@ export class Orc2 extends MonsterBase
     // Check if target is in detection range
     else if (this.isTargetInDetectionRange())
     {
-      // Chase the target
+      // Chase the target relentlessly
       if (this.behavior !== MonsterBehavior.CHASING)
       {
         this.transitionToChasing();
       }
       
-      // Attempt charge when close
+      // Frequently attempt charge
       this.performCharge();
     }
     // Target out of range

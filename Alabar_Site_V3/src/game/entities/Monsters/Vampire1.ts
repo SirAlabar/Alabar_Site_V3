@@ -1,12 +1,12 @@
 /**
- * Slime2.ts - Slime monster implementation (Tier 2)
+ * Vampire1.ts - Vampire monster implementation (Tier 1 - Fast Attacker)
  */
 
-import { AssetManager } from '../../managers/AssetManager';
+import { AssetManager } from '../../../managers/AssetManager';
 import { MonsterBase, MonsterConfig, MonsterBehavior } from './MonsterBase';
-import { EntityState } from './BaseEntity';
+import { EntityState } from '../BaseEntity';
 
-export interface Slime2Config
+export interface Vampire1Config
 {
   startX: number;
   startY: number;
@@ -18,32 +18,32 @@ export interface Slime2Config
   };
 }
 
-export class Slime2 extends MonsterBase
+export class Vampire1 extends MonsterBase
 {
-  constructor(assetManager: AssetManager, config: Slime2Config)
+  constructor(assetManager: AssetManager, config: Vampire1Config)
   {
-    // Define Slime2-specific stats
+    // Define Vampire1-specific stats
     const monsterConfig: MonsterConfig = {
       startX: config.startX,
       startY: config.startY,
-      speed: 0.70,
-      spritesheetKey: 'slime2_spritesheet',
-      animationPrefix: 'Slime2',
-      health: 12,
-      damage: 2,
+      speed: 1.10, // Much faster than slimes!
+      spritesheetKey: 'vampire1_spritesheet',
+      animationPrefix: 'Vampire1',
+      health: 20,
+      damage: 5,
       attackRange: 40,
-      detectionRange: 3000,
+      detectionRange: 3500, // Slightly longer detection range
       bounds: config.bounds
     };
     
     super(assetManager, monsterConfig);
     
-    // Set attack cooldown
-    this.attackCooldownMax = 90; // 1.5 seconds
+    // Shorter attack cooldown for vampires
+    this.attackCooldownMax = 75; // 1.25 seconds
   }
   
   /**
-   * Slime2 AI decision logic
+   * Vampire1 AI decision logic
    */
   protected makeAIDecision(): void
   {
