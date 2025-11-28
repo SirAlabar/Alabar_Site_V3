@@ -1,12 +1,12 @@
 /**
- * Slime2.ts - Slime monster implementation (Tier 2)
+ * Slime1.ts - Slime monster implementation
  */
 
 import { AssetManager } from '../../../managers/AssetManager';
 import { MonsterBase, MonsterConfig, MonsterBehavior } from './MonsterBase';
 import { EntityState } from '../BaseEntity';
 
-export interface Slime2Config
+export interface Slime1Config
 {
   startX: number;
   startY: number;
@@ -18,18 +18,18 @@ export interface Slime2Config
   };
 }
 
-export class Slime2 extends MonsterBase
+export class Slime1 extends MonsterBase
 {
-  constructor(assetManager: AssetManager, config: Slime2Config)
+  constructor(assetManager: AssetManager, config: Slime1Config)
   {
-    // Define Slime2-specific stats
+    // Define Slime-specific stats
     const monsterConfig: MonsterConfig = {
       startX: config.startX,
       startY: config.startY,
-      speed: 0.70,
-      spritesheetKey: 'slime2_spritesheet',
-      animationPrefix: 'Slime2',
-      health: 12,
+      speed: 0.65,
+      spritesheetKey: 'slime1_spritesheet',
+      animationPrefix: 'Slime1',
+      health: 8,
       damage: 2,
       attackRange: 40,
       detectionRange: 3000,
@@ -39,13 +39,13 @@ export class Slime2 extends MonsterBase
     super(assetManager, monsterConfig);
     
     // Set attack cooldown
-    this.attackCooldownMax = 90; // 1.5 seconds
+    this.attackCooldownMax = 1.5; // 1.5 seconds
   }
   
   /**
-   * Slime2 AI decision logic
+   * Slime AI decision logic
    */
-  protected makeAIDecision(): void
+  protected makeAIDecision(_delta: number): void
   {
     // Can't make decisions while attacking
     if (this.currentState === EntityState.ATTACKING)

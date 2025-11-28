@@ -22,9 +22,12 @@ export class Plant1 extends MonsterBase
 {
   // Ranged attack properties
   private shootCooldown: number = 0;
-  private readonly SHOOT_COOLDOWN_MAX: number = 120; // 2 seconds
+  private readonly SHOOT_COOLDOWN_MAX: number = 4; // 4 seconds
   private readonly SHOOT_RANGE: number = 400; // Will shoot when player is within 400 units
-  private readonly MOVEMENT_CHANCE: number = 0.05; // 5% chance to reposition per frame
+  private readonly PROJECTILE_SPEED: number = 3; // Slow projectile speed
+  
+  // Reference to projectile manager (will be set externally)
+  public projectileManager: any = null;
   
   constructor(assetManager: AssetManager, config: Plant1Config)
   {
@@ -45,17 +48,21 @@ export class Plant1 extends MonsterBase
     super(assetManager, monsterConfig);
     
     // Attack cooldown for shooting
-    this.attackCooldownMax = 120; // 2 seconds between shots
+    this.attackCooldownMax = 2; // 2 seconds between shots
   }
   
   /**
    * Update shoot cooldown
    */
-  private updateShootCooldown(): void
+  private updateShootCooldown(delta: number): void
   {
     if (this.shootCooldown > 0)
     {
-      this.shootCooldown--;
+      this.shootCooldown -= delta;
+      if (this.shootCooldown < 0)
+      {
+        this.shootCooldown = 0;
+      }
     }
   }
   
@@ -80,54 +87,41 @@ export class Plant1 extends MonsterBase
     
     console.log('[Plant1] Shooting at target!');
     
+    // Set state FIRST
+    this.setState(EntityState.ATTACKING);
+    this.shootCooldown = this.SHOOT_COOLDOWN_MAX;
+    
     // Play attack animation
     this.playAnimation('atk', this.facingDirection, {
       loop: false,
       speed: 0.15,
       onComplete: () => {
+        // Transition back to idle
         this.setState(EntityState.IDLE);
+        this.transitionToIdle();
       }
     });
     
-    this.setState(EntityState.ATTACKING);
-    this.shootCooldown = this.SHOOT_COOLDOWN_MAX;
-    
-    // For now, just do instant damage when in range
-    const distance = this.getDistanceToTarget();
-    if (distance <= this.SHOOT_RANGE)
+    // Spawn flower projectile if projectile manager is available
+    if (this.projectileManager && this.target)
     {
-      // Apply damage directly
-      this.target.takeDamage(this.damage * 0.016); // ~1 damage per second at 60fps
-    }
-  }
-  
-  /**
-   * Occasionally reposition
-   */
-  private occasionallyReposition(): void
-  {
-    if (Math.random() < this.MOVEMENT_CHANCE)
-    {
-      // Move very slightly in a random direction
-      const randomAngle = Math.random() * Math.PI * 2;
-      const moveDistance = 20;
+      const targetPos = this.target.getPosition();
       
-      const newX = this.currentPosition.x + Math.cos(randomAngle) * moveDistance;
-      const newY = this.currentPosition.y + Math.sin(randomAngle) * moveDistance;
-      
-      // Apply bounds
-      const bounds = this.movementSystem.getBounds();
-      const clampedX = bounds ? Math.max(bounds.minX, Math.min(bounds.maxX, newX)) : newX;
-      const clampedY = bounds ? Math.max(bounds.minY, Math.min(bounds.maxY, newY)) : newY;
-      
-      this.setPosition(clampedX, clampedY);
+      this.projectileManager.spawnFlowerProjectile(
+        this.currentPosition.x,
+        this.currentPosition.y,
+        targetPos.x,
+        targetPos.y,
+        this.damage,
+        this.PROJECTILE_SPEED
+      );
     }
   }
   
   /**
    * Plant1 AI decision logic
    */
-  protected makeAIDecision(): void
+  protected makeAIDecision(delta: number): void
   {
     // Can't make decisions while attacking
     if (this.currentState === EntityState.ATTACKING)
@@ -136,7 +130,7 @@ export class Plant1 extends MonsterBase
     }
     
     // Update shoot cooldown
-    this.updateShootCooldown();
+    this.updateShootCooldown(delta);
     
     // No target = idle
     if (!this.target)
@@ -163,13 +157,11 @@ export class Plant1 extends MonsterBase
     }
     else
     {
-      // Stay mostly idle, occasionally reposition
+      // Stay idle - plants are stationary
       if (this.behavior !== MonsterBehavior.IDLE)
       {
         this.transitionToIdle();
       }
-      
-      this.occasionallyReposition();
     }
   }
 }

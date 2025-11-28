@@ -6,13 +6,14 @@
 import { Application, Container } from 'pixi.js';
 import { AssetManager } from '../../managers/AssetManager';
 import { Player } from '../entities/Player';
-import { MonsterBase } from '../entities/Monsters/MonsterBase';
-import { Slime1 } from '../entities/Monsters/Slime1';
+import { MonsterBase } from '../entities/monsters/MonsterBase';
 import { CollisionSystem } from '../systems/Collision';
 import { DropManager, MonsterType } from '../systems/DropManager';
 import { PickupBase } from '../entities/PickupBase';
 import { CrystalPickup } from '../entities/Crystal';
 import { FoodPickup, FoodTier } from '../entities/Food';
+import { EnemySpawner } from '../systems/EnemySpawner';
+import { EnemyProjectileManager } from '../systems/EnemyProjectileManager';
 
 interface MonsterSpawnData
 {
@@ -32,16 +33,14 @@ export class SiteGame
   // Systems
   private collisionSystem: CollisionSystem;
   private dropManager: DropManager;
+  private enemySpawner!: EnemySpawner;
+  private enemyProjectileManager!: EnemyProjectileManager;
+  private enemyProjectileContainer!: Container;
   
   // Entities
   private player: Player | null = null;
   private monsters: MonsterSpawnData[] = [];
   private pickups: PickupBase[] = [];
-  private readonly MAX_MONSTERS = 5;
-  
-  // Spawn settings
-  private readonly RESPAWN_DELAY_MIN = 180; // 3 seconds at 60fps
-  private readonly RESPAWN_DELAY_MAX = 300; // 5 seconds at 60fps
   
   // Game state
   private isRunning: boolean = false;
@@ -186,8 +185,30 @@ export class SiteGame
     // Spawn player
     this.spawnPlayer();
     
-    // Spawn initial monster (Slime1 for testing)
-    this.spawnMonster('Slime1');
+    // Initialize enemy projectile system
+    this.enemyProjectileContainer = new Container();
+    this.enemyProjectileContainer.label = 'EnemyProjectiles';
+    this.enemyProjectileContainer.zIndex = 600;
+    this.gameContainer.addChild(this.enemyProjectileContainer);
+    
+    this.enemyProjectileManager = new EnemyProjectileManager(
+      this.assetManager,
+      this.enemyProjectileContainer,
+      this.player!
+    );
+    
+    // Initialize enemy spawner
+    this.enemySpawner = new EnemySpawner({
+      assetManager: this.assetManager,
+      player: this.player!,
+      bounds: this.gameBounds,
+      spawnRadius: 400
+    });
+    
+    // Connect projectile manager to spawner (for plant projectiles)
+    this.enemySpawner.setProjectileManager(this.enemyProjectileManager);
+    
+    console.log('[SiteGame] Enemy spawner initialized');
     
     // Start game loop
     this.start();
@@ -231,54 +252,6 @@ export class SiteGame
               Math.random() * (this.gameBounds.maxY - this.gameBounds.minY - margin * 2);
     
     return { x, y };
-  }
-  
-  /**
-   * Spawn a monster at random position
-   * Currently only spawns Slime1 for testing
-   */
-  private spawnMonster(monsterType: MonsterType): void
-  {
-    if (this.monsters.length >= this.MAX_MONSTERS)
-    {
-      return;
-    }
-    
-    const spawnPos = this.getRandomSpawnPosition();
-    
-    let monster: MonsterBase;
-    
-    // For now, only spawn Slime1 for testing drops
-    switch (monsterType)
-    {
-      case 'Slime1':
-      default:
-        monster = new Slime1(this.assetManager, {
-          startX: spawnPos.x,
-          startY: spawnPos.y,
-          bounds: this.gameBounds
-        });
-        break;
-    }
-    
-    monster.scale.set(2.0, 2.0);
-    monster.zIndex = 500;
-    
-    // Set player as target
-    if (this.player)
-    {
-      monster.setTarget(this.player);
-    }
-    
-    this.gameContainer.addChild(monster);
-    
-    this.monsters.push({
-      monster: monster,
-      monsterType: monsterType,
-      respawnTimer: 0
-    });
-    
-    console.log(`[SiteGame] ${monsterType} spawned at`, spawnPos);
   }
   
   /**
@@ -338,19 +311,32 @@ export class SiteGame
   }
   
   /**
-   * Get random respawn delay
-   */
-  private getRandomRespawnDelay(): number
-  {
-    return this.RESPAWN_DELAY_MIN + 
-           Math.random() * (this.RESPAWN_DELAY_MAX - this.RESPAWN_DELAY_MIN);
-  }
-  
-  /**
    * Update monsters
    */
   private updateMonsters(delta: number): void
   {
+    // Get new monsters from enemy spawner
+    const newMonsters = this.enemySpawner.update(delta);
+    
+    for (const monster of newMonsters)
+    {
+      monster.scale.set(2.0, 2.0);
+      monster.zIndex = 500;
+      
+      this.gameContainer.addChild(monster);
+      
+      // Add to monsters array with type
+      const monsterType = monster.constructor.name as MonsterType;
+      
+      this.monsters.push({
+        monster: monster,
+        monsterType: monsterType,
+        respawnTimer: 0
+      });
+      
+      console.log(`[SiteGame] ${monsterType} spawned by EnemySpawner`);
+    }
+    
     for (let i = this.monsters.length - 1; i >= 0; i--)
     {
       const spawnData = this.monsters[i];
@@ -358,64 +344,35 @@ export class SiteGame
       // Check if monster is dead
       if (spawnData.monster.isDead())
       {
-        // Wait for death animation to complete before hiding
+        // Wait for death animation to complete before removing
         if (spawnData.monster.isDeathAnimationComplete())
         {
-          // Start respawn timer if not already started
+          // Spawn pickup at death position (only once)
           if (spawnData.respawnTimer === 0)
           {
-            spawnData.respawnTimer = this.getRandomRespawnDelay();
-            console.log(`[SiteGame] ${spawnData.monsterType} death animation complete, respawning in`, Math.floor(spawnData.respawnTimer / 60), 'seconds');
-            
-            // Spawn pickup at death position
             const deathPos = spawnData.monster.getPosition();
             this.spawnPickup(deathPos.x, deathPos.y, spawnData.monsterType);
             
-            // Hide the dead monster
-            spawnData.monster.visible = false;
+            console.log(`[SiteGame] ${spawnData.monsterType} died, dropping loot`);
           }
           
-          // Update respawn timer
-          spawnData.respawnTimer--;
-          
-          // Respawn monster
-          if (spawnData.respawnTimer <= 0)
-          {
-            // Remove dead monster
-            this.gameContainer.removeChild(spawnData.monster);
-            spawnData.monster.destroy();
-            this.monsters.splice(i, 1);
-            
-            // Spawn new monster
-            this.spawnMonster(spawnData.monsterType);
-            console.log(`[SiteGame] ${spawnData.monsterType} respawned!`);
-          }
+          // Remove dead monster immediately (no respawn)
+          this.gameContainer.removeChild(spawnData.monster);
+          spawnData.monster.destroy();
+          this.monsters.splice(i, 1);
         }
-        // Death animation still playing - don't update or move
       }
       else
       {
         // Update nearby monsters for separation
         spawnData.monster.setNearbyMonsters(
-            this.monsters
-                .filter(s => !s.monster.isDead())
-                .map(s => s.monster)
+          this.monsters
+            .filter(s => !s.monster.isDead())
+            .map(s => s.monster)
         );
         
         // Update alive monster
         spawnData.monster.update(delta);
-      }
-    }
-    
-    // Spawn additional monsters if below max
-    if (this.monsters.length < this.MAX_MONSTERS)
-    {
-      // Only count alive monsters
-      const aliveMonsters = this.monsters.filter(s => !s.monster.isDead()).length;
-      
-      if (aliveMonsters < this.MAX_MONSTERS)
-      {
-        this.spawnMonster('Slime1'); // Only Slime1 for now
       }
     }
   }
@@ -555,8 +512,11 @@ export class SiteGame
       this.collisionSystem.applyTouchDamage(this.player, aliveMonsters, delta);
     }
     
-    // Update monsters
+    // Update monsters (includes enemy spawner)
     this.updateMonsters(delta);
+    
+    // Update enemy projectiles (handles collision with player)
+    this.enemyProjectileManager.update(delta);
     
     // Update pickups
     this.updatePickups(delta);
@@ -634,6 +594,24 @@ export class SiteGame
     {
       this.player.destroy();
       this.player = null;
+    }
+    
+    // Cleanup enemy projectiles
+    if (this.enemyProjectileManager)
+    {
+      this.enemyProjectileManager.clearAll();
+    }
+    
+    if (this.enemyProjectileContainer)
+    {
+      this.gameContainer.removeChild(this.enemyProjectileContainer);
+      this.enemyProjectileContainer.destroy({ children: true });
+    }
+    
+    // Reset enemy spawner
+    if (this.enemySpawner)
+    {
+      this.enemySpawner.reset();
     }
     
     // Cleanup monsters

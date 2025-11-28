@@ -1,6 +1,6 @@
 /**
  * Player.ts - Player entity extending BaseEntity
- * With XP and Leveling System Integration
+ * With XP, Leveling System, and Power System Integration
  */
 
 import { AssetManager } from '../../managers/AssetManager';
@@ -33,6 +33,7 @@ interface PlayerConfig
     minY: number;
     maxY: number;
   };
+  onLevelUp?: (newLevel: number) => void; // Callback for level-up UI
 }
 
 export class Player extends BaseEntity
@@ -51,15 +52,60 @@ export class Player extends BaseEntity
   private standingTimer: number = 0;
   private readonly STANDING_DURATION = 5; // 5 seconds
   
-  // Combat stats (player-specific)
-  private damage: number;
-  private attackRange: number;
+  // Combat stats (base values)
+  private baseDamage: number;
+  private baseAttackRange: number;
   
   private hpBar: HPBar;
 
   // Attack tracking
   private attackImpactFrames: number[] = [2, 3]; // Frames where attack hitbox is active
   private monstersHitThisAttack: Set<any> = new Set(); // Track hit monsters per attack
+  
+  // Power system stats (modified by power-ups)
+  public stats: {
+    damageMultiplier: number;
+    moveSpeedMultiplier: number;
+    cooldownReduction: number;
+    armor: number;
+    projectileSpeedMultiplier: number;
+    projectileCount: number;
+    pierce: number;
+  };
+  
+  // Weapon-specific stats
+  public weaponStats: {
+    [weaponId: string]: {
+      extraProjectiles?: number;
+      pierce?: number;
+    };
+  };
+  
+  // Active weapon
+  public activeWeapon?: {
+    id: string;
+    name: string;
+    level: number;
+    damage: number;
+    area: number;
+    cooldown: number;
+    speed: number;
+    behavior: string;
+    frameName: string;
+    orbitRadius?: number;
+    orbitSpeed?: number;
+  };
+  
+  // Active powers
+  public powers: Array<{
+    id: string;
+    interval: number;
+    timer: number;
+    update: (dt: number) => void;
+  }>;
+  
+  // Level-up callback
+  private onLevelUpCallback?: (newLevel: number) => void;
   
   constructor(assetManager: AssetManager, config: PlayerConfig)
   {
@@ -87,9 +133,29 @@ export class Player extends BaseEntity
 
     this.inputManager = InputManager.getInstance();
     
-    // Initialize player-specific combat stats
-    this.damage = config.damage ?? 8;
-    this.attackRange = config.attackRange ?? 50;
+    // Initialize base combat stats
+    this.baseDamage = config.damage ?? 8;
+    this.baseAttackRange = config.attackRange ?? 50;
+    
+    // Initialize power system stats
+    this.stats = {
+      damageMultiplier: 1.0,
+      moveSpeedMultiplier: 1.0,
+      cooldownReduction: 0,
+      armor: 0,
+      projectileSpeedMultiplier: 1.0,
+      projectileCount: 1,
+      pierce: 0
+    };
+    
+    // Initialize weapon stats
+    this.weaponStats = {};
+    
+    // Initialize powers array
+    this.powers = [];
+    
+    // Store level-up callback
+    this.onLevelUpCallback = config.onLevelUp;
     
     // Initialize XP Manager
     this.xpManager = new XPManager({
@@ -97,12 +163,20 @@ export class Player extends BaseEntity
       startingXP: 0,
       onLevelUp: (newLevel: number) => {
         console.log(`[Player] LEVEL UP! Now level ${newLevel}`);
-        // TODO: Trigger level-up card selection UI
+        
+        // Trigger level-up callback (for UI)
+        if (this.onLevelUpCallback)
+        {
+          this.onLevelUpCallback(newLevel);
+        }
       }
     });
     
     // Initialize player to standing state
     this.transitionToStanding();
+    
+    // Debug: Log initial health
+    console.log(`[Player] Initialized with ${this.getHealth()}/${this.getMaxHealth()} HP`);
   }
   
   /**
@@ -390,11 +464,11 @@ export class Player extends BaseEntity
   }
   
   /**
-   * Get player damage value
+   * Get player damage value (with multipliers)
    */
   getDamage(): number
   {
-    return this.damage;
+    return this.baseDamage * this.stats.damageMultiplier;
   }
   
   /**
@@ -402,7 +476,7 @@ export class Player extends BaseEntity
    */
   getAttackRange(): number
   {
-    return this.attackRange;
+    return this.baseAttackRange;
   }
   
   /**
@@ -444,7 +518,7 @@ export class Player extends BaseEntity
   }
   
   /**
-   * Override takeDamage to add player death handling and hurt animation
+   * Override takeDamage to apply armor and hurt animation
    */
   takeDamage(amount: number): void
   {
@@ -453,10 +527,20 @@ export class Player extends BaseEntity
       return;
     }
     
-    super.takeDamage(amount);
+    // Apply armor (flat damage reduction)
+    const damageAfterArmor = Math.max(1, amount - this.stats.armor);
+    
+    console.log(`[Player] Taking damage: ${amount} → ${damageAfterArmor} (armor: ${this.stats.armor})`);
+    console.log(`[Player] Health before: ${this.getHealth()}/${this.getMaxHealth()}`);
+    
+    super.takeDamage(damageAfterArmor);
+    
+    console.log(`[Player] Health after: ${this.getHealth()}/${this.getMaxHealth()}`);
 
     const hpPercent = this.getHealth() / this.getMaxHealth();
     this.hpBar.update(hpPercent);
+    
+    console.log(`[Player] Took ${damageAfterArmor.toFixed(1)} damage (${amount.toFixed(1)} - ${this.stats.armor} armor)`);
     
     if (this.isDead())
     {
@@ -474,11 +558,23 @@ export class Player extends BaseEntity
   }
   
   /**
+   * Spawn effect (called by active powers)
+   * This should be implemented in the game manager to spawn actual effects
+   */
+  spawnEffect(effectType: string, params: any): void
+  {
+    console.log(`[Player] Spawn effect: ${effectType}`, params);
+    // TODO: Implement in game manager
+  }
+  
+  /**
    * Handle player death
    */
   private onPlayerDeath(): void
   {
     this.playerState = PlayerState.STANDING;
     this.stopAnimation(0);
+    
+    console.log('[Player] Player died!');
   }
 }

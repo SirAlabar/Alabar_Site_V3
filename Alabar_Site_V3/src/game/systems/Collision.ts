@@ -3,7 +3,7 @@
  * Handles circle-based collisions for entities
  */
 
-import { MonsterBase } from '../entities/Monsters/MonsterBase';
+import { MonsterBase } from '../entities/monsters/MonsterBase';
 import { Player } from '../entities/Player';
 
 export interface CollisionConfig
@@ -12,6 +12,7 @@ export interface CollisionConfig
   monsterRadius?: number;
   projectileRadius?: number;
   xpRadius?: number;
+  touchDamageCooldown?: number; // Time between touch damage hits
 }
 
 export class CollisionSystem
@@ -22,12 +23,19 @@ export class CollisionSystem
   private projectileRadius: number;
   private xpRadius: number;
   
+  // Touch damage system
+  private touchDamageCooldown: number; // Seconds between damage hits
+  private monsterDamageCooldowns: Map<MonsterBase, number>; // Track cooldown per monster
+  
   constructor(config: CollisionConfig = {})
   {
     this.playerRadius = config.playerRadius ?? 20;
     this.monsterRadius = config.monsterRadius ?? 25;
     this.projectileRadius = config.projectileRadius ?? 8;
     this.xpRadius = config.xpRadius ?? 30;
+    this.touchDamageCooldown = config.touchDamageCooldown ?? 0.5; // 0.5 seconds between hits
+    
+    this.monsterDamageCooldowns = new Map();
   }
   
   /**
@@ -69,14 +77,28 @@ export class CollisionSystem
   }
   
   /**
-   * Apply touch damage from monsters to player (Vampire Survivors DPS model)
-   * Each monster deals individual DPS while touching
+   * Apply touch damage from monsters to player with cooldown system
+   * Each monster can only damage once every X seconds
    */
   applyTouchDamage(player: Player, monsters: MonsterBase[], delta: number): void
   {
     if (player.isDead())
     {
       return;
+    }
+    
+    // Update all cooldowns
+    for (const [monster, cooldown] of this.monsterDamageCooldowns)
+    {
+      const newCooldown = cooldown - delta;
+      if (newCooldown <= 0)
+      {
+        this.monsterDamageCooldowns.delete(monster);
+      }
+      else
+      {
+        this.monsterDamageCooldowns.set(monster, newCooldown);
+      }
     }
     
     // Check each monster for collision
@@ -90,10 +112,33 @@ export class CollisionSystem
       // Check if monster is touching player
       if (this.checkPlayerMonsterCollision(player, monster))
       {
-        // Apply DPS damage: damage per second * deltaTime
-        // deltaTime is normalized (1.0 = 1 frame at 60fps)
-        const damageThisFrame = monster.getStats().damage * delta;
-        player.takeDamage(damageThisFrame);
+        // Check if this monster can deal damage (cooldown expired)
+        if (!this.monsterDamageCooldowns.has(monster))
+        {
+          // Deal full damage hit
+          const damage = monster.getStats().damage;
+          player.takeDamage(damage);
+          
+          // Set cooldown for this monster
+          this.monsterDamageCooldowns.set(monster, this.touchDamageCooldown);
+        }
+      }
+    }
+  }
+  
+  /**
+   * Clean up dead monsters from cooldown tracking
+   */
+  cleanupDeadMonsters(monsters: MonsterBase[]): void
+  {
+    const aliveMonsters = new Set(monsters);
+    
+    // Remove cooldowns for monsters that no longer exist
+    for (const monster of this.monsterDamageCooldowns.keys())
+    {
+      if (!aliveMonsters.has(monster))
+      {
+        this.monsterDamageCooldowns.delete(monster);
       }
     }
   }
@@ -244,6 +289,14 @@ export class CollisionSystem
   }
   
   /**
+   * Update touch damage cooldown
+   */
+  setTouchDamageCooldown(cooldown: number): void
+  {
+    this.touchDamageCooldown = cooldown;
+  }
+  
+  /**
    * Get current collision radii
    */
   getRadii(): CollisionConfig
@@ -252,7 +305,8 @@ export class CollisionSystem
       playerRadius: this.playerRadius,
       monsterRadius: this.monsterRadius,
       projectileRadius: this.projectileRadius,
-      xpRadius: this.xpRadius
+      xpRadius: this.xpRadius,
+      touchDamageCooldown: this.touchDamageCooldown
     };
   }
 }

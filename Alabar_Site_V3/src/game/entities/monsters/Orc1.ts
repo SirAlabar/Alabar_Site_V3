@@ -22,17 +22,17 @@ export class Orc1 extends MonsterBase
 {
   // Heavy behavior properties
   private chargeCooldown: number = 0;
-  private readonly CHARGE_COOLDOWN_MAX: number = 240; // 4 seconds
+  private readonly CHARGE_COOLDOWN_MAX: number = 4; // 4 seconds
   private readonly CHARGE_RANGE: number = 150; // Will charge when player is close
   private readonly CHARGE_DISTANCE: number = 80;
   private readonly CHARGE_CHANCE: number = 0.4; // 40% chance when in range
   
-  // Dash system
+  // Dash system 
   private isDashing: boolean = false;
   private dashVelocityX: number = 0;
   private dashVelocityY: number = 0;
-  private dashFramesRemaining: number = 0;
-  private readonly DASH_DURATION_FRAMES: number = 15; // Slower dash than Orc3 (0.25 seconds at 60fps)
+  private dashTimeRemaining: number = 0;
+  private readonly DASH_DURATION: number = 0.25; // 0.25 seconds
   
   constructor(assetManager: AssetManager, config: Orc1Config)
   {
@@ -53,17 +53,21 @@ export class Orc1 extends MonsterBase
     super(assetManager, monsterConfig);
     
     // attack cooldown
-    this.attackCooldownMax = 120; // 2 seconds
+    this.attackCooldownMax = 2; // 2 seconds
   }
   
   /**
    * Update charge cooldown
    */
-  private updateChargeCooldown(): void
+  private updateChargeCooldown(delta: number): void
   {
     if (this.chargeCooldown > 0)
     {
-      this.chargeCooldown--;
+      this.chargeCooldown -= delta;
+      if (this.chargeCooldown < 0)
+      {
+        this.chargeCooldown = 0;
+      }
     }
   }
   
@@ -80,16 +84,16 @@ export class Orc1 extends MonsterBase
   /**
    * Update dash movement
    */
-  private updateDash(): void
+  private updateDash(delta: number): void
   {
     if (!this.isDashing)
     {
       return;
     }
     
-    // Apply dash velocity
-    const newX = this.currentPosition.x + this.dashVelocityX;
-    const newY = this.currentPosition.y + this.dashVelocityY;
+    // Apply dash velocity scaled by delta (velocity is in units per second)
+    const newX = this.currentPosition.x + (this.dashVelocityX * delta);
+    const newY = this.currentPosition.y + (this.dashVelocityY * delta);
     
     // Apply bounds
     const bounds = this.movementSystem.getBounds();
@@ -98,11 +102,11 @@ export class Orc1 extends MonsterBase
     
     this.setPosition(boundedX, boundedY);
     
-    // Decrease remaining frames
-    this.dashFramesRemaining--;
+    // Decrease remaining time using delta
+    this.dashTimeRemaining -= delta;
     
     // Check if dash is complete
-    if (this.dashFramesRemaining <= 0)
+    if (this.dashTimeRemaining <= 0)
     {
       this.isDashing = false;
       this.dashVelocityX = 0;
@@ -133,13 +137,14 @@ export class Orc1 extends MonsterBase
         
         const direction = this.getDirectionToTarget();
         
-        // Calculate velocity per frame (distance / duration)
-        this.dashVelocityX = (direction.x * this.CHARGE_DISTANCE) / this.DASH_DURATION_FRAMES;
-        this.dashVelocityY = (direction.y * this.CHARGE_DISTANCE) / this.DASH_DURATION_FRAMES;
+        // Calculate velocity in units per second
+        // Velocity = Distance / Time
+        this.dashVelocityX = (direction.x * this.CHARGE_DISTANCE) / this.DASH_DURATION;
+        this.dashVelocityY = (direction.y * this.CHARGE_DISTANCE) / this.DASH_DURATION;
         
         // Start dash
         this.isDashing = true;
-        this.dashFramesRemaining = this.DASH_DURATION_FRAMES;
+        this.dashTimeRemaining = this.DASH_DURATION;
         
         // Increase animation speed during dash
         if (this.sprite && this.sprite.animationSpeed)
@@ -190,10 +195,10 @@ export class Orc1 extends MonsterBase
   /**
    * Orc1 AI decision logic
    */
-  protected makeAIDecision(): void
+  protected makeAIDecision(delta: number): void
   {
     // Update dash first (always runs, even during attack)
-    this.updateDash();
+    this.updateDash(delta);
     
     // Reset animation speed when not dashing
     if (!this.isDashing && this.sprite && this.sprite.animationSpeed !== 0.2)
@@ -208,7 +213,7 @@ export class Orc1 extends MonsterBase
     }
     
     // Update charge cooldown
-    this.updateChargeCooldown();
+    this.updateChargeCooldown(delta);
     
     // No target = idle
     if (!this.target)

@@ -1,12 +1,12 @@
 /**
- * Vampire2.ts - Vampire monster implementation
+ * Vampire3.ts - Vampire monster implementation
  */
 
 import { AssetManager } from '../../../managers/AssetManager';
 import { MonsterBase, MonsterConfig, MonsterBehavior } from './MonsterBase';
 import { EntityState } from '../BaseEntity';
 
-export interface Vampire2Config
+export interface Vampire3Config
 {
   startX: number;
   startY: number;
@@ -18,56 +18,56 @@ export interface Vampire2Config
   };
 }
 
-export class Vampire2 extends MonsterBase
+export class Vampire3 extends MonsterBase
 {
-  // Dash ability
+  // Aggressive dash ability
   private dashCooldown: number = 0;
-  private readonly DASH_COOLDOWN_MAX: number = 180; // 3 seconds
-  private readonly DASH_DISTANCE: number = 50;
-  private readonly DASH_CHANCE: number = 0.3; // 30% chance when in range
+  private readonly DASH_COOLDOWN_MAX: number = 2; // 2 seconds
+  private readonly DASH_DISTANCE: number = 60; // Longer dash
+  private readonly DASH_CHANCE: number = 0.5; // 50% chance
   
   // Dash system
   private isDashing: boolean = false;
   private dashVelocityX: number = 0;
   private dashVelocityY: number = 0;
-  private dashFramesRemaining: number = 0;
-  private readonly DASH_DURATION_FRAMES: number = 8; // Fast dash 
+  private dashTimeRemaining: number = 0;
+  private readonly DASH_DURATION: number = 0.12; // 0.12 seconds
   
-  constructor(assetManager: AssetManager, config: Vampire2Config)
+  constructor(assetManager: AssetManager, config: Vampire3Config)
   {
-    // Define Vampire2-specific stats
+    // Define Vampire3-specific stats
     const monsterConfig: MonsterConfig = {
       startX: config.startX,
       startY: config.startY,
-      speed: 1.25,
-      spritesheetKey: 'vampire2_spritesheet',
-      animationPrefix: 'Vampire2',
-      health: 32,
-      damage: 7,
+      speed: 1.35,
+      spritesheetKey: 'vampire3_spritesheet',
+      animationPrefix: 'Vampire3',
+      health: 50,
+      damage: 8.5,
       attackRange: 40,
-      detectionRange: 3500,
+      detectionRange: 4000,
       bounds: config.bounds
     };
     
     super(assetManager, monsterConfig);
     
     // Attack cooldown
-    this.attackCooldownMax = 70; // 1.17 seconds
+    this.attackCooldownMax = 1; // 1 second
   }
   
   /**
    * Update dash movement
    */
-  private updateDash(): void
+  private updateDash(delta: number): void
   {
     if (!this.isDashing)
     {
       return;
     }
     
-    // Apply dash velocity
-    const newX = this.currentPosition.x + this.dashVelocityX;
-    const newY = this.currentPosition.y + this.dashVelocityY;
+    // Apply dash velocity scaled by delta (velocity is in units per second)
+    const newX = this.currentPosition.x + (this.dashVelocityX * delta);
+    const newY = this.currentPosition.y + (this.dashVelocityY * delta);
     
     // Apply bounds
     const bounds = this.movementSystem.getBounds();
@@ -76,21 +76,21 @@ export class Vampire2 extends MonsterBase
     
     this.setPosition(boundedX, boundedY);
     
-    // Decrease remaining frames
-    this.dashFramesRemaining--;
+    // Decrease remaining time using delta
+    this.dashTimeRemaining -= delta;
     
     // Check if dash is complete
-    if (this.dashFramesRemaining <= 0)
+    if (this.dashTimeRemaining <= 0)
     {
       this.isDashing = false;
       this.dashVelocityX = 0;
       this.dashVelocityY = 0;
-      console.log('[Vampire2] Dash complete!');
+      console.log('[Vampire3] Dash complete!');
     }
   }
   
   /**
-   * Perform micro-dash towards target
+   * Perform aggressive micro-dash towards target
    */
   private performDash(): void
   {
@@ -102,26 +102,27 @@ export class Vampire2 extends MonsterBase
     const direction = this.getDirectionToTarget();
     const distance = this.getDistanceToTarget();
     
-    // Only dash if target is in medium range
-    if (distance > 100 && distance < 400)
+    // Dash at any medium-to-long range
+    if (distance > 80 && distance < 500)
     {
-      // Random chance to dash
+      // High chance to dash
       if (Math.random() < this.DASH_CHANCE)
       {
-        console.log('[Vampire2] Performing DASH!');
+        console.log('[Vampire3] Performing AGGRESSIVE DASH!');
         
-        // Calculate velocity per frame (distance / duration)
-        this.dashVelocityX = (direction.x * this.DASH_DISTANCE) / this.DASH_DURATION_FRAMES;
-        this.dashVelocityY = (direction.y * this.DASH_DISTANCE) / this.DASH_DURATION_FRAMES;
+        // Calculate velocity in units per second
+        // Velocity = Distance / Time
+        this.dashVelocityX = (direction.x * this.DASH_DISTANCE) / this.DASH_DURATION;
+        this.dashVelocityY = (direction.y * this.DASH_DISTANCE) / this.DASH_DURATION;
         
         // Start dash
         this.isDashing = true;
-        this.dashFramesRemaining = this.DASH_DURATION_FRAMES;
+        this.dashTimeRemaining = this.DASH_DURATION;
         
         // Increase animation speed during dash
         if (this.sprite && this.sprite.animationSpeed)
         {
-          this.sprite.animationSpeed = 0.35; // Faster animation during dash
+          this.sprite.animationSpeed = 0.4; // Even faster animation during dash
         }
         
         // Set cooldown
@@ -133,26 +134,30 @@ export class Vampire2 extends MonsterBase
   /**
    * Update dash cooldown
    */
-  private updateDashCooldown(): void
+  private updateDashCooldown(delta: number): void
   {
     if (this.dashCooldown > 0)
     {
-      this.dashCooldown--;
+      this.dashCooldown -= delta;
+      if (this.dashCooldown < 0)
+      {
+        this.dashCooldown = 0;
+      }
     }
   }
   
   /**
-   * Vampire2 AI decision logic
+   * Vampire3 AI decision logic
    */
-  protected makeAIDecision(): void
+  protected makeAIDecision(delta: number): void
   {
     // Update dash first
-    this.updateDash();
+    this.updateDash(delta);
     
     // Reset animation speed when not dashing
     if (!this.isDashing && this.sprite && this.sprite.animationSpeed !== 0.125)
     {
-      this.sprite.animationSpeed = 0.125;
+      this.sprite.animationSpeed = 0.125; // Normal animation speed
     }
     
     // Can't make decisions while attacking or dashing
@@ -162,7 +167,7 @@ export class Vampire2 extends MonsterBase
     }
     
     // Update dash cooldown
-    this.updateDashCooldown();
+    this.updateDashCooldown(delta);
     
     // No target = idle
     if (!this.target)
@@ -194,13 +199,13 @@ export class Vampire2 extends MonsterBase
     // Check if target is in detection range
     else if (this.isTargetInDetectionRange())
     {
-      // Chase the target
+      // Chase the target aggressively
       if (this.behavior !== MonsterBehavior.CHASING)
       {
         this.transitionToChasing();
       }
       
-      // Attempt dash while chasing
+      // Frequently attempt dash while chasing
       this.performDash();
     }
     // Target out of range

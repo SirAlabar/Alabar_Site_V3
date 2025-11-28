@@ -46,7 +46,7 @@ export abstract class MonsterBase extends BaseEntity
   
   // Attack cooldown
   protected attackCooldown: number = 0;
-  protected attackCooldownMax: number = 60; // 1 second at 60fps
+  protected attackCooldownMax: number = 1; // 1 second
   
   // Movement
   protected moveDirection: { x: number; y: number } = { x: 0, y: 0 };
@@ -234,7 +234,7 @@ export abstract class MonsterBase extends BaseEntity
   /**
    * Move towards target
    */
-  protected moveTowardsTarget(): void
+  protected moveTowardsTarget(delta: number): void
   {
     if (!this.target)
     {
@@ -246,8 +246,11 @@ export abstract class MonsterBase extends BaseEntity
     
     // Calculate new position using movement system
     const speed = this.movementSystem.getSpeed();
-    const dx = direction.x * speed;
-    const dy = direction.y * speed;
+    const scaledSpeed = speed * delta * 60;
+
+    const dx = direction.x * scaledSpeed;
+    const dy = direction.y * scaledSpeed;
+
     
     // Apply bounds checking
     const bounds = this.movementSystem.getBounds();
@@ -309,11 +312,15 @@ export abstract class MonsterBase extends BaseEntity
   /**
    * Update attack cooldown
    */
-  protected updateAttackCooldown(): void
+  protected updateAttackCooldown(delta: number): void
   {
     if (this.attackCooldown > 0)
     {
-      this.attackCooldown--;
+      this.attackCooldown -= delta;
+      if (this.attackCooldown < 0)
+      { 
+        this.attackCooldown = 0;
+      }
     }
   }
   
@@ -505,12 +512,12 @@ protected applySeparation(separationDistance = 50): void
   /**
    * Abstract AI decision method - must be implemented by specific monsters
    */
-  protected abstract makeAIDecision(): void;
+  protected abstract makeAIDecision(delta: number): void;
   
   /**
    * Main update loop
    */
-  update(_delta: number): void
+  update(delta: number): void
   {
     // Don't update if dead
     if (!this.isAlive())
@@ -522,7 +529,7 @@ protected applySeparation(separationDistance = 50): void
     this.checkAnimationWatchdog();
     
     // Update cooldowns
-    this.updateAttackCooldown();
+    this.updateAttackCooldown(delta);
     
     // Freeze during hurt animation (brief stagger effect)
     if (this.isPlayingHurtAnimation)
@@ -531,13 +538,13 @@ protected applySeparation(separationDistance = 50): void
     }
     
     // Make AI decision
-    this.makeAIDecision();
+    this.makeAIDecision(delta);
     
     // Execute behavior
     switch (this.behavior)
     {
       case MonsterBehavior.CHASING:
-        this.moveTowardsTarget();
+        this.moveTowardsTarget(delta);
         break;
         
       case MonsterBehavior.ROAMING:
