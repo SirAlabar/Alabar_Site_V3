@@ -1,13 +1,17 @@
 /**
  * Player.ts - Player entity extending BaseEntity
  * With XP, Leveling System, and Power System Integration
+ * UPDATED: Multiple weapons support with independent cooldowns
  */
 
 import { AssetManager } from '../../managers/AssetManager';
 import { InputManager, Direction } from '../core/Input';
 import { BaseEntity, EntityConfig, EntityState, FacingDirection } from './BaseEntity';
 import { HPBar } from "../ui/HPBar";
+import { XPBar } from "../ui/XPBar";
 import { XPManager } from '../systems/XP';
+import { WeaponSystem } from '../systems/WeaponSystem';
+import { AreaEffectSystem } from '../systems/AreaEffectSystem';
 
 // Player-specific states
 enum PlayerState
@@ -44,6 +48,15 @@ export class Player extends BaseEntity
   // XP Manager
   private xpManager: XPManager;
   
+  // Weapon System (for spawning projectiles)
+  private weaponSystem: WeaponSystem | null = null;
+  
+  // Area Effect System (for aura, explosion, magic field)
+  private areaEffectSystem: AreaEffectSystem | null = null;
+  
+  // Monster targeting (set by SiteGame for power targeting)
+  public getNearestMonsters?: (count: number) => Array<{ x: number; y: number }>;
+  
   // Player-specific state machine
   private playerState: PlayerState = PlayerState.STANDING;
   private lastDirection: Direction = null;
@@ -57,6 +70,7 @@ export class Player extends BaseEntity
   private baseAttackRange: number;
   
   private hpBar: HPBar;
+  private xpBar: XPBar;
 
   // Attack tracking
   private attackImpactFrames: number[] = [2, 3]; // Frames where attack hitbox is active
@@ -81,8 +95,8 @@ export class Player extends BaseEntity
     };
   };
   
-  // Active weapon
-  public activeWeapon?: {
+  // Active weapons array (multiple weapons can be equipped)
+  public activeWeapons: Array<{
     id: string;
     name: string;
     level: number;
@@ -94,7 +108,8 @@ export class Player extends BaseEntity
     frameName: string;
     orbitRadius?: number;
     orbitSpeed?: number;
-  };
+    timer: number;
+  }> = [];
   
   // Active powers
   public powers: Array<{
@@ -116,19 +131,24 @@ export class Player extends BaseEntity
       speed: config.speed,
       spritesheetKey: 'player_spritesheet',
       animationPrefix: 'Leo_Hero',
-      health: config.health ?? 80,
+      health: config.health ?? 80000,
       bounds: config.bounds
     };
     
     super(assetManager, entityConfig);
 
     this.hpBar = new HPBar();
+    this.xpBar = new XPBar();
     this.addChild(this.hpBar);
+    this.addChild(this.xpBar);
     
     if (this.sprite) 
     {
         this.hpBar.y = this.sprite.height * 0.25;
         this.hpBar.x = -(this.hpBar.width / 2);
+
+        this.xpBar.y = this.hpBar.y + 3;
+        this.xpBar.x = -(this.xpBar.width / 2);
     }
 
     this.inputManager = InputManager.getInstance();
@@ -174,9 +194,6 @@ export class Player extends BaseEntity
     
     // Initialize player to standing state
     this.transitionToStanding();
-    
-    // Debug: Log initial health
-    console.log(`[Player] Initialized with ${this.getHealth()}/${this.getMaxHealth()} HP`);
   }
   
   /**
@@ -186,9 +203,8 @@ export class Player extends BaseEntity
   {
     this.xpManager.addXP(amount);
     
-    // TODO: Update XP bar UI when we have it
-    // const progress = this.xpManager.getXPProgress();
-    // this.xpBar.update(progress, this.xpManager.getLevel());
+    const progress = this.xpManager.getXPProgress();
+    this.xpBar.update(progress, this.xpManager.getLevel());
   }
   
   /**
@@ -445,6 +461,7 @@ export class Player extends BaseEntity
     // Handle input (respecting state restrictions)
     this.handleAttack();
     this.handleMovement(delta);
+    this.updateWeaponAttacks(delta);
   }
   
   /**
@@ -453,6 +470,276 @@ export class Player extends BaseEntity
   isPlayerAttacking(): boolean
   {
     return this.playerState === PlayerState.ATTACKING;
+  }
+
+  /**
+   * Update all weapon attacks (each weapon has independent cooldown)
+   */
+  private updateWeaponAttacks(delta: number): void
+  {
+    if (!this.weaponSystem || this.activeWeapons.length === 0)
+    {
+      return;
+    }
+
+    // Update each weapon independently
+    for (const weapon of this.activeWeapons)
+    {
+      weapon.timer += delta;
+
+      // Apply cooldown reduction from stats
+      const effectiveCooldown = weapon.cooldown * (1 - this.stats.cooldownReduction);
+
+      if (weapon.timer >= effectiveCooldown)
+      {
+        weapon.timer = 0;
+        this.fireWeapon(weapon);
+      }
+    }
+  }
+
+  /**
+   * Fire a specific weapon
+   */
+  private fireWeapon(weapon: {
+    id: string;
+    name: string;
+    level: number;
+    damage: number;
+    area: number;
+    cooldown: number;
+    speed: number;
+    behavior: string;
+    frameName: string;
+    orbitRadius?: number;
+    orbitSpeed?: number;
+    timer: number;
+  }): void
+  {
+    const pos = this.getPosition();
+    
+    // Calculate total projectile count
+    const baseCount = 1;
+    const extraFromStats = this.stats.projectileCount - 1;
+    const extraFromWeapon = this.weaponStats[weapon.id]?.extraProjectiles ?? 0;
+    const totalCount = baseCount + extraFromStats + extraFromWeapon;
+    
+    // Calculate total pierce
+    const basePierce = 0;
+    const pierceFromStats = this.stats.pierce;
+    const pierceFromWeapon = this.weaponStats[weapon.id]?.pierce ?? 0;
+    const totalPierce = basePierce + pierceFromStats + pierceFromWeapon;
+    
+    // Apply weapon area to scale
+    const scale = 1.0 * weapon.area;
+    
+    switch (weapon.behavior)
+    {
+      case "straight":
+      {
+        // Dagger: Fan spread pattern (30° between projectiles)
+        const spreadAngle = 30 * (Math.PI / 180); // Convert to radians
+        const facingAngle = this.getFacingAngle();
+        
+        for (let i = 0; i < totalCount; i++)
+        {
+          // Calculate angle offset for this projectile
+          const angleOffset = (i - (totalCount - 1) / 2) * spreadAngle;
+          const finalAngle = facingAngle + angleOffset;
+          
+          // Calculate target position
+          const distance = 200;
+          const targetX = pos.x + Math.cos(finalAngle) * distance;
+          const targetY = pos.y + Math.sin(finalAngle) * distance;
+          
+          this.weaponSystem!.spawnWeaponProjectile({
+            startX: pos.x,
+            startY: pos.y,
+            targetX: targetX,
+            targetY: targetY,
+            speed: weapon.speed * this.stats.projectileSpeedMultiplier,
+            damage: weapon.damage,
+            spritesheetKey: "powers_spritesheet",
+            animationName: weapon.frameName,
+            pierceCount: totalPierce,
+            range: 600,
+            scale: scale
+          });
+        }
+        break;
+      }
+
+      case "arc":
+      {
+        // Axe: Multiple arcs at different angles (20° spread)
+        const spreadAngle = 20 * (Math.PI / 180);
+        const baseAngle = Math.PI / 4; // 45° upward
+        
+        for (let i = 0; i < totalCount; i++)
+        {
+          const angleOffset = (i - (totalCount - 1) / 2) * spreadAngle;
+          const finalAngle = baseAngle + angleOffset;
+          
+          const distance = 200;
+          const targetX = pos.x + Math.cos(finalAngle) * distance;
+          const targetY = pos.y - Math.sin(finalAngle) * distance;
+          
+          this.weaponSystem!.spawnWeaponProjectile({
+            startX: pos.x,
+            startY: pos.y,
+            targetX: targetX,
+            targetY: targetY,
+            speed: weapon.speed * this.stats.projectileSpeedMultiplier,
+            damage: weapon.damage,
+            spritesheetKey: "powers_spritesheet",
+            animationName: weapon.frameName,
+            pierceCount: totalPierce,
+            range: 600,
+            scale: scale
+          });
+        }
+        break;
+      }
+
+      case "boomerang":
+      {
+        // Sword: Fire in opposite directions (180° spread)
+        const facingAngle = this.getFacingAngle();
+        
+        for (let i = 0; i < totalCount; i++)
+        {
+          // Alternate between forward and backward
+          const angle = facingAngle + (i % 2 === 0 ? 0 : Math.PI);
+          
+          const distance = 250;
+          const targetX = pos.x + Math.cos(angle) * distance;
+          const targetY = pos.y + Math.sin(angle) * distance;
+          
+          this.weaponSystem!.spawnWeaponProjectile({
+            startX: pos.x,
+            startY: pos.y,
+            targetX: targetX,
+            targetY: targetY,
+            speed: weapon.speed * this.stats.projectileSpeedMultiplier,
+            damage: weapon.damage,
+            spritesheetKey: "powers_spritesheet",
+            animationName: weapon.frameName,
+            pierceCount: totalPierce,
+            range: 900,
+            scale: scale
+          });
+        }
+        break;
+      }
+
+      case "orbital":
+      {
+        // Shuriken: Spawn/update orbital weapons
+        if (!this.weaponSystem)
+        {
+          console.warn('[Player] Weapon system not connected');
+          break;
+        }
+        
+        // Tell weapon system to spawn orbitals (only once when weapon is acquired)
+        this.weaponSystem.spawnOrbitalWeapon(
+          this,
+          weapon.frameName,
+          totalCount,
+          weapon.orbitRadius ?? 80,
+          weapon.orbitSpeed ?? 2.0,
+          weapon.damage,
+          scale
+        );
+        break;
+      }
+    }
+  }
+  
+  /**
+   * Get facing angle in radians based on current facing direction
+   */
+  private getFacingAngle(): number
+  {
+    switch (this.facingDirection)
+    {
+      case 'Right':
+        return 0; // 0°
+      case 'Front':
+        return Math.PI / 2; // 90° (down)
+      case 'Left':
+        return Math.PI; // 180°
+      case 'Back':
+        return -Math.PI / 2; // -90° (up)
+      default:
+        return 0;
+    }
+  }
+
+  /**
+   * Add or upgrade a weapon
+   * If weapon already exists, update its stats
+   * If new weapon, add to array
+   */
+  public addOrUpgradeWeapon(weaponData: {
+    id: string;
+    name: string;
+    level: number;
+    damage: number;
+    area: number;
+    cooldown: number;
+    speed: number;
+    behavior: string;
+    frameName: string;
+    orbitRadius?: number;
+    orbitSpeed?: number;
+  }): void
+  {
+    // Check if weapon already exists
+    const existingWeapon = this.activeWeapons.find(w => w.id === weaponData.id);
+    
+    if (existingWeapon)
+    {
+      // Update existing weapon stats
+      existingWeapon.level = weaponData.level;
+      existingWeapon.damage = weaponData.damage;
+      existingWeapon.area = weaponData.area;
+      existingWeapon.cooldown = weaponData.cooldown;
+      existingWeapon.speed = weaponData.speed;
+      existingWeapon.frameName = weaponData.frameName;
+      existingWeapon.orbitRadius = weaponData.orbitRadius;
+      existingWeapon.orbitSpeed = weaponData.orbitSpeed;
+      
+      console.log(`[Player] Upgraded ${weaponData.name} to level ${weaponData.level}`);
+    }
+    else
+    {
+      // Add new weapon to array
+      this.activeWeapons.push({
+        ...weaponData,
+        timer: 0 // Initialize timer
+      });
+      
+      console.log(`[Player] Added new weapon: ${weaponData.name}`);
+    }
+  }
+  
+  /**
+   * Apply global projectile count increase to all weapons and powers
+   */
+  public applyGlobalProjectileIncrease(): void
+  {
+    console.log(`[Player] Global projectile count increased to ${this.stats.projectileCount}`);
+    // Stats are already updated, weapons will use the new value on next fire
+  }
+  
+  /**
+   * Apply global pierce increase to all weapons and powers
+   */
+  public applyGlobalPierceIncrease(): void
+  {
+    console.log(`[Player] Global pierce increased to ${this.stats.pierce}`);
+    // Stats are already updated, weapons will use the new value on next fire
   }
   
   /**
@@ -529,19 +816,12 @@ export class Player extends BaseEntity
     
     // Apply armor (flat damage reduction)
     const damageAfterArmor = Math.max(1, amount - this.stats.armor);
-    
-    console.log(`[Player] Taking damage: ${amount} → ${damageAfterArmor} (armor: ${this.stats.armor})`);
-    console.log(`[Player] Health before: ${this.getHealth()}/${this.getMaxHealth()}`);
-    
+
     super.takeDamage(damageAfterArmor);
-    
-    console.log(`[Player] Health after: ${this.getHealth()}/${this.getMaxHealth()}`);
 
     const hpPercent = this.getHealth() / this.getMaxHealth();
     this.hpBar.update(hpPercent);
-    
-    console.log(`[Player] Took ${damageAfterArmor.toFixed(1)} damage (${amount.toFixed(1)} - ${this.stats.armor} armor)`);
-    
+
     if (this.isDead())
     {
       this.onPlayerDeath();
@@ -558,13 +838,139 @@ export class Player extends BaseEntity
   }
   
   /**
+   * Set weapon system reference (called by SiteGame)
+   */
+  setWeaponSystem(weaponSystem: WeaponSystem): void
+  {
+    this.weaponSystem = weaponSystem;
+    console.log('[Player] Weapon system connected');
+  }
+  
+  /**
+   * Set area effect system reference (called by SiteGame)
+   */
+  setAreaEffectSystem(areaEffectSystem: AreaEffectSystem): void
+  {
+    this.areaEffectSystem = areaEffectSystem;
+    console.log('[Player] Area effect system connected');
+  }
+  
+  /**
+   * Spawn a power projectile (called by active powers)
+   */
+  spawnPowerProjectile(config: {
+    targetX: number;
+    targetY: number;
+    damage: number;
+    speed: number;
+    pierce: number;
+    animationName: string;
+  }): void
+  {
+    if (!this.weaponSystem)
+    {
+      console.warn('[Player] Weapon system not connected, cannot spawn projectile');
+      return;
+    }
+    
+    const pos = this.getPosition();
+    
+    this.weaponSystem.spawnPowerProjectile({
+      startX: pos.x,
+      startY: pos.y,
+      targetX: config.targetX,
+      targetY: config.targetY,
+      speed: config.speed,
+      damage: config.damage,
+      spritesheetKey: 'powers_spritesheet',
+      animationName: config.animationName,
+      range: 800,
+      pierceCount: config.pierce,
+      scale: 1.5
+    });
+    
+    console.log('[Player] Spawned power projectile:', config.animationName);
+  }
+  
+  /**
+   * Spawn area effect (aura, explosion, magic field)
+   */
+  spawnAreaEffect(type: string, params: any): void
+  {
+    console.log(`[Player] spawnAreaEffect called - type: ${type}, params:`, params);
+    
+    if (!this.areaEffectSystem)
+    {
+      console.warn('[Player] Area effect system not connected');
+      return;
+    }
+    
+    const pos = this.getPosition();
+    console.log(`[Player] Player position: (${pos.x}, ${pos.y})`);
+    
+    switch (type)
+    {
+      case 'explosion':
+        // Random position near player
+        const offsetX = (Math.random() - 0.5) * 200;
+        const offsetY = (Math.random() - 0.5) * 200;
+        this.areaEffectSystem.spawnExplosion(
+          pos.x + offsetX,
+          pos.y + offsetY,
+          params.damage,
+          params.radius,
+          params.animationName,
+          params.scale
+        );
+        break;
+        
+      case 'magic_field':
+        this.areaEffectSystem.spawnMagicField(
+          pos.x,
+          pos.y,
+          params.damage,
+          params.radius,
+          params.duration,
+          params.tickRate,
+          params.animationName,
+          params.scale
+        );
+        break;
+        
+      case 'aura_damage':
+        // Aura follows player - permanent visual, damages every 1 second
+        
+        this.areaEffectSystem.spawnAura(
+          this,
+          params.damage,
+          params.radius,
+          999999, // Permanent duration
+          1.0, // Damage every 1 second
+          params.animationName,
+          params.scale ?? 1.0
+        );
+        break;
+        
+      default:
+        console.warn(`[Player] Unknown area effect type: ${type}`);
+    }
+  }
+  
+  /**
    * Spawn effect (called by active powers)
-   * This should be implemented in the game manager to spawn actual effects
+   * Routes to appropriate system
    */
   spawnEffect(effectType: string, params: any): void
   {
-    console.log(`[Player] Spawn effect: ${effectType}`, params);
-    // TODO: Implement in game manager
+    // Route to area effects
+    if (effectType === 'explosion' || effectType === 'magic_field' || effectType === 'aura_damage')
+    {
+      this.spawnAreaEffect(effectType, params);
+    }
+    else
+    {
+      console.warn(`[Player] Unknown effect type: ${effectType}`);
+    }
   }
   
   /**

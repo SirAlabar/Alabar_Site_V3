@@ -5,13 +5,13 @@
 
 import { Container } from 'pixi.js';
 import { AssetManager } from '../../managers/AssetManager';
-import { EnemyProjectile, EnemyProjectileConfig } from './EnemyProjectile';
+import { Projectile, ProjectileConfig } from '../entities/Projectile';
 import { Player } from '../entities/Player';
 
 export class EnemyProjectileManager
 {
   private assetManager: AssetManager;
-  private projectiles: EnemyProjectile[] = [];
+  private projectiles: Projectile[] = [];
   private projectileContainer: Container;
   private player: Player;
   
@@ -28,9 +28,9 @@ export class EnemyProjectileManager
   /**
    * Spawn a new enemy projectile
    */
-  spawnProjectile(config: EnemyProjectileConfig): EnemyProjectile
+  spawnProjectile(config: ProjectileConfig): Projectile
   {
-    const projectile = new EnemyProjectile(this.assetManager, config);
+    const projectile = new Projectile(this.assetManager, config);
     
     this.projectiles.push(projectile);
     this.projectileContainer.addChild(projectile);
@@ -178,7 +178,7 @@ export class EnemyProjectileManager
   /**
    * Get all active projectiles
    */
-  getProjectiles(): EnemyProjectile[]
+  getProjectiles(): Projectile[]
   {
     return [...this.projectiles];
   }

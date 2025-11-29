@@ -53,6 +53,9 @@ export abstract class MonsterBase extends BaseEntity
 
   protected nearbyMonsters: MonsterBase[] = [];
   
+  // Boss system
+  protected isBoss: boolean = false;
+  
   // Death animation
   protected isPlayingDeathAnimation: boolean = false;
   
@@ -86,6 +89,23 @@ export abstract class MonsterBase extends BaseEntity
     
     // Start in idle state
     this.transitionToIdle();
+  }
+  
+  /**
+   * Set as boss monster
+   * Called by EnemySpawner when spawning boss
+   */
+  setAsBoss(): void
+  {
+    this.isBoss = true;
+  }
+  
+  /**
+   * Check if monster is a boss
+   */
+  getIsBoss(): boolean
+  {
+    return this.isBoss;
   }
   
   /**

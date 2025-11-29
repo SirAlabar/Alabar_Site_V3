@@ -14,6 +14,10 @@ import { CrystalPickup } from '../entities/Crystal';
 import { FoodPickup, FoodTier } from '../entities/Food';
 import { EnemySpawner } from '../systems/EnemySpawner';
 import { EnemyProjectileManager } from '../systems/EnemyProjectileManager';
+import { PowerManager } from '../systems/PowerManager';
+import { LevelUpUI } from '../ui/LevelUpUI';
+import { WeaponSystem } from '../systems/WeaponSystem';
+import { AreaEffectSystem } from '../systems/AreaEffectSystem';
 
 interface MonsterSpawnData
 {
@@ -36,6 +40,12 @@ export class SiteGame
   private enemySpawner!: EnemySpawner;
   private enemyProjectileManager!: EnemyProjectileManager;
   private enemyProjectileContainer!: Container;
+  private powerManager!: PowerManager;
+  private levelUpUI!: LevelUpUI;
+  private weaponSystem!: WeaponSystem;
+  private playerProjectileContainer!: Container;
+  private areaEffectSystem!: AreaEffectSystem;
+  private areaEffectContainer!: Container;
   
   // Entities
   private player: Player | null = null;
@@ -185,6 +195,41 @@ export class SiteGame
     // Spawn player
     this.spawnPlayer();
     
+    // Initialize player projectile system (weapons and powers)
+    this.playerProjectileContainer = new Container();
+    this.playerProjectileContainer.label = 'PlayerProjectiles';
+    this.playerProjectileContainer.zIndex = 700;
+    this.gameContainer.addChild(this.playerProjectileContainer);
+    
+    this.weaponSystem = new WeaponSystem(
+      this.assetManager,
+      this.playerProjectileContainer
+    );
+    
+   
+    // Initialize area effect system (aura, explosion, magic field)
+    this.areaEffectContainer = new Container();
+    this.areaEffectContainer.label = 'AreaEffects';
+    this.areaEffectContainer.zIndex = 650;
+    this.gameContainer.addChild(this.areaEffectContainer);
+    
+    this.areaEffectSystem = new AreaEffectSystem(
+      this.assetManager,
+      this.areaEffectContainer
+    );
+    
+    // NOW connect all systems to player (after they're all created)
+    if (this.player)
+    {
+      this.player.setWeaponSystem(this.weaponSystem);
+      this.player.setAreaEffectSystem(this.areaEffectSystem);
+      
+      // Provide monster targeting for powers
+      this.player.getNearestMonsters = (count: number) => {
+        return this.getNearestMonstersToPlayer(count);
+      };
+    }
+    
     // Initialize enemy projectile system
     this.enemyProjectileContainer = new Container();
     this.enemyProjectileContainer.label = 'EnemyProjectiles';
@@ -208,8 +253,6 @@ export class SiteGame
     // Connect projectile manager to spawner (for plant projectiles)
     this.enemySpawner.setProjectileManager(this.enemyProjectileManager);
     
-    console.log('[SiteGame] Enemy spawner initialized');
-    
     // Start game loop
     this.start();
   }
@@ -230,29 +273,53 @@ export class SiteGame
       startX: startX,
       startY: startY,
       speed: 2.0,
-      bounds: this.gameBounds
+      bounds: this.gameBounds,
+      onLevelUp: (_newLevel: number) => {
+        this.pause();
+        const cards = this.powerManager.generateLevelUpCards();
+        if (cards.length > 0)
+        {
+          this.levelUpUI.show(cards, this.gameApp.screen.width, this.gameApp.screen.height);
+        }
+        else
+        {
+          this.resume();
+        }
+      }
     });
     
     this.player.scale.set(2.0, 2.0);
-    
     this.player.zIndex = 1000;
     this.gameContainer.addChild(this.player);
+    
+    // Initialize power manager
+    this.powerManager = new PowerManager(this.player);
+    
+    // Initialize level-up UI
+    this.levelUpUI = new LevelUpUI(this.assetManager, {
+      onCardSelected: (powerUpId: string) => {
+        this.powerManager.addPowerUp(powerUpId);
+        this.resume();
+      }
+    });
+    this.levelUpUI.zIndex = 10000;
+    this.gameContainer.addChild(this.levelUpUI);
   }
   
-  /**
-   * Get random spawn position within bounds
-   */
-  private getRandomSpawnPosition(): { x: number; y: number }
-  {
-    const margin = 25; // Keep away from edges
+//   /**
+//    * Get random spawn position within bounds
+//    */
+//   private getRandomSpawnPosition(): { x: number; y: number }
+//   {
+//     const margin = 25; // Keep away from edges
     
-    const x = this.gameBounds.minX + margin + 
-              Math.random() * (this.gameBounds.maxX - this.gameBounds.minX - margin * 2);
-    const y = this.gameBounds.minY + margin + 
-              Math.random() * (this.gameBounds.maxY - this.gameBounds.minY - margin * 2);
+//     const x = this.gameBounds.minX + margin + 
+//               Math.random() * (this.gameBounds.maxX - this.gameBounds.minX - margin * 2);
+//     const y = this.gameBounds.minY + margin + 
+//               Math.random() * (this.gameBounds.maxY - this.gameBounds.minY - margin * 2);
     
-    return { x, y };
-  }
+//     return { x, y };
+//   }
   
   /**
    * Spawn pickup from drop result
@@ -264,7 +331,6 @@ export class SiteGame
     
     if (drop.type === 'none')
     {
-      console.log(`[SiteGame] ${monsterType} dropped nothing`);
       return;
     }
     
@@ -279,8 +345,6 @@ export class SiteGame
         xpValue: drop.xpValue!,
         particleContainer: this.gameContainer
       });
-      
-      console.log(`[SiteGame] Spawned Crystal Tier ${drop.tier} (${drop.xpValue} XP) at (${x}, ${y})`);
     }
     else // food
     {
@@ -300,8 +364,6 @@ export class SiteGame
         tier: foodTier,
         particleContainer: this.gameContainer
       });
-      
-      console.log(`[SiteGame] Spawned Food ${foodTier} at (${x}, ${y})`);
     }
     
     pickup.zIndex = 100;
@@ -333,8 +395,6 @@ export class SiteGame
         monsterType: monsterType,
         respawnTimer: 0
       });
-      
-      console.log(`[SiteGame] ${monsterType} spawned by EnemySpawner`);
     }
     
     for (let i = this.monsters.length - 1; i >= 0; i--)
@@ -352,8 +412,6 @@ export class SiteGame
           {
             const deathPos = spawnData.monster.getPosition();
             this.spawnPickup(deathPos.x, deathPos.y, spawnData.monsterType);
-            
-            console.log(`[SiteGame] ${spawnData.monsterType} died, dropping loot`);
           }
           
           // Remove dead monster immediately (no respawn)
@@ -515,8 +573,37 @@ export class SiteGame
     // Update monsters (includes enemy spawner)
     this.updateMonsters(delta);
     
+    // Get alive monsters for projectile collision
+    const aliveMonsters = this.monsters
+      .map(m => m.monster)
+      .filter(m => m && !m.isDead());
+    
+    // Update weapon system (projectiles + collision with monsters)
+    if (this.weaponSystem)
+    {
+      this.weaponSystem.update(delta, aliveMonsters);
+    }
+    
+    // Update area effect system (aura, explosion, magic field)
+    if (this.areaEffectSystem)
+    {
+      this.areaEffectSystem.update(delta, aliveMonsters);
+    }
+    
     // Update enemy projectiles (handles collision with player)
     this.enemyProjectileManager.update(delta);
+    
+    // Update power manager (active powers)
+    if (this.powerManager)
+    {
+      this.powerManager.update(delta);
+    }
+    
+    // Update level-up UI animations
+    if (this.levelUpUI && this.levelUpUI.visible)
+    {
+      this.levelUpUI.update(delta);
+    }
     
     // Update pickups
     this.updatePickups(delta);
@@ -558,6 +645,43 @@ export class SiteGame
   }
   
   /**
+   * Get N nearest monsters to player (for power targeting)
+   */
+  private getNearestMonstersToPlayer(count: number): Array<{ x: number; y: number }>
+  {
+    if (!this.player)
+    {
+      return [];
+    }
+    
+    const playerPos = this.player.getPosition();
+    const aliveMonsters = this.monsters
+      .map(m => m.monster)
+      .filter(m => m && !m.isDead());
+    
+    // Calculate distances
+    const monstersWithDistance = aliveMonsters.map(monster => {
+      const pos = monster.getPosition();
+      const dx = pos.x - playerPos.x;
+      const dy = pos.y - playerPos.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      
+      return {
+        x: pos.x,
+        y: pos.y,
+        distance: distance
+      };
+    });
+    
+    // Sort by distance and take N nearest
+    monstersWithDistance.sort((a, b) => a.distance - b.distance);
+    
+    return monstersWithDistance
+      .slice(0, count)
+      .map(m => ({ x: m.x, y: m.y }));
+  }
+  
+  /**
    * Get game container
    */
   getContainer(): Container
@@ -594,6 +718,41 @@ export class SiteGame
     {
       this.player.destroy();
       this.player = null;
+    }
+    
+    // Cleanup power system
+    if (this.powerManager)
+    {
+      this.powerManager.reset();
+    }
+    
+    if (this.levelUpUI)
+    {
+      this.levelUpUI.destroy();
+    }
+    
+    // Cleanup weapon system
+    if (this.weaponSystem)
+    {
+      this.weaponSystem.clearAll();
+    }
+    
+    if (this.playerProjectileContainer)
+    {
+      this.gameContainer.removeChild(this.playerProjectileContainer);
+      this.playerProjectileContainer.destroy({ children: true });
+    }
+    
+    // Cleanup area effect system
+    if (this.areaEffectSystem)
+    {
+      this.areaEffectSystem.clearAll();
+    }
+    
+    if (this.areaEffectContainer)
+    {
+      this.gameContainer.removeChild(this.areaEffectContainer);
+      this.areaEffectContainer.destroy({ children: true });
     }
     
     // Cleanup enemy projectiles

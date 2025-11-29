@@ -1,6 +1,7 @@
 /**
  * weapons.ts - Weapons with unique behaviors
  * Axe (arc), Dagger (straight), Sword (boomerang), Shuriken (orbital)
+ * UPDATED: Works with multiple weapons array system
  */
 
 import { PowerUp } from './PowerUps';
@@ -54,6 +55,7 @@ function generateWeaponStats(
 /**
  * AXE
  * Behavior: Throw upward at 45° angle, arcs down
+ * Pierce: Starts at 5, +5 every 3 levels (5, 5, 5, 10, 10, 10, 15, 15, 15, 20, 20, 20)
  */
 const axeStats = generateWeaponStats(6, 1.2, 1.8);
 
@@ -75,13 +77,21 @@ export const AxeWeapon = new PowerUp({
   areaPerLevel: axeStats.area,
   cooldownPerLevel: axeStats.cooldown,
   speedPerLevel: Array(12).fill(5), // Speed stays constant
+  piercePerLevel: [5, 5, 5, 10, 10, 10, 15, 15, 15, 20, 20, 20], // +5 pierce every 3 levels
   
   applyEffect: (player, level) =>
   {
     const stats = AxeWeapon;
     
-    // Store weapon stats on player
-    player.activeWeapon = {
+    // Calculate pierce for this weapon at this level
+    const weaponPierce = stats.piercePerLevel ? stats.piercePerLevel[level - 1] : 0;
+    
+    // Store pierce in weaponStats
+    player.weaponStats["axe"] = player.weaponStats["axe"] || {};
+    player.weaponStats["axe"].pierce = weaponPierce;
+    
+    // Add or upgrade weapon in player's weapons array
+    player.addOrUpgradeWeapon({
       id: "axe",
       name: "Battle Axe",
       level: level,
@@ -91,9 +101,9 @@ export const AxeWeapon = new PowerUp({
       speed: stats.speedPerLevel[level - 1],
       behavior: "arc", // Axe behavior
       frameName: stats.getWeaponFrame()
-    };
+    });
     
-    console.log(`[Axe] Level ${level} - Damage: ${player.activeWeapon.damage.toFixed(1)}, Cooldown: ${player.activeWeapon.cooldown.toFixed(2)}s`);
+    console.log(`[Axe] Level ${level} - Damage: ${stats.damagePerLevel[level - 1].toFixed(1)}, Cooldown: ${stats.cooldownPerLevel[level - 1].toFixed(2)}s, Pierce: ${weaponPierce}`);
   }
 });
 
@@ -126,8 +136,8 @@ export const DaggerWeapon = new PowerUp({
   {
     const stats = DaggerWeapon;
     
-    // Store weapon stats on player
-    player.activeWeapon = {
+    // Add or upgrade weapon in player's weapons array
+    player.addOrUpgradeWeapon({
       id: "dagger",
       name: "Dagger",
       level: level,
@@ -137,9 +147,9 @@ export const DaggerWeapon = new PowerUp({
       speed: stats.speedPerLevel[level - 1],
       behavior: "straight", // Dagger behavior
       frameName: stats.getWeaponFrame()
-    };
+    });
     
-    console.log(`[Dagger] Level ${level} - Damage: ${player.activeWeapon.damage.toFixed(1)}, Cooldown: ${player.activeWeapon.cooldown.toFixed(2)}s`);
+    console.log(`[Dagger] Level ${level} - Damage: ${stats.damagePerLevel[level - 1].toFixed(1)}, Cooldown: ${stats.cooldownPerLevel[level - 1].toFixed(2)}s`);
   }
 });
 
@@ -172,8 +182,8 @@ export const SwordWeapon = new PowerUp({
   {
     const stats = SwordWeapon;
     
-    // Store weapon stats on player
-    player.activeWeapon = {
+    // Add or upgrade weapon in player's weapons array
+    player.addOrUpgradeWeapon({
       id: "sword",
       name: "Mystic Sword",
       level: level,
@@ -183,9 +193,9 @@ export const SwordWeapon = new PowerUp({
       speed: stats.speedPerLevel[level - 1],
       behavior: "boomerang", // Sword behavior
       frameName: stats.getWeaponFrame()
-    };
+    });
     
-    console.log(`[Sword] Level ${level} - Damage: ${player.activeWeapon.damage.toFixed(1)}, Cooldown: ${player.activeWeapon.cooldown.toFixed(2)}s`);
+    console.log(`[Sword] Level ${level} - Damage: ${stats.damagePerLevel[level - 1].toFixed(1)}, Cooldown: ${stats.cooldownPerLevel[level - 1].toFixed(2)}s`);
   }
 });
 
@@ -218,8 +228,8 @@ export const ShurikenWeapon = new PowerUp({
   {
     const stats = ShurikenWeapon;
     
-    // Store weapon stats on player
-    player.activeWeapon = {
+    // Add or upgrade weapon in player's weapons array
+    player.addOrUpgradeWeapon({
       id: "shuriken",
       name: "Orbiting Shuriken",
       level: level,
@@ -231,9 +241,9 @@ export const ShurikenWeapon = new PowerUp({
       frameName: stats.getWeaponFrame(),
       orbitRadius: 80, // Distance from player
       orbitSpeed: 2.0 // Rotation speed
-    };
+    });
     
-    console.log(`[Shuriken] Level ${level} - Damage: ${player.activeWeapon.damage.toFixed(1)}, Tick Rate: ${player.activeWeapon.cooldown.toFixed(2)}s`);
+    console.log(`[Shuriken] Level ${level} - Damage: ${stats.damagePerLevel[level - 1].toFixed(1)}, Tick Rate: ${stats.cooldownPerLevel[level - 1].toFixed(2)}s`);
   }
 });
 
@@ -266,8 +276,13 @@ export function getMajorUpgradeOptions(weaponId: string, level: number): MajorUp
         level: 3,
         apply: (player) =>
         {
-          player.activeWeapon.damage *= 1.10;
-          console.log(`[MajorUpgrade] Heavy Strike applied - Damage: ${player.activeWeapon.damage.toFixed(1)}`);
+          // Find weapon in array and update it
+          const weapon = player.activeWeapons.find((w: any) => w.id === weaponId);
+          if (weapon)
+          {
+            weapon.damage *= 1.10;
+            console.log(`[MajorUpgrade] Heavy Strike applied to ${weapon.name} - Damage: ${weapon.damage.toFixed(1)}`);
+          }
         }
       },
       {
@@ -277,8 +292,13 @@ export function getMajorUpgradeOptions(weaponId: string, level: number): MajorUp
         level: 3,
         apply: (player) =>
         {
-          player.activeWeapon.area *= 1.10;
-          console.log(`[MajorUpgrade] Wide Swing applied - Area: ${player.activeWeapon.area.toFixed(2)}`);
+          // Find weapon in array and update it
+          const weapon = player.activeWeapons.find((w: any) => w.id === weaponId);
+          if (weapon)
+          {
+            weapon.area *= 1.10;
+            console.log(`[MajorUpgrade] Wide Swing applied to ${weapon.name} - Area: ${weapon.area.toFixed(2)}`);
+          }
         }
       },
       {
@@ -290,7 +310,7 @@ export function getMajorUpgradeOptions(weaponId: string, level: number): MajorUp
         {
           player.weaponStats[weaponId] = player.weaponStats[weaponId] || {};
           player.weaponStats[weaponId].extraProjectiles = (player.weaponStats[weaponId].extraProjectiles || 0) + 1;
-          console.log(`[MajorUpgrade] Multi-Strike applied - Projectiles: +${player.weaponStats[weaponId].extraProjectiles}`);
+          console.log(`[MajorUpgrade] Multi-Strike applied to ${weaponId} - Extra Projectiles: ${player.weaponStats[weaponId].extraProjectiles}`);
         }
       }
     ];
@@ -307,8 +327,13 @@ export function getMajorUpgradeOptions(weaponId: string, level: number): MajorUp
         level: 6,
         apply: (player) =>
         {
-          player.activeWeapon.damage *= 1.10;
-          console.log(`[MajorUpgrade] Heavy Strike II applied - Damage: ${player.activeWeapon.damage.toFixed(1)}`);
+          // Find weapon in array and update it
+          const weapon = player.activeWeapons.find((w: any) => w.id === weaponId);
+          if (weapon)
+          {
+            weapon.damage *= 1.10;
+            console.log(`[MajorUpgrade] Heavy Strike II applied to ${weapon.name} - Damage: ${weapon.damage.toFixed(1)}`);
+          }
         }
       },
       {
@@ -318,8 +343,13 @@ export function getMajorUpgradeOptions(weaponId: string, level: number): MajorUp
         level: 6,
         apply: (player) =>
         {
-          player.activeWeapon.area *= 1.10;
-          console.log(`[MajorUpgrade] Wide Swing II applied - Area: ${player.activeWeapon.area.toFixed(2)}`);
+          // Find weapon in array and update it
+          const weapon = player.activeWeapons.find((w: any) => w.id === weaponId);
+          if (weapon)
+          {
+            weapon.area *= 1.10;
+            console.log(`[MajorUpgrade] Wide Swing II applied to ${weapon.name} - Area: ${weapon.area.toFixed(2)}`);
+          }
         }
       },
       {
@@ -329,8 +359,13 @@ export function getMajorUpgradeOptions(weaponId: string, level: number): MajorUp
         level: 6,
         apply: (player) =>
         {
-          player.activeWeapon.cooldown *= 0.85;
-          console.log(`[MajorUpgrade] Swift Attacks applied - Cooldown: ${player.activeWeapon.cooldown.toFixed(2)}s`);
+          // Find weapon in array and update it
+          const weapon = player.activeWeapons.find((w: any) => w.id === weaponId);
+          if (weapon)
+          {
+            weapon.cooldown *= 0.85;
+            console.log(`[MajorUpgrade] Swift Attacks applied to ${weapon.name} - Cooldown: ${weapon.cooldown.toFixed(2)}s`);
+          }
         }
       }
     ];
@@ -347,8 +382,13 @@ export function getMajorUpgradeOptions(weaponId: string, level: number): MajorUp
         level: 9,
         apply: (player) =>
         {
-          player.activeWeapon.damage *= 1.10;
-          console.log(`[MajorUpgrade] Heavy Strike III applied - Damage: ${player.activeWeapon.damage.toFixed(1)}`);
+          // Find weapon in array and update it
+          const weapon = player.activeWeapons.find((w: any) => w.id === weaponId);
+          if (weapon)
+          {
+            weapon.damage *= 1.10;
+            console.log(`[MajorUpgrade] Heavy Strike III applied to ${weapon.name} - Damage: ${weapon.damage.toFixed(1)}`);
+          }
         }
       },
       {
@@ -358,8 +398,13 @@ export function getMajorUpgradeOptions(weaponId: string, level: number): MajorUp
         level: 9,
         apply: (player) =>
         {
-          player.activeWeapon.area *= 1.10;
-          console.log(`[MajorUpgrade] Wide Swing III applied - Area: ${player.activeWeapon.area.toFixed(2)}`);
+          // Find weapon in array and update it
+          const weapon = player.activeWeapons.find((w: any) => w.id === weaponId);
+          if (weapon)
+          {
+            weapon.area *= 1.10;
+            console.log(`[MajorUpgrade] Wide Swing III applied to ${weapon.name} - Area: ${weapon.area.toFixed(2)}`);
+          }
         }
       },
       {
@@ -371,7 +416,7 @@ export function getMajorUpgradeOptions(weaponId: string, level: number): MajorUp
         {
           player.weaponStats[weaponId] = player.weaponStats[weaponId] || {};
           player.weaponStats[weaponId].extraProjectiles = (player.weaponStats[weaponId].extraProjectiles || 0) + 1;
-          console.log(`[MajorUpgrade] Multi-Strike II applied - Projectiles: +${player.weaponStats[weaponId].extraProjectiles}`);
+          console.log(`[MajorUpgrade] Multi-Strike II applied to ${weaponId} - Extra Projectiles: ${player.weaponStats[weaponId].extraProjectiles}`);
         }
       }
     ];
@@ -388,8 +433,13 @@ export function getMajorUpgradeOptions(weaponId: string, level: number): MajorUp
         level: 12,
         apply: (player) =>
         {
-          player.activeWeapon.damage *= 1.10;
-          console.log(`[MajorUpgrade] Heavy Strike IV applied - Damage: ${player.activeWeapon.damage.toFixed(1)}`);
+          // Find weapon in array and update it
+          const weapon = player.activeWeapons.find((w: any) => w.id === weaponId);
+          if (weapon)
+          {
+            weapon.damage *= 1.10;
+            console.log(`[MajorUpgrade] Heavy Strike IV applied to ${weapon.name} - Damage: ${weapon.damage.toFixed(1)}`);
+          }
         }
       },
       {
@@ -399,8 +449,13 @@ export function getMajorUpgradeOptions(weaponId: string, level: number): MajorUp
         level: 12,
         apply: (player) =>
         {
-          player.activeWeapon.area *= 1.10;
-          console.log(`[MajorUpgrade] Wide Swing IV applied - Area: ${player.activeWeapon.area.toFixed(2)}`);
+          // Find weapon in array and update it
+          const weapon = player.activeWeapons.find((w: any) => w.id === weaponId);
+          if (weapon)
+          {
+            weapon.area *= 1.10;
+            console.log(`[MajorUpgrade] Wide Swing IV applied to ${weapon.name} - Area: ${weapon.area.toFixed(2)}`);
+          }
         }
       },
       {
@@ -412,7 +467,7 @@ export function getMajorUpgradeOptions(weaponId: string, level: number): MajorUp
         {
           player.weaponStats[weaponId] = player.weaponStats[weaponId] || {};
           player.weaponStats[weaponId].pierce = (player.weaponStats[weaponId].pierce || 0) + 1;
-          console.log(`[MajorUpgrade] Piercing Strike applied - Pierce: ${player.weaponStats[weaponId].pierce}`);
+          console.log(`[MajorUpgrade] Piercing Strike applied to ${weaponId} - Pierce: ${player.weaponStats[weaponId].pierce}`);
         }
       }
     ];
