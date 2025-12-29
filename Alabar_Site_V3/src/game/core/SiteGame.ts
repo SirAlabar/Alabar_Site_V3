@@ -18,6 +18,8 @@ import { PowerManager } from '../systems/PowerManager';
 import { LevelUpUI } from '../ui/LevelUpUI';
 import { WeaponSystem } from '../systems/WeaponSystem';
 import { AreaEffectSystem } from '../systems/AreaEffectSystem';
+import { Chest } from '../entities/Chest';
+import { GameTimer } from '../ui/GameTimer';
 
 interface MonsterSpawnData
 {
@@ -51,10 +53,16 @@ export class SiteGame
   private player: Player | null = null;
   private monsters: MonsterSpawnData[] = [];
   private pickups: PickupBase[] = [];
+  private chest: Chest | null = null;
+  private chestMonsterData: MonsterSpawnData | null = null; // Track chest in monsters array
+  
+  // UI
+  private gameTimer: GameTimer | null = null;
   
   // Game state
   private isRunning: boolean = false;
   private isPaused: boolean = false;
+  private gameStarted: boolean = false; // True after chest is broken
   
   // Boundaries
   private gameBounds = {
@@ -242,7 +250,7 @@ export class SiteGame
       this.player!
     );
     
-    // Initialize enemy spawner
+    // Initialize enemy spawner (but don't start it yet)
     this.enemySpawner = new EnemySpawner({
       assetManager: this.assetManager,
       player: this.player!,
@@ -253,7 +261,21 @@ export class SiteGame
     // Connect projectile manager to spawner (for plant projectiles)
     this.enemySpawner.setProjectileManager(this.enemyProjectileManager);
     
-    // Start game loop
+    // Initialize game timer
+    this.gameTimer = new GameTimer();
+    this.gameTimer.zIndex = 10000;
+    
+    // Position at top-center of game container
+    const containerWidth = this.gameApp.screen.width;
+    this.gameTimer.position.set(containerWidth / 2, 20);
+    
+    this.gameContainer.addChild(this.gameTimer);
+    this.gameTimer.hide(); // Hidden until chest breaks
+    
+    // Spawn starter chest at center
+    this.spawnStarterChest();
+    
+    // Start game loop (but game hasn't "started" until chest breaks)
     this.start();
   }
   
@@ -304,6 +326,85 @@ export class SiteGame
     });
     this.levelUpUI.zIndex = 10000;
     this.gameContainer.addChild(this.levelUpUI);
+  }
+  
+  /**
+   * Spawn starter chest at center of game area
+   */
+  private spawnStarterChest(): void
+  {
+    const containerWidth = this.gameApp.screen.width;
+    const bgHeight = this.getBackgroundHeight();
+    const greenFieldsHeight = bgHeight * 0.50;
+    
+    // Center of game container
+    const centerX = containerWidth / 2;
+    const centerY = greenFieldsHeight / 2;
+    
+    this.chest = new Chest(this.assetManager, {
+      x: centerX,
+      y: centerY,
+      onBreak: () => {
+        this.onChestBreak();
+      }
+    });
+    
+    this.chest.zIndex = 500;
+    this.gameContainer.addChild(this.chest);
+    
+    // Add chest to monsters array so collision system handles it
+    this.chestMonsterData = {
+      monster: this.chest as any, // Chest extends BaseEntity like monsters
+      monsterType: 'Chest' as any,
+      respawnTimer: 0
+    };
+    this.monsters.push(this.chestMonsterData);
+    
+    console.log('[SiteGame] Starter chest spawned at center. Attack it to begin!');
+  }
+  
+  /**
+   * Called when chest is broken - starts the actual game
+   */
+  private onChestBreak(): void
+  {
+    console.log('[SiteGame] Chest broken! Starting game...');
+    
+    // Remove chest from monsters array
+    if (this.chestMonsterData)
+    {
+      const index = this.monsters.indexOf(this.chestMonsterData);
+      if (index !== -1)
+      {
+        this.monsters.splice(index, 1);
+      }
+      this.chestMonsterData = null;
+    }
+    
+    // Remove chest from game container
+    if (this.chest)
+    {
+      this.gameContainer.removeChild(this.chest);
+      this.chest.destroy();
+      this.chest = null;
+    }
+    
+    // Level up player
+    if (this.player)
+    {
+      this.player.addXP(this.player.getXPNeeded());
+      console.log('[SiteGame] Player leveled up to level', this.player.getLevel());
+    }
+    
+    // Start game timer
+    if (this.gameTimer)
+    {
+      this.gameTimer.show();
+      this.gameTimer.start();
+    }
+    
+    // Mark game as started (enables monster spawning)
+    this.gameStarted = true;
   }
   
 //   /**
@@ -541,17 +642,24 @@ export class SiteGame
     
     const delta = ticker.deltaTime / 60;
     
+    // Update chest if it exists (only visual updates)
+    if (this.chest)
+    {
+      this.chest.update(delta);
+    }
+    
     // Update player
     if (this.player)
     {
       this.player.update(delta);
       
-      // Get alive monsters
+      // Get alive monsters (includes chest if it exists)
       const aliveMonsters = this.monsters
         .filter(s => !s.monster.isDead())
         .map(s => s.monster);
       
       // Check player attack collision (impact frames)
+      // This automatically hits chest AND monsters
       if (this.player.isPlayerAttacking())
       {
         const hitMonsters = this.collisionSystem.applyAttackDamageOnImpactFrames(
@@ -562,36 +670,44 @@ export class SiteGame
         // Debug logging
         if (hitMonsters.length > 0)
         {
-          console.log(`[Attack] Hit ${hitMonsters.length} monsters at impact frame!`);
+          console.log(`[Attack] Hit ${hitMonsters.length} entities at impact frame!`);
         }
       }
       
       // Apply monster touch damage to player (DPS model)
-      this.collisionSystem.applyTouchDamage(this.player, aliveMonsters, delta);
+      // Only if game has started (chest doesn't damage player)
+      if (this.gameStarted)
+      {
+        this.collisionSystem.applyTouchDamage(this.player, aliveMonsters, delta);
+      }
     }
     
-    // Update monsters (includes enemy spawner)
-    this.updateMonsters(delta);
-    
-    // Get alive monsters for projectile collision
-    const aliveMonsters = this.monsters
-      .map(m => m.monster)
-      .filter(m => m && !m.isDead());
-    
-    // Update weapon system (projectiles + collision with monsters)
-    if (this.weaponSystem)
+    // Only update monsters if game has started
+    if (this.gameStarted)
     {
-      this.weaponSystem.update(delta, aliveMonsters);
+      // Update monsters (includes enemy spawner)
+      this.updateMonsters(delta);
+      
+      // Get alive monsters for projectile collision
+      const aliveMonsters = this.monsters
+        .map(m => m.monster)
+        .filter(m => m && !m.isDead());
+      
+      // Update weapon system (projectiles + collision with monsters)
+      if (this.weaponSystem)
+      {
+        this.weaponSystem.update(delta, aliveMonsters);
+      }
+      
+      // Update area effect system (aura, explosion, magic field)
+      if (this.areaEffectSystem)
+      {
+        this.areaEffectSystem.update(delta, aliveMonsters);
+      }
+      
+      // Update enemy projectiles (handles collision with player)
+      this.enemyProjectileManager.update(delta);
     }
-    
-    // Update area effect system (aura, explosion, magic field)
-    if (this.areaEffectSystem)
-    {
-      this.areaEffectSystem.update(delta, aliveMonsters);
-    }
-    
-    // Update enemy projectiles (handles collision with player)
-    this.enemyProjectileManager.update(delta);
     
     // Update power manager (active powers)
     if (this.powerManager)
@@ -603,6 +719,12 @@ export class SiteGame
     if (this.levelUpUI && this.levelUpUI.visible)
     {
       this.levelUpUI.update(delta);
+    }
+    
+    // Update game timer
+    if (this.gameTimer)
+    {
+      this.gameTimer.update(delta);
     }
     
     // Update pickups
@@ -633,6 +755,13 @@ export class SiteGame
       {
         this.player.setPosition(clampedX, clampedY);
       }
+    }
+    
+    // Update timer position
+    if (this.gameTimer)
+    {
+      const containerWidth = this.gameApp.screen.width;
+      this.gameTimer.position.set(containerWidth / 2, 20);
     }
   }
   
@@ -729,6 +858,24 @@ export class SiteGame
     if (this.levelUpUI)
     {
       this.levelUpUI.destroy();
+    }
+    
+    // Cleanup chest
+    if (this.chest)
+    {
+      this.gameContainer.removeChild(this.chest);
+      this.chest.destroy();
+      this.chest = null;
+    }
+    
+    this.chestMonsterData = null;
+    
+    // Cleanup game timer
+    if (this.gameTimer)
+    {
+      this.gameContainer.removeChild(this.gameTimer);
+      this.gameTimer.destroy();
+      this.gameTimer = null;
     }
     
     // Cleanup weapon system

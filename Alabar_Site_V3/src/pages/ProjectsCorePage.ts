@@ -1,15 +1,15 @@
 /**
- * Projects42Page - Projects42Page component
+ * ProjectsCorePage 
  */
 
 import { BaseComponent } from '@components/BaseComponent';
 
-export default class Projects42Page extends BaseComponent {
+export default class ProjectsCorePage extends BaseComponent {
   render(): string {
     return '';
   }
 
   mount(selector: string): void {
-    console.log('Projects42Page mounted');
+    console.log('ProjectsCorePage mounted');
   }
 }

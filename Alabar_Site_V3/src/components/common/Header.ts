@@ -70,13 +70,13 @@ export class Header
                           group-hover:opacity-100 group-hover:visible 
                           transition-all duration-300 
                           transform scale-95 group-hover:scale-100">
-                <a href="/projects/42" data-link
+                <a href="/projects/core" data-link
                   class="block w-full px-4 py-3 mb-2 rounded-lg 
                           bg-white/10 
                           hover:bg-white/20 
                           text-rpg-text hover:text-rpg-accent
                           font-pixel pixel-shadow text-sm transition-all">
-                  42 Projects
+                  Core Systems
                 </a>
                 <a href="/projects/web" data-link
                   class="block w-full px-4 py-3 mb-2 rounded-lg 
@@ -173,12 +173,12 @@ export class Header
               Projects:
             </p>
 
-            <a href="/projects/42" data-link
+            <a href="/projects/core" data-link
               class="w-full max-w-[320px] px-4 py-3 rounded-lg
                       bg-white/10 hover:bg-white/20
                       text-rpg-text hover:text-rpg-accent
                       font-pixel pixel-shadow text-base transition-all text-center">
-              42 Projects
+              Core Systems
             </a>
 
             <a href="/projects/web" data-link

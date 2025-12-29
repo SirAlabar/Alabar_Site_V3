@@ -116,7 +116,7 @@ const routeConfig: Record<string, any> =
   },
   '/projects/42':
   {
-    component: () => import('../pages/Projects42Page'),
+    component: () => import('../pages/ProjectsCorePage'),
     title: '42 School Projects - ALABAR V3',
     layout: 'default',
     headerType: 'default'
