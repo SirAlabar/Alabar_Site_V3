@@ -42,7 +42,7 @@ export class Vampire2 extends MonsterBase
       speed: 1.25,
       spritesheetKey: 'vampire2_spritesheet',
       animationPrefix: 'Vampire2',
-      health: 32,
+      health: 52,
       damage: 7,
       attackRange: 40,
       detectionRange: 3500,

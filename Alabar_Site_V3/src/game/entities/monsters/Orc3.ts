@@ -51,8 +51,8 @@ export class Orc3 extends MonsterBase
       speed: 0.65, // Fastest orc
       spritesheetKey: 'orc3_spritesheet',
       animationPrefix: 'Orc3',
-      health: 110,
-      damage: 14,
+      health: 210,
+      damage: 20,
       attackRange: 40,
       detectionRange: 3500,
       bounds: config.bounds

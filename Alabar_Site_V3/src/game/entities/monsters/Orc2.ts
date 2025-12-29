@@ -51,8 +51,8 @@ export class Orc2 extends MonsterBase
       speed: 0.60,
       spritesheetKey: 'orc2_spritesheet',
       animationPrefix: 'Orc2',
-      health: 70,
-      damage: 10,
+      health: 170,
+      damage: 15,
       attackRange: 40,
       detectionRange: 3200,
       bounds: config.bounds

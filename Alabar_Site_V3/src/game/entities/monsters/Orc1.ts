@@ -43,8 +43,8 @@ export class Orc1 extends MonsterBase
       speed: 0.55, // Slow and heavy
       spritesheetKey: 'orc1_spritesheet',
       animationPrefix: 'Orc1',
-      health: 40,
-      damage: 7,
+      health: 100,
+      damage: 8,
       attackRange: 40,
       detectionRange: 3000,
       bounds: config.bounds
