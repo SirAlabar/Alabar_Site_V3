@@ -22,7 +22,7 @@
   
   .card-rpg
   {
-    @apply bg-rpg-dark border-2 border-rpg-accent/30 rounded-lg p-6 
+    @apply bg-rpg-dark/50 border-2 border-rpg-accent/30 rounded-lg p-6 
            shadow-lg hover:border-rpg-accent transition-all duration-300;
   }
 }
