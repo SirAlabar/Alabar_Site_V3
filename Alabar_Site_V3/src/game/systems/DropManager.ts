@@ -6,9 +6,12 @@ export type MonsterType =
   | 'Slime1' | 'Slime2' | 'Slime3'
   | 'Plant1' | 'Plant2' | 'Plant3'
   | 'Vampire1' | 'Vampire2' | 'Vampire3'
-  | 'Orc1' | 'Orc2' | 'Orc3';
+  | 'Orc1' | 'Orc2' | 'Orc3'
+  | 'Turkey' | 'Pig';
 
-export type DropType = 'crystal' | 'food' | 'none';
+export type DropType = 'crystal' | 'food' | 'star' | 'skull' | 'none';
+
+export type FoodTier = 'bacon' | 'ribs' | 'steak' | 'chiken_leg' | 'eggs' | 'worm';
 
 export interface DropResult
 {
@@ -16,6 +19,7 @@ export interface DropResult
   tier?: number;
   xpValue?: number;
   healPercent?: number;
+  foodTier?: FoodTier;
 }
 
 interface DropEntry
@@ -25,6 +29,7 @@ interface DropEntry
   tier?: number;
   xpValue?: number;
   healPercent?: number;
+  foodTier?: FoodTier;
 }
 
 type DropTable = DropEntry[];
@@ -153,6 +158,29 @@ export class DropManager
         { type: 'crystal', weight: 20, tier: 7, xpValue: CRYSTAL_XP_VALUES[7] },
         { type: 'crystal', weight: 5, tier: 8, xpValue: CRYSTAL_XP_VALUES[8] },
         { type: 'none', weight: 20 }
+      ],
+      
+      // PASSIVE CREATURES - FOOD DROPPERS
+      'Turkey': [
+        // 80% food drops with weighted tiers
+        { type: 'food', weight: 47, foodTier: 'eggs' },        // 47% - Tier 1 (10% heal)
+        { type: 'food', weight: 8, foodTier: 'worm' },         // 8% - Tier 1 (5% damage - poison)
+        { type: 'food', weight: 20, foodTier: 'chiken_leg' },  // 20% - Tier 2 (20% heal)
+        { type: 'food', weight: 10, foodTier: 'steak' },       // 10% - Tier 3 (30% heal)
+        { type: 'food', weight: 5, foodTier: 'ribs' },         // 5% - Tier 4 (40% heal)
+        { type: 'food', weight: 3, foodTier: 'bacon' },        // 3% - Tier 5 (50% heal - best)
+        { type: 'none', weight: 7 }                            // 7% - No drop
+      ],
+      
+      'Pig': [
+        // 80% food drops with weighted tiers (same as Turkey)
+        { type: 'food', weight: 37, foodTier: 'eggs' },        // 37% - Tier 1 (10% heal)
+        { type: 'food', weight: 8, foodTier: 'worm' },         // 8% - Tier 1 (5% damage - poison)
+        { type: 'food', weight: 10, foodTier: 'chiken_leg' },  // 10% - Tier 2 (20% heal)
+        { type: 'food', weight: 10, foodTier: 'steak' },       // 10% - Tier 3 (30% heal)
+        { type: 'food', weight: 15, foodTier: 'ribs' },         // 15% - Tier 4 (40% heal)
+        { type: 'food', weight: 13, foodTier: 'bacon' },        // 13% - Tier 5 (50% heal - best)
+        { type: 'none', weight: 7 }                            // 7% - No drop
       ]
     };
   }
@@ -187,7 +215,8 @@ export class DropManager
           type: entry.type,
           tier: entry.tier,
           xpValue: entry.xpValue,
-          healPercent: entry.healPercent
+          healPercent: entry.healPercent,
+          foodTier: entry.foodTier
         };
       }
     }
@@ -197,31 +226,38 @@ export class DropManager
   }
   
   /**
+   * Roll for rare drops (Star/Skull) - works for ANY monster
+   * Call this BEFORE rollDrop() - if it returns non-null, skip normal drops
+   * 
+   * - 0.5% chance for Star (invincibility)
+   * - 0.5% chance for Skull (screen clear)
+   * - Total: 1% rare drop chance
+   */
+  rollRareDrop(): DropResult | null
+  {
+    const roll = Math.random();
+    
+    // 0.5% chance for Star
+    if (roll < 0.005)
+    {
+      return { type: 'star' };
+    }
+    
+    // 0.5% chance for Skull (next 0.5% after Star)
+    if (roll < 0.010)
+    {
+      return { type: 'skull' };
+    }
+    
+    // No rare drop
+    return null;
+  }
+  
+  /**
    * Get crystal XP value by tier
    */
   getCrystalXPValue(tier: number): number
   {
     return CRYSTAL_XP_VALUES[tier] ?? 1;
-  }
-  
-  /**
-   * Get drop statistics for debugging
-   */
-  getDropStats(monsterType: MonsterType): { type: string; weight: number; chance: string }[]
-  {
-    const table = this.dropTables[monsterType];
-    
-    if (!table)
-    {
-      return [];
-    }
-    
-    const totalWeight = table.reduce((sum, entry) => sum + entry.weight, 0);
-    
-    return table.map(entry => ({
-      type: entry.type === 'crystal' ? `Crystal T${entry.tier} (${entry.xpValue} XP)` : entry.type,
-      weight: entry.weight,
-      chance: `${((entry.weight / totalWeight) * 100).toFixed(1)}%`
-    }));
   }
 }

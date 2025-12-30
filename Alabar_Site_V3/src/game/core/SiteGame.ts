@@ -12,6 +12,8 @@ import { DropManager, MonsterType } from '../systems/DropManager';
 import { PickupBase } from '../entities/PickupBase';
 import { CrystalPickup } from '../entities/Crystal';
 import { FoodPickup, FoodTier } from '../entities/Food';
+import { StarPickup } from '../entities/Star';
+import { SkullPickup } from '../entities/Skull'; 
 import { EnemySpawner } from '../systems/EnemySpawner';
 import { EnemyProjectileManager } from '../systems/EnemyProjectileManager';
 import { PowerManager } from '../systems/PowerManager';
@@ -427,7 +429,43 @@ export class SiteGame
    */
   private spawnPickup(x: number, y: number, monsterType: MonsterType): void
   {
-    // Roll for drop
+    // Roll for rare drops (0.5% Star, 0.5% Skull)
+    const rareDrop = this.dropManager.rollRareDrop();
+    
+    if (rareDrop)
+    {
+      let pickup: PickupBase;
+      
+      if (rareDrop.type === 'star')
+      {
+        pickup = new StarPickup(this.assetManager, {
+          x: x,
+          y: y,
+          duration: 8,
+          particleContainer: this.gameContainer
+        });
+      }
+      else // skull
+      {
+        pickup = new SkullPickup(this.assetManager, {
+          x: x,
+          y: y,
+          damage: 9999,
+          particleContainer: this.gameContainer
+        });
+        
+        pickup.on('screen-clear', (data: any) => {
+          this.handleScreenClear(data.damage);
+        });
+      }
+      pickup.zIndex = 100;
+      this.gameContainer.addChild(pickup);
+      this.pickups.push(pickup);
+
+      return; // Skip normal drops
+    }
+    
+    // Roll for normal drops (crystals/food)
     const drop = this.dropManager.rollDrop(monsterType);
     
     if (drop.type === 'none')
@@ -447,17 +485,10 @@ export class SiteGame
         particleContainer: this.gameContainer
       });
     }
-    else // food
+    else if (drop.type === 'food')
     {
-      // Map heal percent to food tier
-      let foodTier: FoodTier = 'eggs';
-      
-      if (drop.healPercent === 0.50) foodTier = 'bacon';
-      else if (drop.healPercent === 0.40) foodTier = 'ribs';
-      else if (drop.healPercent === 0.30) foodTier = 'steak';
-      else if (drop.healPercent === 0.20) foodTier = 'chiken_leg';
-      else if (drop.healPercent === 0.10) foodTier = 'eggs';
-      else if (drop.healPercent === -0.05) foodTier = 'worm';
+      // Use foodTier from drop result
+      const foodTier = drop.foodTier || 'eggs';
       
       pickup = new FoodPickup(this.assetManager, {
         x: x,
@@ -466,11 +497,34 @@ export class SiteGame
         particleContainer: this.gameContainer
       });
     }
+    else
+    {
+      return; // Unknown drop type
+    }
     
     pickup.zIndex = 100;
     
     this.gameContainer.addChild(pickup);
     this.pickups.push(pickup);
+  }
+
+  /**
+   * Handle Skull screen-clear effect
+   */
+  private handleScreenClear(damage: number): void
+  {
+    console.log(`💀 SCREEN CLEAR! Damaging all monsters for ${damage}`);
+    
+    // Damage all alive monsters
+    for (const spawnData of this.monsters)
+    {
+      const monster = spawnData.monster;
+
+      if (monster.isAlive())
+      {
+        monster.takeDamage(damage);
+      }
+    }
   }
   
   /**

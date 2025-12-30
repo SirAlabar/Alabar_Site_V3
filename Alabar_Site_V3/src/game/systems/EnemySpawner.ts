@@ -20,12 +20,15 @@ import { Vampire3 } from '../entities/monsters/Vampire3';
 import { Orc1 } from '../entities/monsters/Orc1';
 import { Orc2 } from '../entities/monsters/Orc2';
 import { Orc3 } from '../entities/monsters/Orc3';
+import { Turkey } from '../entities/monsters/Turkey';
+import { Pig } from '../entities/monsters/Pig';
 
 export type MonsterType = 
   | 'Slime1' | 'Slime2' | 'Slime3'
   | 'Plant1' | 'Plant2' | 'Plant3'
   | 'Vampire1' | 'Vampire2' | 'Vampire3'
-  | 'Orc1' | 'Orc2' | 'Orc3';
+  | 'Orc1' | 'Orc2' | 'Orc3'
+  | 'Turkey' | 'Pig';
 
 interface SpawnConfig
 {
@@ -282,6 +285,13 @@ export class EnemySpawner
    */
   private spawnRandomMonster(): MonsterBase | null
   {
+    // 1% chance to spawn passive creature (Turkey/Pig) from wave 1 onwards
+    if (Math.random() < 0.01)
+    {
+      const passiveType: MonsterType = Math.random() < 0.5 ? 'Turkey' : 'Pig';
+      return this.spawnMonster(passiveType);
+    }
+    
     let monsterType: MonsterType;
     
     // Waves 1-5: Use fixed probability tables
@@ -663,6 +673,14 @@ export class EnemySpawner
           startY: y,
           bounds: this.bounds
         });
+        break;
+      
+      case 'Turkey':
+        monster = new Turkey(this.assetManager, x, y);
+        break;
+      
+      case 'Pig':
+        monster = new Pig(this.assetManager, x, y);
         break;
     }
     

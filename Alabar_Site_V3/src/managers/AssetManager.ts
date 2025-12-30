@@ -94,6 +94,14 @@ export class AssetManager
       vampire3: {
         spritesheet: '/assets/images/monsters/Vampire3.webp',
         data: '/assets/images/monsters/Vampire3.json'
+      },
+      turkey: {
+        spritesheet: '/assets/images/monsters/Turkey.png',
+        data: '/assets/images/monsters/Turkey.json'
+      },
+      pig: {
+        spritesheet: '/assets/images/monsters/Pig.png',
+        data: '/assets/images/monsters/Pig.json'
       }
     },
     clouds: {

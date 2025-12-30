@@ -52,10 +52,22 @@ export abstract class PickupBase extends Container
   {
     super();
     
+    console.log('🔍 [PickupBase] Constructor called with config:', {
+      x: config.x,
+      y: config.y,
+      spritesheetKey: config.spritesheetKey,
+      frameName: config.frameName,
+      animationName: config.animationName,
+      magnetRadius: config.magnetRadius,
+      magnetSpeed: config.magnetSpeed,
+      lifetime: config.lifetime
+    });
+    
     this.assetManager = assetManager;
     
     // Set position
     this.position.set(config.x, config.y);
+    console.log('🔍 [PickupBase] Position set to:', this.position.x, this.position.y);
     
     // Magnet settings
     this.magnetRadius = config.magnetRadius ?? 75;
@@ -67,11 +79,17 @@ export abstract class PickupBase extends Container
     // Store particle container reference
     this.particleContainer = config.particleContainer ?? null;
     
+    console.log('🔍 [PickupBase] About to initialize sprite...');
+    
     // Initialize sprite (static frame or animation)
     this.initializeSprite(config.spritesheetKey, config.frameName, config.animationName);
     
+    console.log('🔍 [PickupBase] After initializeSprite - sprite exists?', !!this.sprite);
+    
     // Set z-index for proper layering
     this.zIndex = 100;
+    
+    console.log('🔍 [PickupBase] Constructor complete. Container visible?', this.visible, 'alpha:', this.alpha);
   }
   
   /**
@@ -79,43 +97,71 @@ export abstract class PickupBase extends Container
    */
   protected initializeSprite(spritesheetKey: string, frameName?: string, animationName?: string): void
   {
+    console.log(`🔍 [PickupBase] initializeSprite called:`, {
+      spritesheetKey,
+      frameName,
+      animationName
+    });
+    
     const spritesheet = this.assetManager.getSpritesheet(spritesheetKey);
     
     if (!spritesheet)
     {
-      console.error(`[PickupBase] Spritesheet not found: ${spritesheetKey}`);
+      console.error(`❌ [PickupBase] Spritesheet not found: ${spritesheetKey}`);
       return;
     }
+    
+    console.log(`✅ [PickupBase] Spritesheet found:`, spritesheetKey);
+    console.log(`🔍 [PickupBase] Spritesheet has animations?`, !!spritesheet.animations);
+    
+    if (spritesheet.animations)
+    {
+      console.log(`🔍 [PickupBase] Available animations:`, Object.keys(spritesheet.animations));
+    }
+    
+    console.log(`🔍 [PickupBase] Available textures:`, Object.keys(spritesheet.textures));
     
     // Static frame (e.g., gems)
     if (frameName)
     {
+      console.log(`🔍 [PickupBase] Looking for static frame: ${frameName}`);
+      
       const texture = spritesheet.textures[frameName];
       
       if (!texture)
       {
-        console.error(`[PickupBase] Frame not found: ${frameName}`);
+        console.error(`❌ [PickupBase] Frame not found: ${frameName}`);
+        console.log(`🔍 [PickupBase] Available frames:`, Object.keys(spritesheet.textures).slice(0, 10));
         return;
       }
+      
+      console.log(`✅ [PickupBase] Frame found, creating static sprite`);
       
       this.sprite = new AnimatedSprite([texture]);
       this.sprite.anchor.set(0.5, 0.5);
       this.sprite.loop = false;
       
       this.addChild(this.sprite);
+      
+      console.log(`✅ [PickupBase] Static sprite created and added to container`);
       return;
     }
     
     // Animated sprite (e.g., chests)
     if (animationName && spritesheet.animations)
     {
+      console.log(`🔍 [PickupBase] Looking for animation: ${animationName}`);
+      
       const frames = spritesheet.animations[animationName];
       
       if (!frames || frames.length === 0)
       {
-        console.error(`[PickupBase] Animation not found: ${animationName}`);
+        console.error(`❌ [PickupBase] Animation not found: ${animationName}`);
+        console.log(`🔍 [PickupBase] Available animations:`, Object.keys(spritesheet.animations));
         return;
       }
+      
+      console.log(`✅ [PickupBase] Animation found with ${frames.length} frames`);
       
       this.sprite = new AnimatedSprite(frames);
       this.sprite.anchor.set(0.5, 0.5);
@@ -124,10 +170,15 @@ export abstract class PickupBase extends Container
       this.sprite.play();
       
       this.addChild(this.sprite);
+      
+      console.log(`✅ [PickupBase] Animated sprite created and added to container`);
+      console.log(`🔍 [PickupBase] Sprite is playing?`, this.sprite.playing);
+      console.log(`🔍 [PickupBase] Sprite visible?`, this.sprite.visible);
+      console.log(`🔍 [PickupBase] Sprite alpha:`, this.sprite.alpha);
       return;
     }
     
-    console.error('[PickupBase] No frameName or animationName provided');
+    console.error('❌ [PickupBase] No frameName or animationName provided');
   }
   
   /**
