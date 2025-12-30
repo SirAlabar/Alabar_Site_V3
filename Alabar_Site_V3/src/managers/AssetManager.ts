@@ -150,7 +150,7 @@ export class AssetManager
       data: '/assets/images/powers.json'
     },
     collectables: {
-      spritesheet: '/assets/images/collectables.png',
+      spritesheet: '/assets/images/collectables.webp',
       data: '/assets/images/collectables.json'
     }
   };

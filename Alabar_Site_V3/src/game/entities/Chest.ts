@@ -61,7 +61,7 @@ export class Chest extends BaseEntity
     
     // Scale up the chest
     this.scale.set(2.0, 2.0);
-    this.setCollisionOffset(-45, 0);
+    this.setCollisionOffset(0, 0);
   }
   
   /**
