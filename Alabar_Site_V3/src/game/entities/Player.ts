@@ -38,6 +38,7 @@ interface PlayerConfig
     maxY: number;
   };
   onLevelUp?: (newLevel: number) => void; // Callback for level-up UI
+  onDeath?: () => void; // Callback for player death
 }
 
 export class Player extends BaseEntity
@@ -122,6 +123,9 @@ export class Player extends BaseEntity
   // Level-up callback
   private onLevelUpCallback?: (newLevel: number) => void;
   
+  // Death callback
+  private onDeathCallback?: () => void;
+  
   constructor(assetManager: AssetManager, config: PlayerConfig)
   {
     // Call BaseEntity constructor with EntityConfig
@@ -176,6 +180,9 @@ export class Player extends BaseEntity
     
     // Store level-up callback
     this.onLevelUpCallback = config.onLevelUp;
+    
+    // Store death callback
+    this.onDeathCallback = config.onDeath;
     
     // Initialize XP Manager
     this.xpManager = new XPManager({
@@ -1010,5 +1017,11 @@ export class Player extends BaseEntity
     this.stopAnimation(0);
     
     console.log('[Player] Player died!');
+    
+    // Trigger death callback (for game over UI)
+    if (this.onDeathCallback)
+    {
+      this.onDeathCallback();
+    }
   }
 }

@@ -237,7 +237,19 @@ export class App
     
     console.log('[App] Initializing game for home page...');
     
-    this.siteGame = new SiteGame(this.gameApp, this.assetManager);
+    // Pass restart callback that handles full game reset
+    this.siteGame = new SiteGame(
+      this.gameApp, 
+      this.assetManager,
+      () => {
+        // Restart callback: destroy then reinitialize
+        this.destroyGame();
+        setTimeout(() => {
+          this.initializeGame();
+        }, 100);
+      }
+    );
+    
     this.siteGame.initialize();
     this.gameInitialized = true;
   }

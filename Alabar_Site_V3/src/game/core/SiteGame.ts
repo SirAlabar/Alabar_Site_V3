@@ -22,6 +22,7 @@ import { WeaponSystem } from '../systems/WeaponSystem';
 import { AreaEffectSystem } from '../systems/AreaEffectSystem';
 import { Chest } from '../entities/Chest';
 import { GameTimer } from '../ui/GameTimer';
+import { GameOverUI } from '../ui/GameOverUI';
 
 interface MonsterSpawnData
 {
@@ -60,11 +61,15 @@ export class SiteGame
   
   // UI
   private gameTimer: GameTimer | null = null;
+  private gameOverUI: GameOverUI | null = null;
   
   // Game state
   private isRunning: boolean = false;
   private isPaused: boolean = false;
   private gameStarted: boolean = false; // True after chest is broken
+  
+  // Restart callback
+  private onRestartCallback?: () => void;
   
   // Boundaries
   private gameBounds = {
@@ -74,10 +79,11 @@ export class SiteGame
     maxY: 0   // Will be calculated
   };
   
-  constructor(gameApp: Application, assetManager: AssetManager)
+  constructor(gameApp: Application, assetManager: AssetManager, onRestart?: () => void)
   {
     this.gameApp = gameApp;
     this.assetManager = assetManager;
+    this.onRestartCallback = onRestart;
     
     // Initialize systems
     this.collisionSystem = new CollisionSystem({
@@ -274,6 +280,13 @@ export class SiteGame
     this.gameContainer.addChild(this.gameTimer);
     this.gameTimer.hide(); // Hidden until chest breaks
     
+    // Initialize game over UI
+    this.gameOverUI = new GameOverUI();
+    this.gameOverUI.zIndex = 20000;
+    this.gameContainer.addChild(this.gameOverUI);
+    this.gameOverUI.resize(this.gameApp.screen.width, this.gameApp.screen.height);
+    this.gameOverUI.hide();
+    
     // Spawn starter chest at center
     this.spawnStarterChest();
     
@@ -309,6 +322,9 @@ export class SiteGame
         {
           this.resume();
         }
+      },
+      onDeath: () => {
+        this.handlePlayerDeath();
       }
     });
     
@@ -817,6 +833,12 @@ export class SiteGame
       const containerWidth = this.gameApp.screen.width;
       this.gameTimer.position.set(containerWidth / 2, 20);
     }
+    
+    // Update game over UI size
+    if (this.gameOverUI)
+    {
+      this.gameOverUI.resize(this.gameApp.screen.width, this.gameApp.screen.height);
+    }
   }
   
   /**
@@ -889,6 +911,62 @@ export class SiteGame
   }
   
   /**
+   * Handle player death - stop spawning and show game over UI
+   */
+  private handlePlayerDeath(): void
+  {
+    console.log('[SiteGame] Player died - stopping game');
+    
+    // Stop enemy spawner (no more monster spawns)
+    if (this.enemySpawner)
+    {
+      this.enemySpawner.stop();
+    }
+    
+    // Stop the game timer
+    if (this.gameTimer)
+    {
+      this.gameTimer.stop();
+    }
+    
+    // Show game over UI with elapsed time
+    if (this.gameOverUI && this.gameTimer)
+    {
+      const elapsedTime = this.gameTimer.getFormattedTime();
+      this.gameOverUI.show(elapsedTime, () => {
+        this.restartGame();
+      });
+    }
+    
+    // Pause the game (stops all updates)
+    this.pause();
+  }
+  
+  /**
+   * Restart the game - full reset via callback
+   */
+  private restartGame(): void
+  {
+    console.log('[SiteGame] Restarting game...');
+    
+    // Hide game over UI
+    if (this.gameOverUI)
+    {
+      this.gameOverUI.hide();
+    }
+    
+    // Call restart callback (handled by App)
+    if (this.onRestartCallback)
+    {
+      this.onRestartCallback();
+    }
+    else
+    {
+      console.error('[SiteGame] No restart callback provided');
+    }
+  }
+  
+  /**
    * Cleanup and destroy
    */
   destroy(): void
@@ -930,6 +1008,14 @@ export class SiteGame
       this.gameContainer.removeChild(this.gameTimer);
       this.gameTimer.destroy();
       this.gameTimer = null;
+    }
+    
+    // Cleanup game over UI
+    if (this.gameOverUI)
+    {
+      this.gameContainer.removeChild(this.gameOverUI);
+      this.gameOverUI.destroy();
+      this.gameOverUI = null;
     }
     
     // Cleanup weapon system

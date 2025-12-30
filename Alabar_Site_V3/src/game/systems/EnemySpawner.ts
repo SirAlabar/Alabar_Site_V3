@@ -59,6 +59,7 @@ export class EnemySpawner
   // Spawning state
   private spawnTimer: number = 0;
   private spawnInterval: number = 2;
+  private isSpawning: boolean = true; // Control spawner active state
   
   // Wave system
   private currentWave: number = 1;
@@ -158,6 +159,12 @@ export class EnemySpawner
    */
   update(delta: number): MonsterBase[]
   {
+    // Don't spawn if spawner is stopped
+    if (!this.isSpawning)
+    {
+      return [];
+    }
+    
     const spawnedMonsters: MonsterBase[] = [];
     
     // Check if wave just started
@@ -763,6 +770,24 @@ export class EnemySpawner
   }
   
   /**
+   * Stop spawning monsters
+   */
+  stop(): void
+  {
+    this.isSpawning = false;
+    console.log('[EnemySpawner] Stopped spawning');
+  }
+  
+  /**
+   * Start/resume spawning monsters
+   */
+  start(): void
+  {
+    this.isSpawning = true;
+    console.log('[EnemySpawner] Started spawning');
+  }
+  
+  /**
    * Reset spawner
    */
   reset(): void
@@ -773,6 +798,7 @@ export class EnemySpawner
     this.spawnInterval = 2;
     this.waveStarted = false;
     this.isPlantBarrageWave = false;
+    this.isSpawning = true; // Resume spawning on reset
     
     console.log('[EnemySpawner] Reset to wave 1');
   }
