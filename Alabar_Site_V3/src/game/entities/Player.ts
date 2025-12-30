@@ -204,7 +204,7 @@ export class Player extends BaseEntity
     this.xpManager.addXP(amount);
     
     const progress = this.xpManager.getXPProgress();
-    this.xpBar.update(progress, this.xpManager.getLevel());
+    this.xpBar.update(progress);
   }
   
   /**
@@ -485,6 +485,12 @@ export class Player extends BaseEntity
     // Update each weapon independently
     for (const weapon of this.activeWeapons)
     {
+      // Skip orbital weapons - they spawn once and orbit continuously
+      if (weapon.behavior === 'orbital')
+      {
+        continue;
+      }
+      
       weapon.timer += delta;
 
       // Apply cooldown reduction from stats
@@ -634,23 +640,10 @@ export class Player extends BaseEntity
 
       case "orbital":
       {
-        // Shuriken: Spawn/update orbital weapons
-        if (!this.weaponSystem)
-        {
-          console.warn('[Player] Weapon system not connected');
-          break;
-        }
-        
-        // Tell weapon system to spawn orbitals (only once when weapon is acquired)
-        this.weaponSystem.spawnOrbitalWeapon(
-          this,
-          weapon.frameName,
-          totalCount,
-          weapon.orbitRadius ?? 80,
-          weapon.orbitSpeed ?? 2.0,
-          weapon.damage,
-          scale
-        );
+        // NOTE: Orbital weapons are now spawned in addOrUpgradeWeapon()
+        // They orbit continuously without respawning, so this case is never reached
+        // (updateWeaponAttacks skips orbital weapons)
+        console.warn('[Player] Orbital weapon reached fireWeapon - this should not happen');
         break;
       }
     }
@@ -711,6 +704,24 @@ export class Player extends BaseEntity
       existingWeapon.orbitSpeed = weaponData.orbitSpeed;
       
       console.log(`[Player] Upgraded ${weaponData.name} to level ${weaponData.level}`);
+      
+      // If orbital weapon, respawn orbitals with updated count and stats
+      // (count can change from major upgrades like +1 projectile)
+      if (weaponData.behavior === 'orbital' && this.weaponSystem)
+      {
+        const totalCount = 1 + (this.stats.projectileCount - 1) + (this.weaponStats[weaponData.id]?.extraProjectiles ?? 0);
+        const scale = 1.0 * weaponData.area;
+        
+        this.weaponSystem.spawnOrbitalWeapon(
+          this,
+          weaponData.frameName,
+          totalCount,
+          weaponData.orbitRadius ?? 80,
+          weaponData.orbitSpeed ?? 2.0,
+          weaponData.damage,
+          scale
+        );
+      }
     }
     else
     {
@@ -721,6 +732,23 @@ export class Player extends BaseEntity
       });
       
       console.log(`[Player] Added new weapon: ${weaponData.name}`);
+      
+      // If orbital weapon, spawn orbitals immediately
+      if (weaponData.behavior === 'orbital' && this.weaponSystem)
+      {
+        const totalCount = 1 + (this.stats.projectileCount - 1) + (this.weaponStats[weaponData.id]?.extraProjectiles ?? 0);
+        const scale = 1.0 * weaponData.area;
+        
+        this.weaponSystem.spawnOrbitalWeapon(
+          this,
+          weaponData.frameName,
+          totalCount,
+          weaponData.orbitRadius ?? 80,
+          weaponData.orbitSpeed ?? 2.0,
+          weaponData.damage,
+          scale
+        );
+      }
     }
   }
   

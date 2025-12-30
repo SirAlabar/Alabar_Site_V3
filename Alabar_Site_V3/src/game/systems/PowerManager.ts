@@ -140,244 +140,208 @@ export class PowerManager
   }
   
   /**
-   * Generate 3 random power-up cards for level-up
+   * Generate level-up cards (ALWAYS 3 cards)
+   * LEVELS 1-3: Guarantee 1 NEW weapon + 1 NEW power + 1 passive (shuffled randomly)
+   * LEVEL 4+: Completely random (any weapon/power/passive, new or upgrade)
    */
   generateLevelUpCards(): CardOption[]
-{
-    const availableOptions: { powerUp: PowerUp; weight: number; isNew: boolean }[] = [];
+  {
     const level = this.player.getLevel();
     const earlyGame = level <= 3;
 
-    const selected: CardOption[] = [];
+    console.log(`[PowerManager] Generating cards for level ${level}`);
 
-    const hasWeapon = this.player.activeWeapon !== undefined;
-
-    // EARLY GAME (LEVEL 1–3)
+    // =============================================================
+    // LEVELS 1-3: Guarantee 1 NEW weapon + 1 NEW power + 1 passive
+    // =============================================================
     if (earlyGame)
     {
-        console.log("[PowerManager] EARLY GAME: 1 NEW WEAPON + 1 NEW ACTIVE POWER");
+      const cards: CardOption[] = [];
 
-        const unownedWeapons = this.allWeapons.filter(w => !this.ownedPowerUps.has(w.id));
-
-        if (unownedWeapons.length > 0)
-        {
-            const newWeapon = unownedWeapons[0];
-            selected.push({
-                powerUp: newWeapon,
-                isNew: true
-            });
-        }
-
-        const unownedPowers = this.allPowers.filter(p => !this.ownedPowerUps.has(p.id));
-
-        if (unownedPowers.length > 0)
-        {
-            const newPower = unownedPowers[0];
-            selected.push({
-                powerUp: newPower,
-                isNew: true
-            });
-        }
-
-        // Weapon Upgrades
-        if (hasWeapon)
-        {
-            const weapon = this.ownedPowerUps.get(this.player.activeWeapon.id);
-            if (weapon && weapon.canLevelUp())
-            {
-                availableOptions.push({
-                    powerUp: weapon,
-                    weight: 20,
-                    isNew: false
-                });
-            }
-        }
-
-        // Active Powers
-        for (const power of this.allPowers)
-        {
-            const owned = this.ownedPowerUps.get(power.id);
-
-            if (!owned)
-            {
-                availableOptions.push({
-                    powerUp: power,
-                    weight: 20,
-                    isNew: true
-                });
-            }
-            else if (owned.canLevelUp())
-            {
-                availableOptions.push({
-                    powerUp: owned,
-                    weight: 20,
-                    isNew: false
-                });
-            }
-        }
-
-        // Generic Passives
-        for (const passive of GENERIC_PASSIVES)
-        {
-            const owned = this.ownedPowerUps.get(passive.id);
-
-            availableOptions.push({
-                powerUp: passive,
-                weight: 20,
-                isNew: !owned
-            });
-        }
-
-        // Weapon-specific
-        if (hasWeapon)
-        {
-            const weaponId = this.player.activeWeapon.id;
-
-            for (const passive of WEAPON_SPECIFIC_PASSIVES)
-            {
-                if (passive.id.includes(weaponId))
-                {
-                    const owned = this.ownedPowerUps.get(passive.id);
-
-                    availableOptions.push({
-                        powerUp: passive,
-                        weight: 20,
-                        isNew: !owned
-                    });
-                }
-            }
-        }
-
-      const result = this.weightedRandomChoice(availableOptions);
-
-      if (result)
+      // CARD 1: Pick random NEW weapon
+      const unownedWeapons = this.allWeapons.filter(w => !this.ownedPowerUps.has(w.id));
+      
+      if (unownedWeapons.length > 0)
       {
-          selected.push({
-              powerUp: result.item.powerUp,
-              isNew: result.item.isNew
-          });
+        const randomWeapon = unownedWeapons[Math.floor(Math.random() * unownedWeapons.length)];
+        cards.push({
+          powerUp: randomWeapon,
+          isNew: true
+        });
+        console.log(`[PowerManager] Early game - NEW weapon: ${randomWeapon.name}`);
       }
 
-        return selected;
+      // CARD 2: Pick random NEW power
+      const unownedPowers = this.allPowers.filter(p => !this.ownedPowerUps.has(p.id));
+      
+      if (unownedPowers.length > 0)
+      {
+        const randomPower = unownedPowers[Math.floor(Math.random() * unownedPowers.length)];
+        cards.push({
+          powerUp: randomPower,
+          isNew: true
+        });
+        console.log(`[PowerManager] Early game - NEW power: ${randomPower.name}`);
+      }
+
+      // CARD 3: Pick random passive
+      const passiveOptions: PowerUp[] = [];
+
+      // Add generic passives
+      for (const passive of GENERIC_PASSIVES)
+      {
+        passiveOptions.push(passive);
+      }
+
+      // Add weapon-specific passives ONLY if player owns the weapon
+      for (const passive of WEAPON_SPECIFIC_PASSIVES)
+      {
+        const weaponId = passive.id.replace('extra_', '');
+        if (this.ownedPowerUps.has(weaponId))
+        {
+          passiveOptions.push(passive);
+        }
+      }
+
+      if (passiveOptions.length > 0)
+      {
+        const randomPassive = passiveOptions[Math.floor(Math.random() * passiveOptions.length)];
+        const isNew = !this.ownedPowerUps.has(randomPassive.id);
+        
+        cards.push({
+          powerUp: randomPassive,
+          isNew: isNew
+        });
+        console.log(`[PowerManager] Early game - passive: ${randomPassive.name} (${isNew ? 'NEW' : 'UPGRADE'})`);
+      }
+
+      // SHUFFLE the cards randomly
+      for (let i = cards.length - 1; i > 0; i--)
+      {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cards[i], cards[j]] = [cards[j], cards[i]];
+      }
+
+      console.log(`[PowerManager] Generated ${cards.length} cards (SHUFFLED) for level ${level}`);
+      return cards;
     }
 
-    // NORMAL SYSTEM
+    // =============================================================
+    // LEVEL 4+: Completely random
+    // =============================================================
+    const allOptions: { powerUp: PowerUp; weight: number; isNew: boolean }[] = [];
 
-    // 20% weapon NEW
+    // NEW weapons
     for (const weapon of this.allWeapons)
     {
-        const owned = this.ownedPowerUps.get(weapon.id);
-
-        if (!owned)
-        {
-            availableOptions.push({
-                powerUp: weapon,
-                weight: 20,
-                isNew: true
-            });
-        }
-    }
-
-    // 20% weapon UPGRADE
-    if (hasWeapon)
-    {
-        const weapon = this.ownedPowerUps.get(this.player.activeWeapon.id);
-        if (weapon && weapon.canLevelUp())
-        {
-            availableOptions.push({
-                powerUp: weapon,
-                weight: 20,
-                isNew: false
-            });
-        }
-    }
-
-    // 20% active power NEW
-    for (const power of this.allPowers)
-    {
-        const owned = this.ownedPowerUps.get(power.id);
-
-        if (!owned)
-        {
-            availableOptions.push({
-                powerUp: power,
-                weight: 20,
-                isNew: true
-            });
-        }
-    }
-
-    // 20% active power UPGRADE
-    for (const power of this.allPowers)
-    {
-        const owned = this.ownedPowerUps.get(power.id);
-
-        if (owned && owned.canLevelUp())
-        {
-            availableOptions.push({
-                powerUp: owned,
-                weight: 20,
-                isNew: false
-            });
-        }
-    }
-
-    // 20% passives
-    for (const passive of [...GENERIC_PASSIVES, ...WEAPON_SPECIFIC_PASSIVES])
-    {
-        const owned = this.ownedPowerUps.get(passive.id);
-
-        availableOptions.push({
-            powerUp: passive,
-            weight: 20,
-            isNew: !owned
+      if (!this.ownedPowerUps.has(weapon.id))
+      {
+        allOptions.push({
+          powerUp: weapon,
+          weight: 20,
+          isNew: true
         });
+      }
     }
 
-    const availableCopy = [...availableOptions];
-    const finalCards: CardOption[] = [];
+    // OWNED weapon upgrades
+    for (const weapon of this.allWeapons)
+    {
+      const owned = this.ownedPowerUps.get(weapon.id);
+      if (owned && owned.canLevelUp())
+      {
+        allOptions.push({
+          powerUp: owned,
+          weight: 20,
+          isNew: false
+        });
+      }
+    }
+
+    // NEW powers
+    for (const power of this.allPowers)
+    {
+      if (!this.ownedPowerUps.has(power.id))
+      {
+        allOptions.push({
+          powerUp: power,
+          weight: 20,
+          isNew: true
+        });
+      }
+    }
+
+    // OWNED power upgrades
+    for (const power of this.allPowers)
+    {
+      const owned = this.ownedPowerUps.get(power.id);
+      if (owned && owned.canLevelUp())
+      {
+        allOptions.push({
+          powerUp: owned,
+          weight: 20,
+          isNew: false
+        });
+      }
+    }
+
+    // Generic passives
+    for (const passive of GENERIC_PASSIVES)
+    {
+      const owned = this.ownedPowerUps.get(passive.id);
+      allOptions.push({
+        powerUp: passive,
+        weight: 20,
+        isNew: !owned
+      });
+    }
+
+    // Weapon-specific passives (ONLY if player owns the weapon)
+    for (const passive of WEAPON_SPECIFIC_PASSIVES)
+    {
+      const weaponId = passive.id.replace('extra_', '');
+      const ownsWeapon = this.ownedPowerUps.has(weaponId);
+
+      if (ownsWeapon)
+      {
+        const owned = this.ownedPowerUps.get(passive.id);
+        allOptions.push({
+          powerUp: passive,
+          weight: 20,
+          isNew: !owned
+        });
+      }
+    }
+
+    // Pick 3 random cards (no duplicates)
+    const cards: CardOption[] = [];
+    const availableCopy = [...allOptions];
 
     for (let i = 0; i < 3 && availableCopy.length > 0; i++)
     {
-        const choice = this.weightedRandomChoice(availableCopy);
-        if (!choice) continue;
+      const choice = this.weightedRandomChoice(availableCopy);
+      if (!choice) break;
 
-        finalCards.push({
-            powerUp: choice.item.powerUp,
-            isNew: choice.item.isNew
-        });
+      cards.push({
+        powerUp: choice.item.powerUp,
+        isNew: choice.item.isNew
+      });
 
-        availableCopy.splice(choice.index, 1);
+      console.log(`[PowerManager] Card ${i + 1}: ${choice.item.isNew ? 'NEW' : 'UPGRADE'} ${choice.item.powerUp.name}`);
+
+      // Remove selected option
+      availableCopy.splice(choice.index, 1);
     }
 
-
-    return finalCards;
-}
-
+    console.log(`[PowerManager] Generated ${cards.length} cards for level ${level}`);
+    return cards;
+  }
   
   /**
    * Weighted random selection
    */
-  // private weightedRandomChoice<T extends { weight: number }>(options: T[]): T | null
-  // {
-  //   if (options.length === 0) return null;
-    
-  //   const totalWeight = options.reduce((sum, opt) => sum + opt.weight, 0);
-  //   let random = Math.random() * totalWeight;
-    
-  //   for (const option of options)
-  //   {
-  //     random -= option.weight;
-  //     if (random <= 0)
-  //     {
-  //       return option;
-  //     }
-  //   }
-    
-  //   return options[0]; // Fallback
-  // }
   private weightedRandomChoice<T extends { weight: number }>(options: T[]): { item: T, index: number } | null
-{
+  {
     if (options.length === 0) return null;
 
     const totalWeight = options.reduce((sum, opt) => sum + opt.weight, 0);
@@ -385,17 +349,17 @@ export class PowerManager
 
     for (let i = 0; i < options.length; i++)
     {
-        const opt = options[i];
-        random -= opt.weight;
+      const opt = options[i];
+      random -= opt.weight;
 
-        if (random <= 0)
-        {
-            return { item: opt, index: i };
-        }
+      if (random <= 0)
+      {
+        return { item: opt, index: i };
+      }
     }
 
     return { item: options[0], index: 0 }; // fallback
-}
+  }
   
   /**
    * Update all active powers

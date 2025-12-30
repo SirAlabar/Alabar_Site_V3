@@ -2,7 +2,7 @@
  * Food/Healing pickup entity
  */
 
-import { Container } from 'pixi.js';
+import { Container, Text } from 'pixi.js';
 import { AssetManager } from '../../managers/AssetManager';
 import { PickupBase, PickupConfig } from './PickupBase';
 import { Player } from './Player';
@@ -51,7 +51,7 @@ export class FoodPickup extends PickupBase
     this.healPercent = healPercent;
     
     // Scale food items slightly
-    this.scale.set(0.5, 0.5);
+    this.scale.set(0.9, 0.9);
   }
   
   /**
@@ -119,6 +119,9 @@ export class FoodPickup extends PickupBase
       // Positive = healing
       player.heal(amount);
       
+      // Spawn floating heal number
+      this.spawnFloatingNumber(amount, 0x4AFF88, '+');
+      
       // Spawn green burst particles with random shapes
       this.spawnBurstParticles(
         12,
@@ -134,6 +137,9 @@ export class FoodPickup extends PickupBase
       // Negative = damage (poison)
       player.takeDamage(amount);
       
+      // Spawn floating damage number
+      this.spawnFloatingNumber(amount, 0xFF4A4A, '-');
+      
       // Spawn purple burst particles with random shapes
       this.spawnBurstParticles(
         12,
@@ -147,6 +153,81 @@ export class FoodPickup extends PickupBase
     
     // Mark as picked up
     this.markAsPickedUp();
+  }
+  
+  /**
+   * Spawn floating number that fades upward
+   */
+  private spawnFloatingNumber(amount: number, color: number, prefix: string = ''): void
+  {
+    if (!this.particleContainer)
+    {
+      return;
+    }
+    
+    // Create text
+    const text = new Text({
+      text: `${prefix}${amount}`,
+      style: {
+        fontFamily: 'VT323',
+        fontSize: 32,
+        fill: color,
+        stroke: { color: 0x000000, width: 3 },
+        align: 'center',
+        fontWeight: 'bold'
+      }
+    });
+    
+    text.anchor.set(0.5);
+    text.x = this.position.x;
+    text.y = this.position.y - 20; // Start slightly above pickup
+    
+    this.particleContainer.addChild(text);
+    
+    // Animation properties
+    let life = 150; // 2.5 seconds at 60fps
+    const initialLife = life;
+    const floatSpeed = 1.0; // Slower float
+    
+    // Animate
+    const animate = () =>
+    {
+      // Move upward
+      text.y -= floatSpeed;
+      
+      // Fade out (stays visible longer, then fades quickly at end)
+      life--;
+      const lifeRatio = life / initialLife;
+      
+      // Better fade curve - stays at full opacity for first 40%, then fades
+      let alpha = 1.0;
+      if (lifeRatio < 0.6)
+      {
+        alpha = lifeRatio / 0.6; // Fade out in last 60%
+      }
+      text.alpha = Math.max(0, alpha);
+      
+      // Scale up slightly
+      const scale = 1.0 + (1 - lifeRatio) * 0.3;
+      text.scale.set(scale);
+      
+      // Remove when done
+      if (life <= 0)
+      {
+        if (this.particleContainer)
+        {
+          this.particleContainer.removeChild(text);
+        }
+        text.destroy();
+        return;
+      }
+      
+      // Continue animation
+      requestAnimationFrame(animate);
+    };
+    
+    // Start animation
+    requestAnimationFrame(animate);
   }
   
   /**
