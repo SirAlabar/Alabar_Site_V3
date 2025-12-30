@@ -1,10 +1,12 @@
 /**
  * Router.ts - History API based routing with dynamic imports
  * No hash routing - clean URLs: /, /about, /projects, etc.
+ * Manages SiteGame lifecycle based on current route
  */
 
 import { renderDefault } from '../managers/LayoutManager';
 import { mountHeader } from '../managers/HeaderManager';
+import { App } from '../App';
 
 // Singleton router state
 class RouterState
@@ -12,6 +14,7 @@ class RouterState
   private static instance: RouterState;
   
   public currentRoute: any = null;
+  public previousRoute: any = null;
   public isInitialized = false;
   public isNavigating = false;
   
@@ -114,10 +117,10 @@ const routeConfig: Record<string, any> =
     layout: 'default',
     headerType: 'default'
   },
-  '/projects/42':
+  '/projects/core':
   {
     component: () => import('../pages/ProjectsCorePage'),
-    title: '42 School Projects - ALABAR V3',
+    title: 'Core Projects - ALABAR V3',
     layout: 'default',
     headerType: 'default'
   },
@@ -178,6 +181,54 @@ function parseRoute(path: string): any
 }
 
 /**
+ * Manage game lifecycle based on route changes
+ */
+function manageGameLifecycle(newPath: string): void
+{
+  const app = App.getInstance();
+  
+  const previousPath = routerState.previousRoute?.path || null;
+  const isCurrentlyHome = newPath === '/';
+  const wasHome = previousPath === '/';
+  
+  // CASE 1: First load on home page (previousPath is null)
+  if (isCurrentlyHome && previousPath === null)
+  {
+    console.log('[Router] First load on home page - initializing game');
+    
+    // Use setTimeout to ensure DOM is ready
+    setTimeout(() =>
+    {
+      app.initializeGame();
+    }, 100);
+    return;
+  }
+  
+  // CASE 2: Leaving home page
+  if (wasHome && !isCurrentlyHome)
+  {
+    console.log('[Router] Leaving home page - destroying game');
+    app.destroyGame();
+    return;
+  }
+  
+  // CASE 3: Entering home page from another page
+  if (isCurrentlyHome && !wasHome && previousPath !== null)
+  {
+    console.log('[Router] Entering home page - initializing game');
+    
+    // Use setTimeout to ensure DOM is ready
+    setTimeout(() =>
+    {
+      app.initializeGame();
+    }, 100);
+    return;
+  }
+  
+  // CASE 4: Moving between non-home pages (do nothing)
+}
+
+/**
  * Main navigation function
  */
 export async function navigateTo(path: string): Promise<void>
@@ -198,6 +249,9 @@ export async function navigateTo(path: string): Promise<void>
   }
   
   routerState.isNavigating = true;
+  
+  // Store previous route before updating
+  routerState.previousRoute = routerState.currentRoute;
   
   // Cleanup previous page
   routerState.cleanupCurrentPage();
@@ -246,6 +300,9 @@ export async function navigateTo(path: string): Promise<void>
     
     // Store current route
     routerState.currentRoute = { ...route, path: pathname };
+    
+    // Manage game lifecycle based on route
+    manageGameLifecycle(pathname);
   }
   catch (error)
   {
@@ -435,9 +492,14 @@ export function addRoute(path: string, config: any): void
  */
 export function destroyRouter(): void
 {
+  // Destroy game if it's running
+  const app = App.getInstance();
+  app.destroyGame();
+  
   routerState.cleanup();
   routerState.isInitialized = false;
   routerState.currentRoute = null;
+  routerState.previousRoute = null;
   routerState.isNavigating = false;
 }
 

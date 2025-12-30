@@ -1,5 +1,6 @@
 /**
  * BaseEntity.ts - Abstract base class for all living entities (Player, Monsters, NPCs)
+ * Now with collision offset support for asymmetric sprite frames
  */
 
 import { AnimatedSprite, Container, Texture } from 'pixi.js';
@@ -56,6 +57,10 @@ export abstract class BaseEntity extends Container
   protected health: number;
   protected maxHealth: number;
   
+  // Collision offset (for sprites with asymmetric padding)
+  // Child classes can override this to adjust collision center
+  protected collisionOffset: { x: number; y: number } = { x: 0, y: 0 };
+  
   constructor(assetManager: AssetManager, config: EntityConfig)
   {
     super();
@@ -109,6 +114,7 @@ export abstract class BaseEntity extends Container
     
     this.sprite = new AnimatedSprite(idleFrames);
     this.sprite.anchor.set(0.5, 0.5);
+    this.sprite.position.set(0, 0); // Explicitly center on container
     this.sprite.animationSpeed = 0.08;
     this.sprite.loop = true;
     this.sprite.play();
@@ -224,6 +230,35 @@ export abstract class BaseEntity extends Container
   getPosition(): Position
   {
     return { ...this.currentPosition };
+  }
+  
+  /**
+   * Get collision center position (position + offset)
+   * Used by collision system for accurate collision detection
+   */
+  getCollisionPosition(): Position
+  {
+    return {
+      x: this.currentPosition.x + this.collisionOffset.x,
+      y: this.currentPosition.y + this.collisionOffset.y
+    };
+  }
+  
+  /**
+   * Set collision offset (for asymmetric sprites)
+   * Example: If sprite visual center is 5px to the right, use offset { x: -5, y: 0 }
+   */
+  setCollisionOffset(x: number, y: number): void
+  {
+    this.collisionOffset = { x, y };
+  }
+  
+  /**
+   * Get collision offset
+   */
+  getCollisionOffset(): { x: number; y: number }
+  {
+    return { ...this.collisionOffset };
   }
   
   /**

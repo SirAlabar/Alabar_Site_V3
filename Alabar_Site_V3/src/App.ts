@@ -1,6 +1,7 @@
 /**
  * App.ts - Main application singleton
  * Multi-App Architecture: Background, Game, Cursor layers
+ * Game only initializes on home page
  */
 
 import { Application, Container } from 'pixi.js';
@@ -30,6 +31,7 @@ export class App
   private sceneManager: SceneManager | null = null;
   private cursorEffect: CursorEffectComponent | null = null;
   private isInitialized = false;
+  private gameInitialized = false;
   
   private constructor() {}
   
@@ -76,7 +78,8 @@ export class App
       // Initialize Cursor Manager
       this.initCursorManager();
 
-      this.initSiteGame();
+      // NOTE: Game is NOT initialized here anymore
+      // It will be initialized when navigating to home page
       
       // Initialize Router
       this.initRouter();
@@ -214,17 +217,59 @@ export class App
     // Mount default header
     mountHeader('default');
   }
-
-    private initSiteGame(): void
+  
+  /**
+   * Initialize the game (called when navigating to home page)
+   */
+  initializeGame(): void
+  {
+    if (this.gameInitialized)
     {
-      if (!this.gameApp || !this.assetManager)
-      {
-        throw new Error('Cannot init SiteGame - dependencies missing');
-      }
-
-      this.siteGame = new SiteGame(this.gameApp, this.assetManager);
-      this.siteGame.initialize();
+      console.warn('[App] Game already initialized');
+      return;
     }
+    
+    if (!this.gameApp || !this.assetManager)
+    {
+      console.error('[App] Cannot init game - dependencies missing');
+      return;
+    }
+    
+    console.log('[App] Initializing game for home page...');
+    
+    this.siteGame = new SiteGame(this.gameApp, this.assetManager);
+    this.siteGame.initialize();
+    this.gameInitialized = true;
+  }
+  
+  /**
+   * Destroy the game (called when leaving home page)
+   */
+  destroyGame(): void
+  {
+    if (!this.gameInitialized)
+    {
+      return;
+    }
+    
+    console.log('[App] Destroying game (leaving home page)...');
+    
+    if (this.siteGame)
+    {
+      this.siteGame.destroy();
+      this.siteGame = null;
+    }
+    
+    this.gameInitialized = false;
+  }
+  
+  /**
+   * Check if game is currently initialized
+   */
+  isGameInitialized(): boolean
+  {
+    return this.gameInitialized;
+  }
   
   private handleResize(): void
   {
@@ -349,6 +394,11 @@ export class App
     return this.sceneManager;
   }
   
+  getSiteGame(): SiteGame | null
+  {
+    return this.siteGame;
+  }
+  
   // Cleanup
   destroy(): void
   {
@@ -385,11 +435,8 @@ export class App
       this.cursorApp.destroy(true, { children: true });
     }
 
-    if (this.siteGame)
-    {
-      this.siteGame.destroy();
-      this.siteGame = null;
-    }
+    // Destroy game if it exists
+    this.destroyGame();
     
     this.isInitialized = false;
   }

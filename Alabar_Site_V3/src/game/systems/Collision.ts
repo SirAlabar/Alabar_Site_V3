@@ -1,6 +1,7 @@
 /**
  * Collision.ts - Collision detection and damage system
  * Handles circle-based collisions for entities
+ * Supports custom collision radius per entity
  */
 
 import { MonsterBase } from '../entities/monsters/MonsterBase';
@@ -39,6 +40,23 @@ export class CollisionSystem
   }
   
   /**
+   * Get collision radius for a monster (automatically scales with entity size)
+   * radius = baseMonsterRadius * entity.scale
+   */
+  private getMonsterCollisionRadius(monster: MonsterBase): number
+  {
+    // Check if monster has custom collision radius override
+    if ('getCollisionRadius' in monster && typeof (monster as any).getCollisionRadius === 'function')
+    {
+      return (monster as any).getCollisionRadius();
+    }
+    
+    // Default: base radius * entity scale (use larger of x/y scale)
+    const scale = Math.max(Math.abs(monster.scale.x), Math.abs(monster.scale.y));
+    return this.monsterRadius * scale;
+  }
+  
+  /**
    * Check circle collision between two entities
    */
   private checkCircleCollision(
@@ -63,8 +81,8 @@ export class CollisionSystem
    */
   checkPlayerMonsterCollision(player: Player, monster: MonsterBase): boolean
   {
-    const playerPos = player.getPosition();
-    const monsterPos = monster.getPosition();
+    const playerPos = player.getCollisionPosition();
+    const monsterPos = monster.getCollisionPosition();
     
     return this.checkCircleCollision(
       playerPos.x,
@@ -72,7 +90,7 @@ export class CollisionSystem
       this.playerRadius,
       monsterPos.x,
       monsterPos.y,
-      this.monsterRadius
+      this.getMonsterCollisionRadius(monster) // Use custom radius if available
     );
   }
   
@@ -155,7 +173,7 @@ export class CollisionSystem
     }
     
     const hitMonsters: MonsterBase[] = [];
-    const playerPos = player.getPosition();
+    const playerPos = player.getCollisionPosition();
     const attackRange = player.getAttackRange();
     
     for (const monster of monsters)
@@ -165,16 +183,16 @@ export class CollisionSystem
         continue;
       }
       
-      const monsterPos = monster.getPosition();
+      const monsterPos = monster.getCollisionPosition();
       
-      // Check if monster is within attack range (circle collision)
+      // Check if monster is within attack range (use custom radius)
       if (this.checkCircleCollision(
         playerPos.x,
         playerPos.y,
         attackRange,
         monsterPos.x,
         monsterPos.y,
-        this.monsterRadius
+        this.getMonsterCollisionRadius(monster) // Use custom radius if available
       ))
       {
         hitMonsters.push(monster);
@@ -198,7 +216,7 @@ export class CollisionSystem
     }
     
     const newlyHitMonsters: MonsterBase[] = [];
-    const playerPos = player.getPosition();
+    const playerPos = player.getCollisionPosition();
     const attackRange = player.getAttackRange();
     const playerDamage = player.getDamage();
     
@@ -215,16 +233,16 @@ export class CollisionSystem
         continue;
       }
       
-      const monsterPos = monster.getPosition();
+      const monsterPos = monster.getCollisionPosition();
       
-      // Check if monster is within attack range
+      // Check if monster is within attack range (use custom radius)
       if (this.checkCircleCollision(
         playerPos.x,
         playerPos.y,
         attackRange,
         monsterPos.x,
         monsterPos.y,
-        this.monsterRadius
+        this.getMonsterCollisionRadius(monster) // Use custom radius if available
       ))
       {
         // Deal damage

@@ -4,7 +4,7 @@
  * Extends BaseEntity to work with existing collision system
  */
 
-import { Sprite, Texture } from 'pixi.js';
+import { AnimatedSprite, Sprite, Texture } from 'pixi.js';
 import { AssetManager } from '../../managers/AssetManager';
 import { BaseEntity, EntityConfig } from './BaseEntity';
 
@@ -27,6 +27,7 @@ export class Chest extends BaseEntity
   
   // State
   private isBroken: boolean = false;
+  private isPlayingDestructionAnimation: boolean = false;
   
   // Chest type
   private chestType: ChestType;
@@ -60,6 +61,16 @@ export class Chest extends BaseEntity
     
     // Scale up the chest
     this.scale.set(2.0, 2.0);
+    this.setCollisionOffset(-45, 0);
+  }
+  
+  /**
+   * Override initializeSprite to prevent BaseEntity from loading Chest_idle_down
+   * Chest uses static sprites, not animated sprite sequences
+   */
+  protected initializeSprite(): void
+  {
+    // Do nothing - chest sprite is initialized in initializeChestSprite()
   }
   
   /**
@@ -96,11 +107,26 @@ export class Chest extends BaseEntity
   }
   
   /**
+   * Get destruction animation name for chest type
+   */
+  private getDestructionAnimationName(): string
+  {
+    // Map chest types to destruction animation names
+    const animationMap: Record<ChestType, string> = {
+      gray: 'Chest_1',
+      gold: 'Chest_2',
+      bone: 'Chest_3'
+    };
+    
+    return animationMap[this.chestType];
+  }
+  
+  /**
    * Initialize chest sprite (override BaseEntity's animated sprite)
    */
   private initializeChestSprite(): void
   {
-    // Remove the animated sprite created by BaseEntity
+    // Remove the animated sprite created by BaseEntity (if any)
     if (this.sprite)
     {
       this.removeChild(this.sprite);
@@ -145,11 +171,11 @@ export class Chest extends BaseEntity
   }
   
   /**
-   * Override takeDamage to trigger flash animation
+   * Override takeDamage to trigger flash animation and destruction
    */
   takeDamage(amount: number): void
   {
-    if (this.isBroken)
+    if (this.isBroken || this.isPlayingDestructionAnimation)
     {
       return;
     }
@@ -166,14 +192,73 @@ export class Chest extends BaseEntity
     // Check if chest is broken
     if (this.isDead())
     {
-      this.breakChest();
+      this.playDestructionAnimation();
     }
   }
   
   /**
-   * Break the chest and trigger game start
+   * Play chest destruction animation before triggering game start
    */
-  private breakChest(): void
+  private playDestructionAnimation(): void
+  {
+    if (this.isPlayingDestructionAnimation)
+    {
+      return;
+    }
+    
+    this.isPlayingDestructionAnimation = true;
+    
+    console.log('[Chest] Playing destruction animation...');
+    
+    // Get destruction animation frames based on chest type
+    const spritesheet = this.assetManager.getSpritesheet('collectables_spritesheet');
+    
+    if (!spritesheet || !spritesheet.animations)
+    {
+      console.error('[Chest] Cannot play destruction animation - spritesheet not found');
+      this.onDestructionComplete();
+      return;
+    }
+    
+    const animationName = this.getDestructionAnimationName();
+    const destructionFrames = spritesheet.animations[animationName];
+    
+    if (!destructionFrames || destructionFrames.length === 0)
+    {
+      console.error(`[Chest] Destruction animation frames not found: ${animationName}`);
+      this.onDestructionComplete();
+      return;
+    }
+    
+    console.log(`[Chest] Playing ${animationName} animation (${destructionFrames.length} frames)`);
+    
+    // Remove current static sprite
+    if (this.sprite)
+    {
+      this.removeChild(this.sprite);
+      this.sprite.destroy();
+      this.sprite = null;
+    }
+    
+    // Create destruction animation sprite
+    const destructionSprite = new AnimatedSprite(destructionFrames);
+    destructionSprite.anchor.set(0.5, 0.5);
+    destructionSprite.animationSpeed = 0.15; // Dramatic destruction
+    destructionSprite.loop = false;
+    destructionSprite.onComplete = () => this.onDestructionComplete();
+    
+    this.addChild(destructionSprite);
+    this.sprite = destructionSprite as any;
+    
+    // Play animation
+    destructionSprite.play();
+  }
+  
+  /**
+   * Called when destruction animation completes
+   * Triggers game start and player level up
+   */
+  private onDestructionComplete(): void
   {
     if (this.isBroken)
     {
@@ -182,22 +267,25 @@ export class Chest extends BaseEntity
     
     this.isBroken = true;
     
-    console.log('[Chest] Chest broken! Starting game...');
+    console.log('[Chest] Destruction complete! Starting game...');
     
     // Trigger callback (starts game, spawns monsters, starts timer)
     if (this.onBreakCallback)
     {
       this.onBreakCallback();
     }
+    
+    // Make chest invisible after destruction
+    this.alpha = 0;
   }
   
   /**
    * Update chest (handle damage flash animation)
-   * Required by BaseEntity
+   * Override to prevent BaseEntity from trying to play idle animations
    */
   update(delta: number): void
   {
-    if (this.isBroken)
+    if (this.isBroken || this.isPlayingDestructionAnimation)
     {
       return;
     }
@@ -235,7 +323,7 @@ export class Chest extends BaseEntity
    */
   private showNormalFrame(): void
   {
-    if (this.sprite && this.normalTexture)
+    if (this.sprite && this.normalTexture && !this.isPlayingDestructionAnimation)
     {
       (this.sprite as Sprite).texture = this.normalTexture;
       this.currentFrame = 0;
@@ -247,7 +335,7 @@ export class Chest extends BaseEntity
    */
   private showDamagedFrame(): void
   {
-    if (this.sprite && this.damagedTexture)
+    if (this.sprite && this.damagedTexture && !this.isPlayingDestructionAnimation)
     {
       (this.sprite as Sprite).texture = this.damagedTexture;
       this.currentFrame = 1;
