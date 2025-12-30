@@ -28,7 +28,7 @@ export class Slime3 extends MonsterBase
       speed: 0.75,
       spritesheetKey: 'slime3_spritesheet',
       animationPrefix: 'Slime3',
-      health: 18,
+      health: 48,
       damage: 2.5,
       attackRange: 40,
       detectionRange: 3000,

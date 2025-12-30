@@ -119,8 +119,8 @@ export const MagicFieldPower = new PowerUp({
   // Stats per level
   damagePerLevel: generateScaling(8, 0.10, 12), // +10% per level (damage per tick)
   radiusPerLevel: generateScaling(60, 0.20, 12), // +8% per level
-  durationPerLevel: generateLinearScaling(1.5, 0.75, 12), // +0.2s per level (1s → 3.2s)
-  cooldownPerLevel: generateScaling(6.0, -0.04, 12), // -4% per level
+  durationPerLevel: generateLinearScaling(4.0, 0.75, 12), // +0.2s per level (1s → 3.2s)
+  cooldownPerLevel: generateScaling(5.0, -0.04, 12), // -4% per level
   tickRatePerLevel: Array(12).fill(0.5), // Ticks every 0.5s at all levels
   
   applyEffect: (player, level) =>

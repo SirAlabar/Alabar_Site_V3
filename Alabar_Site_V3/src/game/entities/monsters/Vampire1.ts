@@ -29,7 +29,7 @@ export class Vampire1 extends MonsterBase
       speed: 1.10, // Much faster than slimes!
       spritesheetKey: 'vampire1_spritesheet',
       animationPrefix: 'Vampire1',
-      health: 30,
+      health: 45,
       damage: 5,
       attackRange: 40,
       detectionRange: 3500, // Slightly longer detection range

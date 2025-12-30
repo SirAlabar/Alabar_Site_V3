@@ -285,8 +285,8 @@ export class EnemySpawner
    */
   private spawnRandomMonster(): MonsterBase | null
   {
-    // 1% chance to spawn passive creature (Turkey/Pig) from wave 1 onwards
-    if (Math.random() < 0.01)
+    // 3% chance to spawn passive creature (Turkey/Pig) from wave 1 onwards
+    if (Math.random() < 0.03)
     {
       const passiveType: MonsterType = Math.random() < 0.5 ? 'Turkey' : 'Pig';
       return this.spawnMonster(passiveType);

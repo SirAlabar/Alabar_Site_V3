@@ -131,7 +131,7 @@ export class Player extends BaseEntity
       speed: config.speed,
       spritesheetKey: 'player_spritesheet',
       animationPrefix: 'Leo_Hero',
-      health: config.health ?? 80000,
+      health: config.health ?? 120,
       bounds: config.bounds
     };
     
