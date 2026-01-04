@@ -25,5 +25,11 @@ export default defineConfig({
   server: {
     port: 3000,
     open: true
+  },
+  // Add video file support
+  assetsInclude: ['**/*.mp4', '**/*.webm', '**/*.ogg', '**/*.mov'],
+  // Ensure proper MIME types for video files
+  optimizeDeps: {
+    exclude: ['*.mp4', '*.webm', '*.ogg', '*.mov']
   }
 });
