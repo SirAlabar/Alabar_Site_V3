@@ -14,26 +14,29 @@ export default class ProjectsWebPage extends BaseProjectPage
     {
       title: 'Racing Game Website',
       subtitle: 'Interactive browser-based racing experience',
-      techStack: ['TypeScript', 'Babylon.js', 'WebGL', 'HTML5', 'CSS3'],
+      techStack: ['TypeScript', 'Babylon.js', 'Ammo.js', 'WebGL', 'CSS3'],
       mediaUrl: '/assets/videos/demo_racer.mp4',
       mediaType: 'video',
       whatIBuilt: [
-        'Interactive racing game in browser',
-        'Real-time input & collision handling',
-        'Responsive game controls with keyboard support'
+        '3D racing game built with Babylon.js',
+        'Vehicle physics using Ammo.js',
+        'Real-time input and control system',
+        'Lap timing and track progression'
       ],
       whatILearned: [
-        'Game loop & rendering optimization',
-        'Input abstraction patterns',
-        'Canvas performance techniques'
+        'Physics integration in a real-time loop',
+        'Syncing physics and rendering',
+        '3D transforms and collision handling',
+        'Basic 3D asset workflow (Blender)'
       ],
       challenges: [
-        'Performance with many moving objects',
-        'Fixed timestep vs variable timestep decisions',
-        'Cross-browser compatibility issues'
+        'Implementing and tuning physics behavior for a responsive 3D vehicle',
+        'Separating visual meshes from collision meshes for accurate physics',
+        'Creating simplified collision geometry from complex 3D models',
+        'Hidden playable spaceship unlocked through secret input combinations'
       ],
-      liveUrl: 'https://example.com/racing',
-      githubUrl: 'https://github.com/yourusername/racing-game'
+      liveUrl: 'https://starcendence.dev/pod-racer',
+      githubUrl: 'https://github.com/SirAlabar/StarCendence'
     },
     {
       title: 'Portfolio Website V2',
