@@ -71,9 +71,9 @@ export class SkullPickup extends PickupBase
   /**
    * Override update to add pulse effect
    */
-  update(delta: number, playerPos?: { x: number; y: number }): void
+  update(delta: number, _playerPos?: { x: number; y: number }): void
   {
-    super.update(delta, playerPos);
+    super.update(delta);
     
     // Apply pulse effect
     if ((this as any).pulseEffect && !this.wasPickedUp())
@@ -85,7 +85,7 @@ export class SkullPickup extends PickupBase
   /**
    * Called when player picks up this skull
    */
-  onPickup(player: Player): void
+  onPickup(_player: Player): void
   {
     if (this.wasPickedUp())
     {

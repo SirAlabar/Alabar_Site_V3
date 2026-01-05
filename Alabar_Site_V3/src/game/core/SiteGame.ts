@@ -11,7 +11,7 @@ import { CollisionSystem } from '../systems/Collision';
 import { DropManager, MonsterType } from '../systems/DropManager';
 import { PickupBase } from '../entities/PickupBase';
 import { CrystalPickup } from '../entities/Crystal';
-import { FoodPickup, FoodTier } from '../entities/Food';
+import { FoodPickup } from '../entities/Food';
 import { StarPickup } from '../entities/Star';
 import { SkullPickup } from '../entities/Skull'; 
 import { EnemySpawner } from '../systems/EnemySpawner';

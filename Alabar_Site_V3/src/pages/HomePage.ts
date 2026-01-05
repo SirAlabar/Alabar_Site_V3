@@ -10,7 +10,7 @@ export default class HomePage extends BaseComponent {
     return '';
   }
 
-  mount(selector: string): void {
+  mount(_selector: string): void {
     // PIXI ContentManager handles the home page content
   }
 }

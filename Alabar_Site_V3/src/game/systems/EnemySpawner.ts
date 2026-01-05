@@ -90,7 +90,8 @@ export class EnemySpawner
       'Slime3': 0.01,
       'Plant1': 0, 'Plant2': 0, 'Plant3': 0,
       'Vampire1': 0, 'Vampire2': 0, 'Vampire3': 0,
-      'Orc1': 0, 'Orc2': 0, 'Orc3': 0
+      'Orc1': 0, 'Orc2': 0, 'Orc3': 0,
+      'Turkey': 0, 'Pig': 0
     },
     2: {
       'Slime1': 0.80,
@@ -98,7 +99,8 @@ export class EnemySpawner
       'Slime3': 0.05,
       'Plant1': 0, 'Plant2': 0, 'Plant3': 0,
       'Vampire1': 0, 'Vampire2': 0, 'Vampire3': 0,
-      'Orc1': 0, 'Orc2': 0, 'Orc3': 0
+      'Orc1': 0, 'Orc2': 0, 'Orc3': 0,
+      'Turkey': 0, 'Pig': 0
     },
     3: {
       'Slime1': 0.60,
@@ -106,21 +108,24 @@ export class EnemySpawner
       'Slime3': 0.10,
       'Plant1': 0, 'Plant2': 0, 'Plant3': 0,
       'Vampire1': 0, 'Vampire2': 0, 'Vampire3': 0,
-      'Orc1': 0, 'Orc2': 0, 'Orc3': 0
+      'Orc1': 0, 'Orc2': 0, 'Orc3': 0,
+      'Turkey': 0, 'Pig': 0
     },
     4: {
       'Slime1': 0, 'Slime2': 0.55, 'Slime3': 0.30,
       'Plant1': 0.05,
       'Plant2': 0, 'Plant3': 0,
       'Vampire1': 0.05, 'Vampire2': 0, 'Vampire3': 0,
-      'Orc1': 0.05, 'Orc2': 0, 'Orc3': 0
+      'Orc1': 0.05, 'Orc2': 0, 'Orc3': 0,
+      'Turkey': 0, 'Pig': 0
     },
     5: {
       'Slime1': 0, 'Slime2': 0.15, 'Slime3': 0.50,
       'Plant1': 0.10, 'Plant2': 0.05,
       'Plant3': 0,
       'Vampire1': 0.10, 'Vampire2': 0, 'Vampire3': 0,
-      'Orc1': 0.10, 'Orc2': 0, 'Orc3': 0
+      'Orc1': 0.10, 'Orc2': 0, 'Orc3': 0,
+      'Turkey': 0, 'Pig': 0
     }
   };
   

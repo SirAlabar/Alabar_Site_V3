@@ -23,7 +23,6 @@ export class Chest extends BaseEntity
   // Visual feedback
   private isDamaged: boolean = false;
   private damageFlashTimer: number = 0;
-  private currentFrame: number = 0; // 0 = normal, 1 = damaged frame
   
   // State
   private isBroken: boolean = false;
@@ -326,7 +325,6 @@ export class Chest extends BaseEntity
     if (this.sprite && this.normalTexture && !this.isPlayingDestructionAnimation)
     {
       (this.sprite as Sprite).texture = this.normalTexture;
-      this.currentFrame = 0;
     }
   }
   
@@ -338,7 +336,6 @@ export class Chest extends BaseEntity
     if (this.sprite && this.damagedTexture && !this.isPlayingDestructionAnimation)
     {
       (this.sprite as Sprite).texture = this.damagedTexture;
-      this.currentFrame = 1;
     }
   }
   

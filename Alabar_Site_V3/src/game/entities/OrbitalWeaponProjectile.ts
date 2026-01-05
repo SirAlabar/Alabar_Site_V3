@@ -10,7 +10,6 @@ import { MonsterBase } from './monsters/MonsterBase';
 export class OrbitalWeaponProjectile extends Sprite
 {
   // Orbital movement
-  public angle: number;
   private orbitRadius: number;
   private orbitSpeed: number;
   
@@ -37,27 +36,29 @@ export class OrbitalWeaponProjectile extends Sprite
   )
   {
     // Get texture from spritesheet
+    let texture: Texture = Texture.EMPTY;
+
     const spritesheet = assetManager.getSpritesheet('powers_spritesheet');
-    
-    if (!spritesheet || !spritesheet.textures)
+
+    if (!spritesheet || !spritesheet.textures) 
     {
-      console.error(`[OrbitalWeapon] Spritesheet not found: powers_spritesheet`);
-      super(Texture.EMPTY);
-    }
-    else
+      console.error('[OrbitalWeapon] Spritesheet not found: powers_spritesheet');
+    } 
+    else 
     {
-      const texture = spritesheet.textures[frameName];
-      
-      if (!texture)
+      const foundTexture = spritesheet.textures[frameName];
+
+      if (!foundTexture) 
       {
         console.error(`[OrbitalWeapon] Texture not found: ${frameName}`);
-        super(Texture.EMPTY);
-      }
-      else
+      } 
+      else 
       {
-        super(texture);
+        texture = foundTexture;
       }
     }
+
+    super(texture);
     
     this.anchor.set(0.5);
     this.scale.set(scale);

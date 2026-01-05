@@ -3,7 +3,7 @@
  */
 
 import { Application, Container, Sprite, Spritesheet, Ticker } from 'pixi.js';
-import { lerp, boundValue } from '../utils/MathUtils';
+import { lerp } from '../utils/MathUtils';
 import { AssetManager } from './AssetManager';
 
 // Extend Container to include custom properties
@@ -540,7 +540,7 @@ export class CloudsManager
   /**
    * Calculate end position for cloud animation
    */
-  private calculateEndPosition(animType: AnimationType, startX: number, startY: number, screenWidth: number, screenHeight: number): { x: number; y: number }
+  private calculateEndPosition(animType: AnimationType, startX: number, startY: number, screenWidth: number, _screenHeight: number): { x: number; y: number }
   {
     switch (animType)
     {
@@ -687,7 +687,7 @@ export class CloudsManager
     }
     
     // Create the animation ticker
-    const tickerCallback = (ticker: Ticker) =>
+    const tickerCallback = (_ticker: Ticker) =>
     {
       // Safety check - if cloud is destroyed, removed, or manager is destroyed
       if (this.isDestroyed || !cloud || !cloud.parent)
