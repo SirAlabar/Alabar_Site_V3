@@ -211,6 +211,43 @@ export default class ProjectsGamesPage extends BaseProjectPage
       ],
       liveUrl: 'https://starcendence.dev/pod-racer',
       githubUrl: 'https://github.com/SirAlabar/StarCendence'
+    },
+    {
+      title: 'Survivor Arena',
+      subtitle: 'Vampire Survivors–inspired game engine',
+      techStack: [
+        'TypeScript',
+        'Pixi.js',
+        'Canvas API',
+        'ECS-like Architecture',
+        'OOP'
+      ],
+      mediaUrl: '/assets/videos/alabarv3_game_demo.mp4',
+      mediaType: 'video',
+      whatIBuilt: [
+        'Complete survivor-style game loop',
+        'Abstract entity system (BaseEntity / MonsterBase)',
+        'Modular combat systems (melee, ranged, AoE)',
+        'Drop & pickup system with rarity logic',
+        'Level-up cards and power progression',
+        'Dynamic enemy spawning and wave scaling'
+      ],
+      whatILearned: [
+        'Designing reusable abstract classes and systems',
+        'Separating entities, systems and game state',
+        'Balancing gameplay through data-driven configs',
+        'Managing large-scale real-time updates in Canvas',
+        'Building scalable progression systems'
+      ],
+      challenges: [
+        'Designing a flexible monster hierarchy',
+        'Coordinating multiple real-time systems safely',
+        'Handling collisions and damage efficiently',
+        'Scaling difficulty while maintaining performance',
+        'Keeping architecture extensible for new content'
+      ],
+      liveUrl: 'https://github.com/SirAlabar/Alabar_Site_V3',
+      githubUrl: 'https://github.com/SirAlabar/Alabar_Site_V3'
     }
   ];
 }
