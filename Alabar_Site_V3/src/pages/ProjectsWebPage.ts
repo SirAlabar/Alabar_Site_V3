@@ -92,30 +92,34 @@ export default class ProjectsWebPage extends BaseProjectPage
       githubUrl: 'https://github.com/SirAlabar/Alabar_Site_V3'
     },
     {
-      title: 'Racing Game Website',
-      subtitle: 'Interactive browser-based racing experience',
-      techStack: ['TypeScript', 'Babylon.js', 'Ammo.js', 'WebGL', 'CSS3'],
+      title: 'ft_transcendence - Starcendence',
+      subtitle: 'Full-stack multiplayer gaming platform',
+        techStack: ['TypeScript','NodeJS+Fastify','WebSockets','Babylon.js',
+                    'Microservices','SQLite+Prisma', 'Docker','Nginx', 'Redis(Pub/Sub)'],
       mediaUrl: '/assets/videos/demo_racer.mp4',
       mediaType: 'video',
       whatIBuilt: [
-        '3D racing game built with Babylon.js',
-        'Vehicle physics using Ammo.js',
-        'Real-time input and control system',
-        'Lap timing and track progression'
+        'Designed and owned the overall system architecture',
+        'Built the complete frontend (UI, state, routing, game canvas)',
+        'Integrated frontend with backend microservices',
+        'Developed core game logic and client-side user management',
+        'Integrated Redis Pub/Sub for cross-service event communication',
+        'Implemented real-time multiplayer via WebSockets',
       ],
       whatILearned: [
-        'Physics integration in a real-time loop',
-        'Syncing physics and rendering',
-        '3D transforms and collision handling',
-        'Basic 3D asset workflow (Blender)'
+        'Designing scalable microservice architectures',
+        'Real-time multiplayer synchronization and latency handling',
+        'Frontend–backend integration at scale',
+        'Server-authoritative game design',
+        'Managing complex state across services and clients',
       ],
       challenges: [
-        'Implementing and tuning physics behavior for a responsive 3D vehicle',
-        'Separating visual meshes from collision meshes for accurate physics',
-        'Creating simplified collision geometry from complex 3D models',
-        'Hidden playable spaceship unlocked through secret input combinations'
+        'Designing a server-authoritative multiplayer architecture',
+        'Synchronizing real-time game state across clients',
+        'Balancing performance, latency and consistency',
+        'Integrating 3D rendering with real-time networking',
+        'Coordinating development across multiple services and contributors',
       ],
-      liveUrl: 'https://starcendence.dev/pod-racer',
       githubUrl: 'https://github.com/SirAlabar/StarCendence'
     }
   ];

@@ -14,6 +14,7 @@ export class AboutPage extends BaseComponent
           <div class="container-rpg py-2 pl-16">
             <header class="text-center mb-8">
               <h1 class="font-pixel pixel-font pixel-shadow text-2xl text-rpg-accent mb-3">ABOUT ME</h1>
+                <p class="font-pixel pixel-font pixel-shadow text-xl text-rpg-accent mb-1"> Hugo Marta</p>
               <p class="font-game pixel-shadow text-2xl text-rpg-accent">Software Developer & Game Enthusiast</p>
             </header>
             

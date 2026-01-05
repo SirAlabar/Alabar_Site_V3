@@ -235,7 +235,7 @@ export abstract class BaseProjectPage extends BaseComponent
         {
           width: 100%;
           height: 100%;
-          object-fit: contain;
+          object-fit: fit;
           background-color: rgba(0, 0, 0, 0.6);
         }
 
