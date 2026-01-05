@@ -11,14 +11,14 @@ export class AboutPage extends BaseComponent
     return `
       <div class="about-grimoire-wrapper">
         <div class="grimoire-container">
-          <div class="container-rpg py-2 pl-16">
-            <header class="text-center mb-8">
+          <div class="grimoire-content">
+            <header class="text-center mb-6">
               <h1 class="font-pixel pixel-font pixel-shadow text-2xl text-rpg-accent mb-3">ABOUT ME</h1>
-                <p class="font-pixel pixel-font pixel-shadow text-xl text-rpg-accent mb-1"> Hugo Marta</p>
+              <p class="font-pixel pixel-font pixel-shadow text-xl text-rpg-accent mb-1">Hugo Marta</p>
               <p class="font-game pixel-shadow text-2xl text-rpg-accent">Software Developer & Game Enthusiast</p>
             </header>
             
-            <div class="max-w-4xl mx-auto">
+            <div class="content-wrapper">
               <!-- Character Stats Card -->
               <div class="card-rpg mb-6">
                 <h2 class="font-pixel pixel-font pixel-shadow text-xl text-rpg-accent mb-4">Character Stats</h2>
@@ -33,17 +33,17 @@ export class AboutPage extends BaseComponent
                   <div>
                     <p class="font-game pixel-shadow text-rpg-text text-sm mb-3">Interests:</p>
                     <div class="space-y-2">
-                      <div class="flex items-center gap-2">
+                      <div class="flex items-center justify-center gap-2">
                         <span class="pixel-shadow text-rpg-accent">⚔️</span>
-                        <span class="font-game pixel-shadow text-rpg-text text-sm">Game Development</span>
+                        <span class="font-game pixel-shadow text-rpg-accent text-sm">Game Development</span>
                       </div>
-                      <div class="flex items-center gap-2">
+                      <div class="flex items-center justify-center gap-2">
                         <span class="pixel-shadow text-rpg-accent">🎨</span>
-                        <span class="font-game pixel-shadow text-rpg-text text-sm">Pixel Art</span>
+                        <span class="font-game pixel-shadow text-rpg-accent text-sm">Pixel Art</span>
                       </div>
-                      <div class="flex items-center gap-2">
-                        <span class="pixel-shadow text-rpg-accent">🏛️</span>
-                        <span class="font-game pixel-shadow text-rpg-text text-sm">System Architecture</span>
+                      <div class="flex items-center justify-center gap-2">
+                        <span class="pixel-shadow text-rpg-accent">🛠️</span>
+                        <span class="font-game pixel-shadow text-rpg-accent text-sm">System Architecture</span>
                       </div>
                     </div>
                   </div>
@@ -59,6 +59,7 @@ export class AboutPage extends BaseComponent
                     I build gameplay-driven 2D games with a strong focus on systems, performance, and clean architecture.
                     Currently working with TypeScript and Pixi.js, and actively developing projects in Unity (C#), applying low-level programming and problem-solving skills gained from a strong systems background.
                     In this website you'll find playable projects that showcase how I design, implement, and iterate on game mechanics.
+                  </p>
                 </div>
               </div>
             </div>
@@ -81,13 +82,42 @@ export class AboutPage extends BaseComponent
         .grimoire-container
         {
           width: 100%;
-          max-width: 800px;
+          max-width: 900px;
           min-height: 600px;
-          padding: 4rem 3rem;
+          padding: 3rem 2.5rem;
           background-image: url('/assets/images/grimorypg1.png');
           background-size: 100% 100%;
           background-repeat: no-repeat;
           background-position: center;
+        }
+
+        /* Content wrapper inside grimoire */
+        .grimoire-content
+        {
+          max-width: 100%;
+          height: 100%;
+        }
+
+        /* Content constrained area */
+        .content-wrapper
+        {
+          max-width: 650px;
+          margin: 0 auto;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px)
+        {
+          .grimoire-container
+          {
+            padding: 2rem 1.5rem;
+            min-height: 500px;
+          }
+
+          .about-grimoire-wrapper
+          {
+            padding: 0.5rem;
+          }
         }
       </style>
     `;
@@ -95,15 +125,7 @@ export class AboutPage extends BaseComponent
   
   mount(): void 
   {
-    setTimeout(() => 
-    {
-      const skillBars = document.querySelectorAll('.skill-bar');
-      skillBars.forEach((bar: any) => 
-      {
-        const level = bar.dataset.level;
-        bar.style.width = `${level}%`;
-      });
-    }, 100);
+    console.log('AboutPage mounted');
   }
   
   dispose(): void 

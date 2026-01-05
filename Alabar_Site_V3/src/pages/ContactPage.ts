@@ -13,13 +13,13 @@ export class ContactPage
     return `
       <div class="contact-grimoire-wrapper">
         <div class="grimoire-container">
-          <div class="container-rpg py-2 pl-16">
-            <header class="text-center mb-8">
+          <div class="grimoire-content">
+            <header class="text-center mb-6">
               <h1 class="font-pixel pixel-font pixel-shadow text-2xl text-rpg-accent mb-3">CONTACT</h1>
               <p class="font-game pixel-shadow text-2xl text-rpg-accent">Send me a message</p>
             </header>
             
-            <div class="max-w-4xl mx-auto">
+            <div class="content-wrapper">
               <!-- Contact Form Card -->
               <div class="card-rpg">
                 <h2 class="font-pixel pixel-font pixel-shadow text-xl text-rpg-accent mb-6">Message Quest</h2>
@@ -90,13 +90,27 @@ export class ContactPage
         .grimoire-container
         {
           width: 100%;
-          max-width: 800px;
+          max-width: 900px;
           min-height: 600px;
-          padding: 4rem 3rem;
+          padding: 3rem 2.5rem;
           background-image: url('/assets/images/grimorypg1.png');
           background-size: 100% 100%;
           background-repeat: no-repeat;
           background-position: center;
+        }
+
+        /* Content wrapper inside grimoire */
+        .grimoire-content
+        {
+          max-width: 100%;
+          height: 100%;
+        }
+
+        /* Content constrained area */
+        .content-wrapper
+        {
+          max-width: 650px;
+          margin: 0 auto;
         }
 
         /* Status message styles */
@@ -122,6 +136,21 @@ export class ContactPage
           font-family: 'VT323', monospace;
           font-size: 1.125rem;
           text-align: center;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px)
+        {
+          .grimoire-container
+          {
+            padding: 2rem 1.5rem;
+            min-height: 500px;
+          }
+
+          .contact-grimoire-wrapper
+          {
+            padding: 0.5rem;
+          }
         }
       </style>
     `;
