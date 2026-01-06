@@ -222,7 +222,7 @@ export default class ProjectsGamesPage extends BaseProjectPage
         'ECS-like Architecture',
         'OOP'
       ],
-      mediaUrl: '/assets/videos/alabarv3_game_demo.mp4',
+      mediaUrl: '/assets/videos/alabarv3-game-demo.mp4',
       mediaType: 'video',
       whatIBuilt: [
         'Complete survivor-style game loop',
