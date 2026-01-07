@@ -156,36 +156,6 @@ export default class ProjectsGamesPage extends BaseProjectPage
       liveUrl: 'https://github.com/SirAlabar/cub3D'
     },
     {
-      title: 'Doom Nukem',
-      subtitle: 'Custom 3D engine inspired by classic shooters (WIP)',
-      techStack: ['C', 'OpenGL', 'SDL', 'Multithreading', 'BSP', 'Fixed-point math (BAM)'],
-      mediaUrl: '/assets/images/doom.png',
-      mediaType: 'image',
-      whatIBuilt: [
-        'Custom 3D rendering engine using OpenGL',
-        'BSP-based world partitioning for visibility and traversal',
-        'Fixed-point math system (Binary Angle Measurement)',
-        'Double-buffered rendering pipeline',
-        'Thread pool for parallel tasks',
-        'Lookup tables for fast trigonometric calculations'
-      ],
-      whatILearned: [
-        'Low-level 3D engine architecture',
-        'Spatial partitioning and culling techniques',
-        'Managing real-time rendering with double buffering',
-        'Multithreaded task scheduling with thread pools',
-        'Performance-oriented math using fixed-point arithmetic'
-      ],
-      challenges: [
-        'Designing BSP traversal and visibility logic',
-        'Balancing accuracy and performance in fixed-point math',
-        'Synchronizing rendering and worker threads safely',
-        'Keeping real-time performance without modern engine tooling'
-      ],
-      liveUrl: 'https://github.com/SirAlabar/doom-nukem',
-      githubUrl: 'https://github.com/SirAlabar/doom-nukem'
-    },
-    {
       title: 'Racing Game Web',
       subtitle: 'Interactive browser-based racing experience',
       techStack: ['TypeScript', 'Babylon.js', 'Ammo.js', 'WebGL', 'CSS3'],
@@ -248,6 +218,36 @@ export default class ProjectsGamesPage extends BaseProjectPage
       ],
       liveUrl: 'https://github.com/SirAlabar/Alabar_Site_V3',
       githubUrl: 'https://github.com/SirAlabar/Alabar_Site_V3'
-    }
+    },
+    {
+      title: 'Doom Nukem - Under Development',
+      subtitle: 'Custom 3D engine inspired by classic shooters (WIP)',
+      techStack: ['C', 'OpenGL', 'SDL', 'Multithreading', 'BSP', 'Fixed-point math (BAM)'],
+      mediaUrl: '/assets/images/doom.png',
+      mediaType: 'image',
+      whatIBuilt: [
+        'Custom 3D rendering engine using OpenGL',
+        'BSP-based world partitioning for visibility and traversal',
+        'Fixed-point math system (Binary Angle Measurement)',
+        'Double-buffered rendering pipeline',
+        'Thread pool for parallel tasks',
+        'Lookup tables for fast trigonometric calculations'
+      ],
+      whatILearned: [
+        'Low-level 3D engine architecture',
+        'Spatial partitioning and culling techniques',
+        'Managing real-time rendering with double buffering',
+        'Multithreaded task scheduling with thread pools',
+        'Performance-oriented math using fixed-point arithmetic'
+      ],
+      challenges: [
+        'Designing BSP traversal and visibility logic',
+        'Balancing accuracy and performance in fixed-point math',
+        'Synchronizing rendering and worker threads safely',
+        'Keeping real-time performance without modern engine tooling'
+      ],
+      liveUrl: 'https://github.com/SirAlabar/doom-nukem',
+      githubUrl: 'https://github.com/SirAlabar/doom-nukem'
+    },
   ];
 }
