@@ -717,7 +717,11 @@ export class EnemySpawner
         }
       }
     }
-    
+
+    if (monster)
+    {
+      (monster as any).monsterTypeName = monsterType;
+    }
     return monster;
   }
   

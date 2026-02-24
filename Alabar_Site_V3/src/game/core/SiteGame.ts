@@ -559,7 +559,7 @@ export class SiteGame
       this.gameContainer.addChild(monster);
       
       // Add to monsters array with type
-      const monsterType = monster.constructor.name as MonsterType;
+      const monsterType = (monster as any).monsterTypeName as MonsterType;
       
       this.monsters.push({
         monster: monster,
