@@ -29,6 +29,7 @@ export abstract class BaseProjectPage extends BaseComponent
 
   // Component state
   private currentIndex: number = 0;
+  private boundHandleKeydown = this.handleKeydown.bind(this);
 
   render(): string 
   {
@@ -396,16 +397,34 @@ export abstract class BaseProjectPage extends BaseComponent
       });
     }
 
-    if (nextButton) 
+    if (nextButton)
     {
-      nextButton.addEventListener('click', (e) => 
+      nextButton.addEventListener('click', (e) =>
       {
         e.preventDefault();
         this.navigateNext();
       });
     }
 
+    // Avoid stacking listeners across re-renders (update() calls mount() again)
+    document.removeEventListener('keydown', this.boundHandleKeydown);
+    document.addEventListener('keydown', this.boundHandleKeydown);
+
     console.log(`${this.constructor.name} mounted`);
+  }
+
+  private handleKeydown(e: KeyboardEvent): void
+  {
+    if (e.key === 'ArrowLeft')
+    {
+      e.preventDefault();
+      this.navigatePrevious();
+    }
+    else if (e.key === 'ArrowRight')
+    {
+      e.preventDefault();
+      this.navigateNext();
+    }
   }
   
   private createNavButtons(): void
@@ -494,11 +513,12 @@ export abstract class BaseProjectPage extends BaseComponent
     }
   }
 
-  dispose(): void 
+  dispose(): void
   {
     // Remove navigation buttons from body
     this.removeNavButtons();
-    
+    document.removeEventListener('keydown', this.boundHandleKeydown);
+
     console.log(`${this.constructor.name} destroyed`);
   }
 }
