@@ -11,35 +11,60 @@ export default class ProjectsGamesPage extends BaseProjectPage
   protected pageSubtitle = '"Scrolls of Interactive Entertainment"';
 
   protected projects: Project[] = [
+    // Doom Nukem is on standby - development paused
+    // {
+    //   title: 'Doom Nukem - Under Development',
+    //   subtitle: 'Custom 3D engine inspired by classic shooters (WIP)',
+    //   techStack: ['C', 'OpenGL', 'SDL', 'Multithreading', 'BSP', 'Fixed-point math (BAM)'],
+    //   mediaUrl: '/assets/images/doom.png',
+    //   mediaType: 'image',
+    //   whatIBuilt: [
+    //     'Custom 3D rendering engine using OpenGL',
+    //     'BSP-based world partitioning for visibility and traversal',
+    //     'Fixed-point math system (Binary Angle Measurement)',
+    //     'Double-buffered rendering pipeline',
+    //     'Thread pool for parallel tasks',
+    //     'Lookup tables for fast trigonometric calculations'
+    //   ],
+    //   whatILearned: [
+    //     'Low-level 3D engine architecture',
+    //     'Spatial partitioning and culling techniques',
+    //     'Managing real-time rendering with double buffering',
+    //     'Multithreaded task scheduling with thread pools',
+    //     'Performance-oriented math using fixed-point arithmetic'
+    //   ],
+    //   challenges: [
+    //     'Designing BSP traversal and visibility logic',
+    //     'Balancing accuracy and performance in fixed-point math',
+    //     'Synchronizing rendering and worker threads safely',
+    //     'Keeping real-time performance without modern engine tooling'
+    //   ],
+    //   liveUrl: 'https://github.com/SirAlabar/doom-nukem',
+    //   githubUrl: 'https://github.com/SirAlabar/doom-nukem'
+    // },
     {
-      title: 'Doom Nukem - Under Development',
-      subtitle: 'Custom 3D engine inspired by classic shooters (WIP)',
-      techStack: ['C', 'OpenGL', 'SDL', 'Multithreading', 'BSP', 'Fixed-point math (BAM)'],
-      mediaUrl: '/assets/images/doom.png',
+      title: 'Lunar Drill Idle',
+      subtitle: 'Unity 2D idle mining game (Steam-oriented)',
+      techStack: ['C#', 'Unity 6', 'Physics2D', 'ScriptableObjects', 'Steamworks.NET', 'NUnit'],
+      mediaUrl: '/assets/images/lunnar_mining.png',
       mediaType: 'image',
       whatIBuilt: [
-        'Custom 3D rendering engine using OpenGL',
-        'BSP-based world partitioning for visibility and traversal',
-        'Fixed-point math system (Binary Angle Measurement)',
-        'Double-buffered rendering pipeline',
-        'Thread pool for parallel tasks',
-        'Lookup tables for fast trigonometric calculations'
+        'Event-driven gameplay loop: seeded map generation, timed mining runs, boss encounters',
+        'Frame-driven isometric mining using non-allocating Physics2D queries and object pooling',
+        'Authenticated save pipeline: AES-256-CBC encryption, HMAC integrity, backup recovery',
+        'Steamworks.NET inventory/achievements behind a mockable provider adapter'
       ],
       whatILearned: [
-        'Low-level 3D engine architecture',
-        'Spatial partitioning and culling techniques',
-        'Managing real-time rendering with double buffering',
-        'Multithreaded task scheduling with thread pools',
-        'Performance-oriented math using fixed-point arithmetic'
+        'Data-driven design with ScriptableObjects across drills/skills/forge/artifact systems',
+        'Applying dependency inversion so game code never depends on the concrete Steam provider',
+        'Applied cryptography for tamper-resistant save data',
+        'Cross-platform build automation (Windows/Linux/macOS)'
       ],
       challenges: [
-        'Designing BSP traversal and visibility logic',
-        'Balancing accuracy and performance in fixed-point math',
-        'Synchronizing rendering and worker threads safely',
-        'Keeping real-time performance without modern engine tooling'
-      ],
-      liveUrl: 'https://github.com/SirAlabar/doom-nukem',
-      githubUrl: 'https://github.com/SirAlabar/doom-nukem'
+        'Keeping mining physics queries allocation-free at scale',
+        'Designing a save format that survives corruption and legacy migrations',
+        'Mocking Steam integration for development and testing without a real Steam session'
+      ]
     },
     {
       title: 'Survivor Arena',
@@ -77,30 +102,6 @@ export default class ProjectsGamesPage extends BaseProjectPage
       ],
       liveUrl: 'https://github.com/SirAlabar/Alabar_Site_V3',
       githubUrl: 'https://github.com/SirAlabar/Alabar_Site_V3'
-    },
-    {
-      title: 'Lunar Drill Idle',
-      subtitle: 'Unity 2D idle mining game (Steam-oriented)',
-      techStack: ['C#', 'Unity 6', 'Physics2D', 'ScriptableObjects', 'Steamworks.NET', 'NUnit'],
-      mediaUrl: '/assets/images/lunnar_mining.png',
-      mediaType: 'image',
-      whatIBuilt: [
-        'Event-driven gameplay loop: seeded map generation, timed mining runs, boss encounters',
-        'Frame-driven isometric mining using non-allocating Physics2D queries and object pooling',
-        'Authenticated save pipeline: AES-256-CBC encryption, HMAC integrity, backup recovery',
-        'Steamworks.NET inventory/achievements behind a mockable provider adapter'
-      ],
-      whatILearned: [
-        'Data-driven design with ScriptableObjects across drills/skills/forge/artifact systems',
-        'Applying dependency inversion so game code never depends on the concrete Steam provider',
-        'Applied cryptography for tamper-resistant save data',
-        'Cross-platform build automation (Windows/Linux/macOS)'
-      ],
-      challenges: [
-        'Keeping mining physics queries allocation-free at scale',
-        'Designing a save format that survives corruption and legacy migrations',
-        'Mocking Steam integration for development and testing without a real Steam session'
-      ]
     },
     {
       title: 'Racing Game Web',
