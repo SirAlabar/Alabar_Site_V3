@@ -15,8 +15,8 @@ export default class ProjectsCorePage extends BaseProjectPage
       title: 'OOP-Piscine — Railway Simulation',
       subtitle: 'Deterministic multi-train simulation engine',
       techStack: ['C++17', 'STL', 'SFML', 'GoogleTest', 'CMake', 'Design Patterns'],
-      mediaUrl: '/assets/videos/train_simulator.gif',
-      mediaType: 'gif',
+      mediaUrl: '/assets/videos/train_simulator.mp4',
+      mediaType: 'video',
       whatIBuilt: [
         'Multi-train railway simulator with graph-based routing and real-time physics',
         'Multi-train collision-risk system (Mediator-style traffic coordination) with braking-distance safety checks',
