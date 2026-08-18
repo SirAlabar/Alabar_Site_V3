@@ -24,10 +24,30 @@ export class Header
   }
 
   /**
+   * Current theme, read from the same localStorage key SceneManager writes to
+   */
+  private getCurrentTheme(): 'light' | 'dark'
+  {
+    return (localStorage.getItem('theme') as 'light' | 'dark') || 'light';
+  }
+
+  /**
+   * Icon shown on the toggle button - reflects the theme you'll switch TO
+   * (day sky shows the moon you'll switch to, night sky shows the sun)
+   */
+  private getThemeIcon(theme: 'light' | 'dark'): string
+  {
+    return theme === 'dark' ? '☀️' : '🌚';
+  }
+
+  /**
    * Render header HTML with liquid glass effect
    */
   render(): string
   {
+    const currentTheme = this.getCurrentTheme();
+    const themeIcon = this.getThemeIcon(currentTheme);
+
     return `
       <header class="fixed top-0 left-0 right-0 z-50 bg-rpg-dark/20 backdrop-blur-xl border-b-2 border-rpg-accent/20 shadow-lg">
         <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-1">
@@ -118,9 +138,9 @@ export class Header
             </a>
             
             <!-- Theme Toggle -->
-            <button id="theme-toggle" 
-                    class="w-12 h-12 rounded-full bg-rpg-accent/10 border-2 border-rpg-accent/30 flex items-center justify-center hover:bg-rpg-accent/20 hover:border-rpg-accent transition-all duration-200 hover:scale-110 text-3xl">
-              🌚
+            <button id="theme-toggle"
+                    class="w-12 h-12 rounded-full bg-rpg-accent/10 border-2 border-rpg-accent/30 flex items-center justify-center hover:bg-rpg-accent/20 hover:border-rpg-accent transition-all duration-200 hover:scale-110 text-3xl leading-none">
+              <span class="theme-icon flex items-center justify-center w-full h-full leading-none">${themeIcon}</span>
             </button>
           </div>
 
@@ -217,9 +237,9 @@ export class Header
                 <img src="/assets/images/linkedin_logo.png" class="w-10 h-10">
               </a>
 
-              <button id="theme-toggle-mobile" 
-                      class="text-4xl hover:scale-110 transition-transform">
-                🌚
+              <button id="theme-toggle-mobile"
+                      class="w-10 h-10 flex items-center justify-center text-4xl leading-none hover:scale-110 transition-transform">
+                <span class="theme-icon flex items-center justify-center w-full h-full leading-none">${themeIcon}</span>
               </button>
             </div>
 
@@ -262,6 +282,7 @@ export class Header
       {
         // Dispatch custom event for SceneManager to handle
         window.dispatchEvent(new CustomEvent('theme:toggle'));
+        this.syncThemeIcons();
       };
 
       themeToggle.addEventListener('click', handleThemeToggle);
@@ -276,11 +297,26 @@ export class Header
       {
         // Dispatch custom event for SceneManager to handle
         window.dispatchEvent(new CustomEvent('theme:toggle'));
+        this.syncThemeIcons();
       };
 
       themeToggleMobile.addEventListener('click', handleThemeToggleMobile);
       this.listeners.set('theme-toggle-mobile', handleThemeToggleMobile);
     }
+  }
+
+  /**
+   * Update both toggle button icons to match the theme SceneManager just applied.
+   * SceneManager writes localStorage synchronously inside its 'theme:toggle' handler,
+   * so it's already up to date by the time this runs right after dispatch.
+   */
+  private syncThemeIcons(): void
+  {
+    const icon = this.getThemeIcon(this.getCurrentTheme());
+    document.querySelectorAll('.theme-icon').forEach((el) =>
+    {
+      el.textContent = icon;
+    });
   }
 
   /**
